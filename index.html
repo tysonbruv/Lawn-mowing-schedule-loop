@@ -11,7 +11,7 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 .app{width:min(100%,760px);min-height:480px;background:var(--panel);border:1px solid var(--border2);border-radius:16px;padding:18px}
 h1,h2,h3{margin:0}h1{font-size:20px}h2{font-size:18px}h3{font-size:15px;color:var(--muted);font-weight:500}
 button,input,textarea,select{font:inherit}button{cursor:pointer}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.today-line{text-align:center;color:var(--muted);font-size:15px;font-weight:700;margin:0 0 14px}.today-line span{color:var(--text)}
 .small-btn,.main-btn,.ghost-btn,.danger-btn{background:var(--input);color:var(--text);border:1px solid var(--border);border-radius:6px;min-height:38px;padding:8px 12px}
 .main-btn{width:100%;font-weight:700;background:#132015;border-color:#254a2a}.danger-btn{color:#fff;background:var(--red);border-color:var(--red)}.ghost-btn{color:var(--muted)}
 .next-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:16px;margin-bottom:16px}
@@ -20,7 +20,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .notes{color:var(--muted);margin:8px 0 14px;line-height:1.35}.action-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 16px}.summary-box{background:#101010;border:1px solid #242424;border-radius:10px;padding:12px;text-align:center}.summary-num{font-size:22px;font-weight:800}.summary-label{color:var(--muted);font-size:13px;margin-top:3px}
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.tab{background:#0f0f0f;color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:8px 4px}.tab.active{color:#fff;border-color:#f5f5f5;background:#242424}
-.list{display:flex;flex-direction:column;gap:8px}.row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:#111;border:1px solid #242424;border-radius:8px;padding:10px}.row.next-row{border-color:#254a2a;background:#101710}.row-title{font-weight:700}.row-sub{color:var(--muted);font-size:14px;margin-top:3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.row-right{text-align:right;color:var(--muted);font-size:14px}.price{color:var(--text);font-weight:700;margin-bottom:3px}.finish-small{background:#132015;border:1px solid #254a2a;color:#fff;border-radius:6px;padding:7px 12px;font-weight:800;margin-top:6px;min-height:34px}.edit-small{background:#0f0f0f;border:1px solid #333;color:var(--muted);border-radius:6px;padding:7px 12px;margin-top:6px;min-height:34px}.row-buttons{display:flex;gap:6px;justify-content:flex-end}
+.list{display:flex;flex-direction:column;gap:8px}.row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:#111;border:1px solid #242424;border-radius:8px;padding:10px}.row.next-row{border-color:#254a2a;background:#101710}.row.selected-row{border-color:#f5f5f5;background:#1b1b1b}.row-title{font-weight:700}.row-sub{color:var(--muted);font-size:14px;margin-top:3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.row-right{text-align:right;color:var(--muted);font-size:14px}.price{color:var(--text);font-weight:700;margin-bottom:3px}.finish-small{background:#132015;border:1px solid #254a2a;color:#fff;border-radius:6px;padding:7px 12px;font-weight:800;margin-top:6px;min-height:34px}.edit-small{background:#0f0f0f;border:1px solid #333;color:var(--muted);border-radius:6px;padding:7px 12px;margin-top:6px;min-height:34px}.row-buttons{display:flex;gap:6px;justify-content:flex-end}.selected-actions{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.selected-actions button{min-height:38px}
 .empty{color:var(--muted);padding:12px}.screen{display:none}.screen.active{display:block}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{color:var(--muted);font-size:13px}
 input,textarea,select{background:var(--input);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:10px;outline:none;width:100%}textarea{min-height:72px;resize:vertical}
@@ -32,6 +32,7 @@ input,textarea,select{background:var(--input);color:var(--text);border:1px solid
 <main class="app">
 <section id="homeScreen" class="screen active">
 <div class="top"><div><h1>Lawn Loop</h1><h3>Who is next?</h3></div><button class="small-btn" id="addClientTop">+ Client</button></div>
+<div class="today-line">Date today: <span id="todayDateText"></span></div>
 
 <div id="clientList" class="list"></div><div class="footer-note">Top client is next. Tap Finished and they move forward by their repeat cycle.</div>
 </section>
@@ -50,7 +51,7 @@ input,textarea,select{background:var(--input);color:var(--text);border:1px solid
 </main>
 <script>
 const STORAGE_KEY="lawnLoop.clients.v1";
-let clients=[],activeFilter="all",editingId=null;
+let clients=[],activeFilter="all",editingId=null,selectedClientId=null;
 const starter=[
 ["Mary Wilson","Blacktown",70,14,0,"Side gate. Green bin near garage."],
 ["Adam K.","Seven Hills",126,21,1,"AHO. Check front and back."],
@@ -74,6 +75,7 @@ const starter=[
 ["Jess Carter","Marsden Park",105,28,19,"Back gate sticks."]
 ];
 function today(){const d=new Date();d.setHours(0,0,0,0);return d}
+function todayPretty(){return new Date().toLocaleDateString("en-AU",{weekday:"short",day:"numeric",month:"short",year:"numeric"})}
 function addDays(date,days){const d=new Date(date);d.setDate(d.getDate()+Number(days));return d}
 function iso(d){return d.toISOString().slice(0,10)}
 function pretty(s){return new Date(s+"T00:00:00").toLocaleDateString("en-AU",{weekday:"short",day:"numeric",month:"short"})}
@@ -87,14 +89,15 @@ function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(clients))}
 function load(){const raw=localStorage.getItem(STORAGE_KEY);if(raw){try{clients=JSON.parse(raw);return}catch{}}const t=today();clients=starter.map((c,i)=>({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()+i)),name:c[0],suburb:c[1],price:c[2],cycle:c[3],nextDue:iso(addDays(t,c[4])),notes:c[5]}));save()}
 function matches(c){const d=daysUntil(c.nextDue);if(activeFilter==="today")return d<=0;if(activeFilter==="week")return d<=7;if(activeFilter==="month")return d<=30;return true}
 function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active")}
-function render(){const sorted=sort(clients);renderList(sorted)}
+function render(){document.getElementById("todayDateText").textContent=todayPretty();const sorted=sort(clients);renderList(sorted)}
 function renderNext(c){const el=document.getElementById("nextCard");if(!c){el.innerHTML='<div class="next-label">NEXT TO CUT</div><div class="client-name">No clients yet</div><div class="suburb">Add a client to start the loop.</div>';return}el.innerHTML='<div class="next-label">NEXT TO CUT</div><div class="client-name">'+esc(c.name)+'</div><div class="suburb">'+esc(c.suburb)+'</div><div class="meta-row"><span class="pill '+dueClass(c.nextDue)+'">'+dueText(c.nextDue)+'</span><span class="pill">'+pretty(c.nextDue)+'</span><span class="pill">'+money(c.price)+'</span><span class="pill">Every '+c.cycle+' days</span></div><div class="notes">'+esc(c.notes)+'</div><div class="action-row"><button class="main-btn" onclick="finishClient(\''+c.id+'\')">Finished</button><button class="ghost-btn" onclick="editClient(\''+c.id+'\')">Edit</button></div>'}
-function renderList(list){const el=document.getElementById("clientList");el.innerHTML="";if(!list.length){el.innerHTML='<div class="empty">No clients yet. Add one to start the loop.</div>';return}list.forEach((c,index)=>{const row=document.createElement("div");row.className="row"+(index===0?" next-row":"");const right=index===0?'<div class="price">'+money(c.price)+'</div><div>'+pretty(c.nextDue)+'</div><div class="row-buttons"><button class="finish-small" onclick="event.stopPropagation();finishClient(\''+c.id+'\')">Finished</button><button class="edit-small" onclick="event.stopPropagation();editClient(\''+c.id+'\')">Edit</button></div>':'<div class="price">'+money(c.price)+'</div><div>'+pretty(c.nextDue)+'</div>';row.innerHTML='<div><div class="row-title">'+(index===0?'NEXT - ':'')+esc(c.name)+'</div><div class="row-sub">'+esc(c.suburb)+' · '+dueText(c.nextDue)+' · every '+c.cycle+' days</div></div><div class="row-right">'+right+'</div>';row.onclick=()=>editClient(c.id);el.appendChild(row)})}
-function finishClient(id){const c=clients.find(x=>x.id===id);if(!c)return;c.nextDue=iso(addDays(today(),c.cycle));save();render();scrollTo({top:0,behavior:"smooth"})}
+function renderList(list){const el=document.getElementById("clientList");el.innerHTML="";if(!list.length){el.innerHTML='<div class="empty">No clients yet. Add one to start the loop.</div>';return}list.forEach((c,index)=>{const row=document.createElement("div");row.className="row"+(index===0?" next-row":"")+(selectedClientId===c.id?" selected-row":"");const isSelected=selectedClientId===c.id;const actions=isSelected?'<div class="selected-actions"><button class="finish-small" onclick="event.stopPropagation();finishClient(\''+c.id+'\')">Finished</button><button class="edit-small" onclick="event.stopPropagation();editClient(\''+c.id+'\')">Edit</button></div>':'';row.innerHTML='<div><div class="row-title">'+(index===0?'NEXT - ':'')+esc(c.name)+'</div><div class="row-sub">'+esc(c.suburb)+' · '+dueText(c.nextDue)+' · every '+c.cycle+' days</div></div><div class="row-right"><div class="price">'+money(c.price)+'</div><div>'+pretty(c.nextDue)+'</div></div>'+actions;row.onclick=()=>selectClient(c.id);el.appendChild(row)})}
+function selectClient(id){selectedClientId=selectedClientId===id?null:id;render()}
+function finishClient(id){const c=clients.find(x=>x.id===id);if(!c)return;c.nextDue=iso(addDays(today(),c.cycle));selectedClientId=null;save();render();scrollTo({top:0,behavior:"smooth"})}
 function editClient(id){const c=clients.find(x=>x.id===id);if(!c)return;editingId=id;formTitle.textContent="Edit Client";nameInput.value=c.name;suburbInput.value=c.suburb;priceInput.value=c.price;cycleInput.value=c.cycle;dueInput.value=c.nextDue;notesInput.value=c.notes||"";deleteClient.style.display="block";show("formScreen")}
 function addClient(){editingId=null;formTitle.textContent="Add Client";nameInput.value="";suburbInput.value="";priceInput.value="";cycleInput.value="14";dueInput.value=iso(today());notesInput.value="";deleteClient.style.display="none";show("formScreen")}
 function saveClientForm(){const name=nameInput.value.trim();if(!name)return;const data={name,suburb:suburbInput.value.trim(),price:Number(priceInput.value)||0,cycle:Number(cycleInput.value)||14,nextDue:dueInput.value||iso(today()),notes:notesInput.value.trim()};if(editingId){const c=clients.find(x=>x.id===editingId);if(c)Object.assign(c,data)}else clients.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),...data});save();render();show("homeScreen")}
-function deleteClientForm(){if(!editingId)return;if(!confirm("Delete this client?"))return;clients=clients.filter(c=>c.id!==editingId);save();render();show("homeScreen")}
+function deleteClientForm(){if(!editingId)return;if(!confirm("Delete this client?"))return;clients=clients.filter(c=>c.id!==editingId);selectedClientId=null;save();render();show("homeScreen")}
 addClientTop.onclick=addClient;backHome.onclick=()=>show("homeScreen");saveClient.onclick=saveClientForm;deleteClient.onclick=deleteClientForm;
 
 load();render();
