@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Lawn Loop</title>
+<title>Lawn Schedule</title>
 <style>
 :root{--bg:#0e0e0e;--panel:#161616;--card:#111;--input:#0f0f0f;--border:#333;--border2:#2a2a2a;--text:#f5f5f5;--muted:#9a9a9a;--muted2:#777;--green:#5fd36d;--orange:#ffb347;--red:#ff5f57}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -31,7 +31,7 @@ input,textarea,select{background:var(--input);color:var(--text);border:1px solid
 <body>
 <main class="app">
 <section id="homeScreen" class="screen active">
-<div class="top"><div><h1>Lawn Loop</h1><h3>Who is next?</h3></div><button class="small-btn" id="addClientTop">+ Client</button></div>
+<div class="top"><div><h1>Lawn Schedule</h1><h3>Who is next?</h3></div><button class="small-btn" id="addClientTop">+ Client</button></div>
 <div class="today-line">Date today: <span id="todayDateText"></span></div>
 
 <div id="clientList" class="list"></div><div class="footer-note">Top client is next. Tap Finished and they move forward by their repeat cycle.</div>
@@ -61,28 +61,7 @@ input,textarea,select{background:var(--input);color:var(--text);border:1px solid
 <script>
 const STORAGE_KEY="lawnLoop.clients.v1";
 let clients=[],activeFilter="all",editingId=null,selectedClientId=null,pendingPaidId=null;
-const starter=[
-["Mary Wilson","Blacktown",70,14,0,"Side gate. Green bin near garage."],
-["Adam K.","Seven Hills",126,21,1,"AHO. Check front and back."],
-["John Nguyen","Doonside",80,14,2,"Dog usually inside."],
-["Sarah Moore","Mount Druitt",65,28,3,"Small front lawn."],
-["Khaled Ali","Blacktown",100,30,4,"Text before arriving."],
-["Nina Patel","Toongabbie",75,14,5,"Cash sometimes."],
-["Peter Brown","Rooty Hill",90,21,6,"Backyard gets long."],
-["Lisa Tran","Quakers Hill",85,14,7,"Green waste in side bin."],
-["George Smith","Kings Park",60,28,8,"Front only."],
-["Anne Cooper","Lalor Park",95,21,9,"Hedges every second visit."],
-["Michael Jones","Marayong",70,14,10,"Easy access."],
-["Fatima Hassan","Prospect",110,30,11,"Large corner block."],
-["Ben Taylor","Stanhope Gardens",85,14,12,"Invoice after job."],
-["Olivia Martin","Kellyville",120,28,13,"Front, back, edges."],
-["Chris Lee","Castle Hill",95,21,14,"Steep driveway."],
-["Grace White","Winston Hills",75,14,15,"Call if gate locked."],
-["Robert King","Penrith",130,30,16,"Big job. Allow extra time."],
-["Emily Davis","Riverstone",90,21,17,"Corner nature strip."],
-["Tony Romano","Schofields",80,14,18,"Prefers morning."],
-["Jess Carter","Marsden Park",105,28,19,"Back gate sticks."]
-];
+const starter=[];
 function today(){const d=new Date();d.setHours(0,0,0,0);return d}
 function todayPretty(){return new Date().toLocaleDateString("en-AU",{weekday:"short",day:"numeric",month:"short",year:"numeric"})}
 function addDays(date,days){const d=new Date(date);d.setDate(d.getDate()+Number(days));return d}
@@ -105,7 +84,7 @@ function matches(c){const d=daysUntil(c.nextDue);if(activeFilter==="today")retur
 function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active")}
 function render(){document.getElementById("todayDateText").textContent=todayPretty();const sorted=sort(clients);renderList(sorted)}
 function renderNext(c){const el=document.getElementById("nextCard");if(!c){el.innerHTML='<div class="next-label">NEXT TO CUT</div><div class="client-name">No clients yet</div><div class="suburb">Add a client to start the loop.</div>';return}el.innerHTML='<div class="next-label">NEXT TO CUT</div><div class="client-name">'+esc(c.name)+'</div><div class="suburb">'+esc(c.suburb)+'</div><div class="meta-row"><span class="pill '+dueClass(c.nextDue)+'">'+dueText(c.nextDue)+'</span><span class="pill">'+pretty(c.nextDue)+'</span><span class="pill">'+money(c.price)+'</span><span class="pill">Every '+c.cycle+' days</span></div><div class="notes">'+esc(c.notes)+'</div><div class="action-row"><button class="main-btn" onclick="finishClient(\''+c.id+'\')">Finished</button><button class="ghost-btn" onclick="editClient(\''+c.id+'\')">Edit</button></div>'}
-function renderList(list){const el=document.getElementById("clientList");el.innerHTML="";if(!list.length){el.innerHTML='<div class="empty">No clients yet. Add one to start the loop.</div>';return}list.forEach((c,index)=>{const row=document.createElement("div");row.className="row"+(index===0?" next-row":"")+(selectedClientId===c.id?" selected-row":"");const isSelected=selectedClientId===c.id;const paidClass=c.paid?"paid-yes":"";const paidBtn='<button class="paid-btn '+paidClass+'" onclick="event.stopPropagation();openPaidPopup(\''+c.id+'\')">Paid</button>';const actions=isSelected?'<div class="selected-actions"><button class="finish-small" onclick="event.stopPropagation();finishClient(\''+c.id+'\')">Finished</button><button class="edit-small" onclick="event.stopPropagation();editClient(\''+c.id+'\')">Edit</button></div>':'';row.innerHTML='<div><div class="row-title">'+(index===0?'NEXT - ':'')+esc(c.name)+'</div><div class="row-sub">'+esc(c.suburb)+' · '+dueText(c.nextDue)+' · every '+c.cycle+' days</div></div><div class="row-right"><div class="price">'+money(c.price)+'</div><div>'+pretty(c.nextDue)+'</div>'+paidBtn+'</div>'+actions;row.onclick=()=>selectClient(c.id);el.appendChild(row)})}
+function renderList(list){const el=document.getElementById("clientList");el.innerHTML="";if(!list.length){el.innerHTML='<div class="empty">No clients yet. Add one to start the schedule.</div>';return}list.forEach((c,index)=>{const row=document.createElement("div");row.className="row"+(index===0?" next-row":"")+(selectedClientId===c.id?" selected-row":"");const isSelected=selectedClientId===c.id;const paidClass=c.paid?"paid-yes":"";const paidBtn='<button class="paid-btn '+paidClass+'" onclick="event.stopPropagation();openPaidPopup(\''+c.id+'\')">Paid</button>';const actions=isSelected?'<div class="selected-actions"><button class="finish-small" onclick="event.stopPropagation();finishClient(\''+c.id+'\')">Finished</button><button class="edit-small" onclick="event.stopPropagation();editClient(\''+c.id+'\')">Edit</button></div>':'';row.innerHTML='<div><div class="row-title">'+(index===0?'NEXT - ':'')+esc(c.name)+'</div><div class="row-sub">'+esc(c.suburb)+' · '+dueText(c.nextDue)+' · every '+c.cycle+' days</div></div><div class="row-right"><div class="price">'+money(c.price)+'</div><div>'+pretty(c.nextDue)+'</div>'+paidBtn+'</div>'+actions;row.onclick=()=>selectClient(c.id);el.appendChild(row)})}
 function selectClient(id){selectedClientId=selectedClientId===id?null:id;render()}
 function finishClient(id){const c=clients.find(x=>x.id===id);if(!c)return;c.nextDue=iso(addDays(today(),c.cycle));c.paid=false;selectedClientId=null;save();render();scrollTo({top:0,behavior:"smooth"})}
 function editClient(id){const c=clients.find(x=>x.id===id);if(!c)return;editingId=id;formTitle.textContent="Edit Client";nameInput.value=c.name;suburbInput.value=c.suburb;priceInput.value=c.price;cycleInput.value=c.cycle;dueInput.value=c.nextDue;notesInput.value=c.notes||"";deleteClient.style.display="block";show("formScreen")}
