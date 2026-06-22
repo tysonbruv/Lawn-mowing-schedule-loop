@@ -11,7 +11,7 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 .app{width:min(100%,760px);min-height:480px;background:var(--panel);border:1px solid var(--border2);border-radius:16px;padding:18px}
 h1,h2,h3{margin:0}h1{font-size:20px}h2{font-size:18px}h3{font-size:15px;color:var(--muted);font-weight:500}
 button,input,textarea,select{font:inherit}button{cursor:pointer}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.top-buttons{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.today-line{text-align:center;color:var(--muted);font-size:15px;font-weight:700;margin:0 0 14px}.today-line span{color:var(--text)}.undo-bar{display:none;background:#101010;border:1px solid #5b3f1a;border-radius:8px;padding:10px;margin:0 0 12px;color:var(--orange);align-items:center;justify-content:space-between;gap:10px}.undo-bar.active{display:flex}.undo-bar button{background:#2a1f0d;color:var(--orange);border:1px solid #5b3f1a;border-radius:6px;min-height:34px;padding:6px 12px;font-weight:800}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.top-buttons{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.today-line{text-align:center;color:var(--muted);font-size:15px;font-weight:700;margin:0 0 14px}.today-line span{color:var(--text)}.undo-bar{display:none;background:#101010;border:1px solid #5b3f1a;border-radius:8px;padding:10px;margin:0 0 12px;color:var(--orange);align-items:center;justify-content:space-between;gap:10px}.undo-bar.active{display:flex}.undo-actions{display:flex;gap:8px;align-items:center}.undo-bar button{background:#2a1f0d;color:var(--orange);border:1px solid #5b3f1a;border-radius:6px;min-height:34px;padding:6px 12px;font-weight:800}.undo-close{background:#3a1111!important;color:#fff!important;border-color:#7a2222!important;min-width:38px}
 .small-btn,.main-btn,.ghost-btn,.danger-btn{background:var(--input);color:var(--text);border:1px solid var(--border);border-radius:6px;min-height:38px;padding:8px 12px}
 .main-btn{width:100%;font-weight:700;background:#132015;border-color:#254a2a}.danger-btn{color:#fff;background:var(--red);border-color:var(--red)}.ghost-btn{color:var(--muted)}
 .next-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:16px;margin-bottom:16px}
@@ -33,7 +33,7 @@ input,textarea,select{background:var(--input);color:var(--text);border:1px solid
 <section id="homeScreen" class="screen active">
 <div class="top"><div><h1>Lawn Schedule</h1><h3>Who is next?</h3></div><div class="top-buttons"><button class="small-btn" id="addClientTop">+ Client</button><button class="small-btn" id="addOneOffTop">+ One-off</button></div></div>
 <div class="today-line">Date today: <span id="todayDateText"></span></div>
-<div class="undo-bar" id="undoBar"><span id="undoText">Job finished.</span><button id="undoBtn">Undo</button></div>
+<div class="undo-bar" id="undoBar"><span id="undoText">Job finished.</span><div class="undo-actions"><button id="undoBtn">Undo</button><button class="undo-close" id="undoCloseBtn">X</button></div></div>
 
 <div id="clientList" class="list"></div><div id="unpaidSection" class="unpaid-section"><div class="section-title">ONE-OFF UNPAID JOBS</div><div id="unpaidList" class="list"></div></div><div class="footer-note">Top client is next. Tap Finished and they move forward by their repeat cycle.</div>
 </section>
@@ -96,10 +96,11 @@ function saveClientForm(){const name=nameInput.value.trim();if(!name)return;cons
 function deleteClientForm(){if(!editingId)return;if(!confirm("Delete this client?"))return;clients=clients.filter(c=>c.id!==editingId);if(lastFinish&&lastFinish.id===editingId)lastFinish=null;selectedClientId=null;save();render();show("homeScreen")}
 function renderUndo(){if(!lastFinish){undoBar.classList.remove("active");return}undoText.textContent=lastFinish.name+" finished. Undo?";undoBar.classList.add("active")}
 function undoLastFinish(){if(!lastFinish)return;const c=clients.find(x=>x.id===lastFinish.id);if(c){c.nextDue=lastFinish.nextDue;c.paid=lastFinish.paid;c.finished=lastFinish.finished}lastFinish=null;save();render()}
+function dismissUndo(){lastFinish=null;render()}
 function openPaidPopup(id){pendingPaidId=id;paidPopup.classList.add("active")}
 function closePaidPopup(){pendingPaidId=null;paidPopup.classList.remove("active")}
 function markPaidYes(){if(!pendingPaidId){closePaidPopup();return}const c=clients.find(x=>x.id===pendingPaidId);if(c){if(c.type==="oneoff"){clients=clients.filter(x=>x.id!==pendingPaidId);if(lastFinish&&lastFinish.id===pendingPaidId)lastFinish=null;selectedClientId=null}else{c.paid=true}save();render()}closePaidPopup()}
-addClientTop.onclick=addClient;addOneOffTop.onclick=addOneOff;backHome.onclick=()=>show("homeScreen");saveClient.onclick=saveClientForm;deleteClient.onclick=deleteClientForm;paidYesBtn.onclick=markPaidYes;paidNoBtn.onclick=closePaidPopup;undoBtn.onclick=undoLastFinish;
+addClientTop.onclick=addClient;addOneOffTop.onclick=addOneOff;backHome.onclick=()=>show("homeScreen");saveClient.onclick=saveClientForm;deleteClient.onclick=deleteClientForm;paidYesBtn.onclick=markPaidYes;paidNoBtn.onclick=closePaidPopup;undoBtn.onclick=undoLastFinish;undoCloseBtn.onclick=dismissUndo;
 
 load();render();
 </script>
