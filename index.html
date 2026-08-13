@@ -623,7 +623,7 @@ textarea{
 </div>
 
 <div class="footer-note">
-  Top client is next. Tap Finished and they move forward by their repeat cycle.
+  Finished = job done and unpaid. Paid = job done and paid. Both reset the repeat cycle from today.
 </div>
 
 </section>
@@ -689,7 +689,12 @@ textarea{
 
 <div class="form-actions">
   <button class="main-btn" id="saveClient">Save Client</button>
-  <button class="danger-btn" id="deleteClient" style="display:none">
+
+  <button
+    class="danger-btn"
+    id="deleteClient"
+    style="display:none"
+  >
     Delete Client
   </button>
 </div>
@@ -720,7 +725,6 @@ textarea{
 const STORAGE_KEY="lawnLoop.clients.v1";
 
 let clients=[];
-let activeFilter="all";
 let editingId=null;
 let selectedClientId=null;
 let pendingPaidId=null;
@@ -730,17 +734,27 @@ let formMode="recurring";
 const starter=[];
 
 
-/* -------------------------
-   DATE FUNCTIONS
-------------------------- */
+/* =========================
+   DATES
+========================= */
 
 function today(){
+
   const d=new Date();
-  d.setHours(0,0,0,0);
+
+  d.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
   return d;
 }
 
+
 function todayPretty(){
+
   return new Date().toLocaleDateString(
     "en-AU",
     {
@@ -752,26 +766,44 @@ function todayPretty(){
   );
 }
 
+
 function addDays(date,days){
+
   const d=new Date(date);
-  d.setDate(d.getDate()+Number(days));
+
+  d.setDate(
+    d.getDate()+
+    Number(days)
+  );
+
   return d;
 }
 
+
 function iso(d){
 
-  const y=d.getFullYear();
+  const y=
+    d.getFullYear();
 
-  const m=String(
-    d.getMonth()+1
-  ).padStart(2,"0");
+  const m=
+    String(
+      d.getMonth()+1
+    ).padStart(
+      2,
+      "0"
+    );
 
-  const day=String(
-    d.getDate()
-  ).padStart(2,"0");
+  const day=
+    String(
+      d.getDate()
+    ).padStart(
+      2,
+      "0"
+    );
 
   return `${y}-${m}-${day}`;
 }
+
 
 function pretty(s){
 
@@ -787,144 +819,236 @@ function pretty(s){
   );
 }
 
+
 function daysUntil(s){
 
   return Math.round(
     (
-      new Date(s+"T00:00:00")-today()
-    )/86400000
+      new Date(
+        s+"T00:00:00"
+      )
+      -
+      today()
+    )
+    /
+    86400000
   );
 }
 
+
 function dueText(s){
 
-  const d=daysUntil(s);
+  const d=
+    daysUntil(s);
 
   if(d<0){
-    return Math.abs(d)+" day"+
-    (Math.abs(d)==1?"":"s")+
-    " overdue";
+
+    return (
+      Math.abs(d)+
+      " day"+
+      (
+        Math.abs(d)===1
+          ?""
+          :"s"
+      )+
+      " overdue"
+    );
+
   }
 
   if(d===0){
+
     return "Due today";
+
   }
 
   if(d===1){
+
     return "Tomorrow";
+
   }
 
   return "In "+d+" days";
 }
 
-function dueClass(s){
-
-  const d=daysUntil(s);
-
-  return d<0
-    ?"overdue"
-    :d===0
-      ?"due"
-      :"future";
-}
 
 function dueTextStyled(s){
 
-  const d=daysUntil(s);
+  const d=
+    daysUntil(s);
 
-  const text=dueText(s);
+  const text=
+    dueText(s);
+
 
   if(d<0){
-    return '<span class="due-now">'+text+'</span>';
+
+    return (
+      '<span class="due-now">'+
+      text+
+      '</span>'
+    );
+
   }
+
 
   if(d===0){
-    return '<span class="due-today">'+text+'</span>';
+
+    return (
+      '<span class="due-today">'+
+      text+
+      '</span>'
+    );
+
   }
+
 
   if(d===1){
-    return '<span class="due-now">'+text+'</span>';
+
+    return (
+      '<span class="due-now">'+
+      text+
+      '</span>'
+    );
+
   }
 
+
   if(d<=4){
-    return '<span class="due-warn">'+text+'</span>';
+
+    return (
+      '<span class="due-warn">'+
+      text+
+      '</span>'
+    );
+
   }
+
 
   return text;
 }
 
 
-/* -------------------------
+/* =========================
    HELPERS
-------------------------- */
+========================= */
 
 function money(n){
 
-  return "$"+
-  Number(n||0).toLocaleString(
-    "en-AU",
-    {
-      maximumFractionDigits:0
-    }
+  return (
+    "$"+
+    Number(
+      n||0
+    ).toLocaleString(
+      "en-AU",
+      {
+        maximumFractionDigits:0
+      }
+    )
   );
 }
+
 
 function esc(s){
 
-  return String(s||"")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function sort(list){
-
-  return [...list].sort(
-    (a,b)=>
-      new Date(a.nextDue)-
-      new Date(b.nextDue)
+  return String(
+    s||""
+  )
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "'",
+    "&#039;"
   );
 }
 
 
-/* -------------------------
-   STORAGE
-------------------------- */
+function sort(list){
+
+  return [
+    ...list
+  ].sort(
+    (a,b)=>
+      new Date(
+        a.nextDue
+      )
+      -
+      new Date(
+        b.nextDue
+      )
+  );
+}
+
+
+/* =========================
+   SAVE / LOAD
+========================= */
 
 function save(){
 
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify(clients)
+    JSON.stringify(
+      clients
+    )
   );
 }
+
 
 function load(){
 
   const raw=
-    localStorage.getItem(STORAGE_KEY);
+    localStorage.getItem(
+      STORAGE_KEY
+    );
+
 
   if(raw){
 
     try{
 
-      clients=JSON.parse(raw);
+      clients=
+        JSON.parse(
+          raw
+        );
 
-      clients=clients.map(
-        c=>({
-          ...c,
-          paid:
-            c.paid===undefined
-              ?true
-              :c.paid,
-          type:
-            c.type||"recurring",
-          finished:
-            c.finished||false
-        })
-      );
+
+      clients=
+        clients.map(
+          c=>({
+
+            ...c,
+
+            paid:
+              c.paid===undefined
+                ?true
+                :c.paid,
+
+            type:
+              c.type||
+              "recurring",
+
+            finished:
+              c.finished||
+              false
+
+          })
+        );
+
 
       save();
 
@@ -933,88 +1057,95 @@ function load(){
     }catch{}
   }
 
-  const t=today();
 
-  clients=starter.map(
-    (c,i)=>({
+  const t=
+    today();
 
-      id:
-        crypto.randomUUID
-          ?crypto.randomUUID()
-          :String(Date.now()+i),
 
-      name:c[0],
-      suburb:c[1],
-      price:c[2],
-      cycle:c[3],
+  clients=
+    starter.map(
+      (c,i)=>({
 
-      nextDue:
-        iso(
-          addDays(t,c[4])
-        ),
+        id:
+          crypto.randomUUID
+            ?crypto.randomUUID()
+            :String(
+              Date.now()+i
+            ),
 
-      notes:c[5],
+        name:c[0],
 
-      paid:true,
-      type:"recurring",
-      finished:false
+        suburb:c[1],
 
-    })
-  );
+        price:c[2],
+
+        cycle:c[3],
+
+        nextDue:
+          iso(
+            addDays(
+              t,
+              c[4]
+            )
+          ),
+
+        notes:c[5],
+
+        paid:true,
+
+        type:"recurring",
+
+        finished:false
+
+      })
+    );
+
 
   save();
 }
 
 
-/* -------------------------
-   SCREEN
-------------------------- */
-
-function matches(c){
-
-  const d=
-    daysUntil(c.nextDue);
-
-  if(activeFilter==="today"){
-    return d<=0;
-  }
-
-  if(activeFilter==="week"){
-    return d<=7;
-  }
-
-  if(activeFilter==="month"){
-    return d<=30;
-  }
-
-  return true;
-}
+/* =========================
+   SCREENS
+========================= */
 
 function show(id){
 
   document
-    .querySelectorAll(".screen")
+    .querySelectorAll(
+      ".screen"
+    )
     .forEach(
       s=>
-        s.classList.remove("active")
+        s.classList.remove(
+          "active"
+        )
     );
 
+
   document
-    .getElementById(id)
-    .classList.add("active");
+    .getElementById(
+      id
+    )
+    .classList.add(
+      "active"
+    );
 }
 
 
-/* -------------------------
+/* =========================
    MAIN RENDER
-------------------------- */
+========================= */
 
 function render(){
 
   document
-    .getElementById("todayDateText")
+    .getElementById(
+      "todayDateText"
+    )
     .textContent=
       todayPretty();
+
 
   renderUndo();
 
@@ -1023,14 +1154,25 @@ function render(){
     sort(
       clients.filter(
         c=>
+
           !(
-            c.type==="oneoff" &&
-            c.finished &&
+            c.type==="oneoff"
+            &&
+            c.finished
+            &&
             !c.paid
           )
+
           &&
+
           !(
-            (c.type||"recurring")==="recurring" &&
+            (
+              c.type||
+              "recurring"
+            )
+            ===
+            "recurring"
+            &&
             !c.paid
           )
       )
@@ -1041,7 +1183,12 @@ function render(){
     sort(
       clients.filter(
         c=>
-          (c.type||"recurring")==="recurring"
+          (
+            c.type||
+            "recurring"
+          )
+          ===
+          "recurring"
           &&
           !c.paid
       )
@@ -1052,7 +1199,8 @@ function render(){
     sort(
       clients.filter(
         c=>
-          c.type==="oneoff"
+          c.type===
+          "oneoff"
           &&
           c.finished
           &&
@@ -1061,11 +1209,15 @@ function render(){
     );
 
 
-  renderList(normal);
+  renderList(
+    normal
+  );
+
 
   renderRecurringUnpaidList(
     recurringUnpaid
   );
+
 
   renderUnpaidList(
     unpaid
@@ -1073,69 +1225,20 @@ function render(){
 }
 
 
-/* -------------------------
-   UNUSED NEXT CARD SUPPORT
-------------------------- */
-
-function renderNext(c){
-
-  const el=
-    document.getElementById("nextCard");
-
-  if(!el){
-    return;
-  }
-
-  if(!c){
-
-    el.innerHTML=
-      '<div class="next-label">NEXT TO CUT</div>'+
-      '<div class="client-name">No clients yet</div>'+
-      '<div class="suburb">Add a client to start the loop.</div>';
-
-    return;
-  }
-
-  el.innerHTML=
-    '<div class="next-label">NEXT TO CUT</div>'+
-    '<div class="client-name">'+esc(c.name)+'</div>'+
-    '<div class="suburb">'+esc(c.suburb)+'</div>'+
-    '<div class="meta-row">'+
-      '<span class="pill '+dueClass(c.nextDue)+'">'+
-        dueText(c.nextDue)+
-      '</span>'+
-      '<span class="pill">'+
-        pretty(c.nextDue)+
-      '</span>'+
-      '<span class="pill">'+
-        money(c.price)+
-      '</span>'+
-      '<span class="pill">Every '+
-        c.cycle+
-        ' days</span>'+
-    '</div>'+
-    '<div class="notes">'+esc(c.notes)+'</div>'+
-    '<div class="action-row">'+
-      '<button class="main-btn" onclick="finishClient(\''+
-        c.id+
-      '\')">Finished</button>'+
-      '<button class="ghost-btn" onclick="editClient(\''+
-        c.id+
-      '\')">Edit</button>'+
-    '</div>';
-}
-
-
-/* -------------------------
-   NORMAL JOB LIST
-------------------------- */
+/* =========================
+   NORMAL JOBS
+========================= */
 
 function renderList(list){
 
   const el=
-    document.getElementById("clientList");
+    document.getElementById(
+      "clientList"
+    );
+
 
   el.innerHTML="";
+
 
   if(!list.length){
 
@@ -1152,13 +1255,17 @@ function renderList(list){
     (c,index)=>{
 
       const row=
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       row.className=
         "row"+
-        (index===0
-          ?" next-row"
-          :""
+        (
+          index===0
+            ?" next-row"
+            :""
         )+
         (
           selectedClientId===c.id
@@ -1170,6 +1277,7 @@ function renderList(list){
       const isSelected=
         selectedClientId===c.id;
 
+
       const paidClass=
         c.paid
           ?"paid-yes"
@@ -1177,28 +1285,35 @@ function renderList(list){
 
 
       const paidBtn=
+
         '<button class="paid-btn '+
         paidClass+
         '" onclick="event.stopPropagation();openPaidPopup(\''+
         c.id+
-        '\')">Paid</button>';
+        '\')">'+
+        'Paid'+
+        '</button>';
 
 
       const actions=
         isSelected
-        ?
-        '<div class="selected-actions">'+
+          ?
+          '<div class="selected-actions">'+
 
           '<button class="finish-small" onclick="event.stopPropagation();finishClient(\''+
           c.id+
-          '\')">Finished</button>'+
+          '\')">'+
+          'Finished'+
+          '</button>'+
 
           '<button class="edit-small" onclick="event.stopPropagation();editClient(\''+
           c.id+
-          '\')">Edit</button>'+
+          '\')">'+
+          'Edit'+
+          '</button>'+
 
-        '</div>'
-        :"";
+          '</div>'
+          :"";
 
 
       row.innerHTML=
@@ -1211,12 +1326,16 @@ function renderList(list){
                 ?"NEXT - "
                 :""
             )+
-            esc(c.name)+
+            esc(
+              c.name
+            )+
           '</div>'+
 
           '<div class="row-sub">'+
 
-            esc(c.suburb)+
+            esc(
+              c.suburb
+            )+
 
             ' · '+
 
@@ -1228,14 +1347,23 @@ function renderList(list){
 
             (
               c.type==="oneoff"
-                ?'<span class="oneoff-tag">ONE-OFF</span>'
-                :'every '+c.cycle+' days'
+                ?
+                '<span class="oneoff-tag">ONE-OFF</span>'
+                :
+                'every '+
+                c.cycle+
+                ' days'
             )+
 
             (
               c.notes
-                ?' · '+esc(c.notes)
-                :''
+                ?
+                ' · '+
+                esc(
+                  c.notes
+                )
+                :
+                ''
             )+
 
           '</div>'+
@@ -1245,11 +1373,15 @@ function renderList(list){
         '<div class="row-right">'+
 
           '<div class="price">'+
-            money(c.price)+
+            money(
+              c.price
+            )+
           '</div>'+
 
           '<div>'+
-            pretty(c.nextDue)+
+            pretty(
+              c.nextDue
+            )+
           '</div>'+
 
           paidBtn+
@@ -1260,18 +1392,24 @@ function renderList(list){
 
 
       row.onclick=
-        ()=>selectClient(c.id);
+        ()=>
+          selectClient(
+            c.id
+          );
 
-      el.appendChild(row);
+
+      el.appendChild(
+        row
+      );
 
     }
   );
 }
 
 
-/* -------------------------
-   RECURRING UNPAID
-------------------------- */
+/* =========================
+   RECURRING UNPAID JOBS
+========================= */
 
 function renderRecurringUnpaidList(list){
 
@@ -1280,10 +1418,12 @@ function renderRecurringUnpaidList(list){
       "recurringUnpaidSection"
     );
 
+
   const el=
     document.getElementById(
       "recurringUnpaidList"
     );
+
 
   el.innerHTML="";
 
@@ -1292,7 +1432,9 @@ function renderRecurringUnpaidList(list){
 
     section
       .classList
-      .remove("active");
+      .remove(
+        "active"
+      );
 
     return;
   }
@@ -1300,14 +1442,19 @@ function renderRecurringUnpaidList(list){
 
   section
     .classList
-    .add("active");
+    .add(
+      "active"
+    );
 
 
   list.forEach(
     c=>{
 
       const row=
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       row.className=
         "row unpaid-row"+
@@ -1323,26 +1470,33 @@ function renderRecurringUnpaidList(list){
 
 
       const paidBtn=
+
         '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\''+
         c.id+
-        '\')">Paid</button>';
+        '\')">'+
+        'Paid'+
+        '</button>';
 
 
       const actions=
         isSelected
-        ?
-        '<div class="selected-actions">'+
+          ?
+          '<div class="selected-actions">'+
 
           '<button class="edit-small" onclick="event.stopPropagation();editClient(\''+
           c.id+
-          '\')">Edit</button>'+
+          '\')">'+
+          'Edit'+
+          '</button>'+
 
           '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\''+
           c.id+
-          '\')">Paid</button>'+
+          '\')">'+
+          'Paid'+
+          '</button>'+
 
-        '</div>'
-        :"";
+          '</div>'
+          :"";
 
 
       row.innerHTML=
@@ -1350,12 +1504,16 @@ function renderRecurringUnpaidList(list){
         '<div>'+
 
           '<div class="row-title">'+
-            esc(c.name)+
+            esc(
+              c.name
+            )+
           '</div>'+
 
           '<div class="row-sub">'+
 
-            esc(c.suburb)+
+            esc(
+              c.suburb
+            )+
 
             ' · '+
 
@@ -1369,8 +1527,13 @@ function renderRecurringUnpaidList(list){
 
             (
               c.notes
-                ?' · '+esc(c.notes)
-                :''
+                ?
+                ' · '+
+                esc(
+                  c.notes
+                )
+                :
+                ''
             )+
 
           '</div>'+
@@ -1380,7 +1543,9 @@ function renderRecurringUnpaidList(list){
         '<div class="row-right">'+
 
           '<div class="price">'+
-            money(c.price)+
+            money(
+              c.price
+            )+
           '</div>'+
 
           '<div>Unpaid</div>'+
@@ -1393,18 +1558,24 @@ function renderRecurringUnpaidList(list){
 
 
       row.onclick=
-        ()=>selectClient(c.id);
+        ()=>
+          selectClient(
+            c.id
+          );
 
-      el.appendChild(row);
+
+      el.appendChild(
+        row
+      );
 
     }
   );
 }
 
 
-/* -------------------------
-   ONE-OFF UNPAID
-------------------------- */
+/* =========================
+   ONE-OFF UNPAID JOBS
+========================= */
 
 function renderUnpaidList(list){
 
@@ -1413,10 +1584,12 @@ function renderUnpaidList(list){
       "unpaidSection"
     );
 
+
   const el=
     document.getElementById(
       "unpaidList"
     );
+
 
   el.innerHTML="";
 
@@ -1425,7 +1598,9 @@ function renderUnpaidList(list){
 
     section
       .classList
-      .remove("active");
+      .remove(
+        "active"
+      );
 
     return;
   }
@@ -1433,14 +1608,19 @@ function renderUnpaidList(list){
 
   section
     .classList
-    .add("active");
+    .add(
+      "active"
+    );
 
 
   list.forEach(
     c=>{
 
       const row=
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       row.className=
         "row"+
@@ -1456,26 +1636,33 @@ function renderUnpaidList(list){
 
 
       const paidBtn=
+
         '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\''+
         c.id+
-        '\')">Paid</button>';
+        '\')">'+
+        'Paid'+
+        '</button>';
 
 
       const actions=
         isSelected
-        ?
-        '<div class="selected-actions">'+
+          ?
+          '<div class="selected-actions">'+
 
           '<button class="edit-small" onclick="event.stopPropagation();editClient(\''+
           c.id+
-          '\')">Edit</button>'+
+          '\')">'+
+          'Edit'+
+          '</button>'+
 
           '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\''+
           c.id+
-          '\')">Paid</button>'+
+          '\')">'+
+          'Paid'+
+          '</button>'+
 
-        '</div>'
-        :"";
+          '</div>'
+          :"";
 
 
       row.innerHTML=
@@ -1483,20 +1670,30 @@ function renderUnpaidList(list){
         '<div>'+
 
           '<div class="row-title">'+
-            esc(c.name)+
+            esc(
+              c.name
+            )+
           '</div>'+
 
           '<div class="row-sub">'+
 
-            esc(c.suburb)+
+            esc(
+              c.suburb
+            )+
 
             ' · Finished · '+
+
             '<span class="oneoff-tag">ONE-OFF</span>'+
 
             (
               c.notes
-                ?' · '+esc(c.notes)
-                :''
+                ?
+                ' · '+
+                esc(
+                  c.notes
+                )
+                :
+                ''
             )+
 
           '</div>'+
@@ -1506,7 +1703,9 @@ function renderUnpaidList(list){
         '<div class="row-right">'+
 
           '<div class="price">'+
-            money(c.price)+
+            money(
+              c.price
+            )+
           '</div>'+
 
           '<div>Unpaid</div>'+
@@ -1519,18 +1718,24 @@ function renderUnpaidList(list){
 
 
       row.onclick=
-        ()=>selectClient(c.id);
+        ()=>
+          selectClient(
+            c.id
+          );
 
-      el.appendChild(row);
+
+      el.appendChild(
+        row
+      );
 
     }
   );
 }
 
 
-/* -------------------------
-   SELECT CLIENT
-------------------------- */
+/* =========================
+   SELECT
+========================= */
 
 function selectClient(id){
 
@@ -1539,22 +1744,26 @@ function selectClient(id){
       ?null
       :id;
 
+
   render();
 }
 
 
-/* -------------------------
-   FINISH JOB
-------------------------- */
+/* =========================
+   FINISHED
+========================= */
 
 function finishClient(id){
 
   const c=
     clients.find(
-      x=>x.id===id
+      x=>
+        x.id===id
     );
 
+
   if(!c){
+
     return;
   }
 
@@ -1562,6 +1771,7 @@ function finishClient(id){
   lastFinish={
 
     id:c.id,
+
     name:c.name,
 
     nextDue:
@@ -1576,7 +1786,8 @@ function finishClient(id){
     type:
       c.type,
 
-    action:"finish"
+    action:
+      "finish"
 
   };
 
@@ -1584,14 +1795,18 @@ function finishClient(id){
   if(c.type==="oneoff"){
 
     c.finished=true;
+
     c.paid=false;
 
   }else{
 
     /*
-      Recurring client:
-      finished today,
-      next date is TODAY + cycle.
+      IMPORTANT RULE:
+
+      Every time Finished is clicked,
+      the new due date is:
+
+      TODAY + CLIENT CYCLE
     */
 
     c.nextDue=
@@ -1602,12 +1817,14 @@ function finishClient(id){
         )
       );
 
+
     c.paid=false;
 
   }
 
 
   selectedClientId=null;
+
 
   save();
 
@@ -1621,26 +1838,31 @@ function finishClient(id){
 }
 
 
-/* -------------------------
+/* =========================
    EDIT CLIENT
-------------------------- */
+========================= */
 
 function editClient(id){
 
   const c=
     clients.find(
-      x=>x.id===id
+      x=>
+        x.id===id
     );
 
+
   if(!c){
+
     return;
   }
 
 
   editingId=id;
 
+
   formMode=
-    c.type||"recurring";
+    c.type||
+    "recurring";
 
 
   formTitle.textContent=
@@ -1660,108 +1882,153 @@ function editClient(id){
   nameInput.value=
     c.name;
 
+
   suburbInput.value=
     c.suburb;
+
 
   priceInput.value=
     c.price;
 
+
   cycleInput.value=
-    c.cycle||30;
+    c.cycle||
+    30;
+
 
   dueInput.value=
     c.nextDue;
 
+
   notesInput.value=
-    c.notes||"";
+    c.notes||
+    "";
 
 
   deleteClient.style.display=
     "block";
 
 
-  show("formScreen");
+  show(
+    "formScreen"
+  );
 }
 
 
-/* -------------------------
+/* =========================
    ADD CLIENT
-------------------------- */
+========================= */
 
 function addClient(){
 
   editingId=null;
 
-  formMode="recurring";
+
+  formMode=
+    "recurring";
+
 
   formTitle.textContent=
     "Add Client";
 
+
   cycleField
     .classList
-    .remove("hidden-field");
+    .remove(
+      "hidden-field"
+    );
+
 
   nameInput.value="";
+
   suburbInput.value="";
+
   priceInput.value="";
+
   cycleInput.value="14";
 
   dueInput.value=
-    iso(today());
+    iso(
+      today()
+    );
 
   notesInput.value="";
+
 
   deleteClient.style.display=
     "none";
 
-  show("formScreen");
+
+  show(
+    "formScreen"
+  );
 }
 
 
-/* -------------------------
+/* =========================
    ADD ONE-OFF
-------------------------- */
+========================= */
 
 function addOneOff(){
 
   editingId=null;
 
-  formMode="oneoff";
+
+  formMode=
+    "oneoff";
+
 
   formTitle.textContent=
     "Add One-off Job";
 
+
   cycleField
     .classList
-    .add("hidden-field");
+    .add(
+      "hidden-field"
+    );
+
 
   nameInput.value="";
+
   suburbInput.value="";
+
   priceInput.value="";
+
   cycleInput.value="30";
 
   dueInput.value=
-    iso(today());
+    iso(
+      today()
+    );
 
   notesInput.value="";
+
 
   deleteClient.style.display=
     "none";
 
-  show("formScreen");
+
+  show(
+    "formScreen"
+  );
 }
 
 
-/* -------------------------
-   SAVE CLIENT FORM
-------------------------- */
+/* =========================
+   SAVE CLIENT
+========================= */
 
 function saveClientForm(){
 
   const name=
-    nameInput.value.trim();
+    nameInput
+      .value
+      .trim();
+
 
   if(!name){
+
     return;
   }
 
@@ -1778,20 +2045,25 @@ function saveClientForm(){
     price:
       Number(
         priceInput.value
-      )||0,
+      )||
+      0,
 
     cycle:
       formMode==="oneoff"
         ?0
-        :(
+        :
+        (
           Number(
             cycleInput.value
-          )||14
+          )||
+          14
         ),
 
     nextDue:
       dueInput.value||
-      iso(today()),
+      iso(
+        today()
+      ),
 
     notes:
       notesInput
@@ -1808,11 +2080,18 @@ function saveClientForm(){
 
     const c=
       clients.find(
-        x=>x.id===editingId
+        x=>
+          x.id===editingId
       );
 
+
     if(c){
-      Object.assign(c,data);
+
+      Object.assign(
+        c,
+        data
+      );
+
     }
 
   }else{
@@ -1822,7 +2101,9 @@ function saveClientForm(){
       id:
         crypto.randomUUID
           ?crypto.randomUUID()
-          :String(Date.now()),
+          :String(
+            Date.now()
+          ),
 
       paid:
         formMode==="oneoff"
@@ -1842,17 +2123,20 @@ function saveClientForm(){
 
   render();
 
-  show("homeScreen");
+  show(
+    "homeScreen"
+  );
 }
 
 
-/* -------------------------
+/* =========================
    DELETE CLIENT
-------------------------- */
+========================= */
 
 function deleteClientForm(){
 
   if(!editingId){
+
     return;
   }
 
@@ -1862,37 +2146,45 @@ function deleteClientForm(){
       "Delete this client?"
     )
   ){
+
     return;
   }
 
 
   clients=
     clients.filter(
-      c=>c.id!==editingId
+      c=>
+        c.id!==editingId
     );
 
 
   if(
-    lastFinish &&
+    lastFinish
+    &&
     lastFinish.id===editingId
   ){
+
     lastFinish=null;
+
   }
 
 
   selectedClientId=null;
 
+
   save();
 
   render();
 
-  show("homeScreen");
+  show(
+    "homeScreen"
+  );
 }
 
 
-/* -------------------------
+/* =========================
    UNDO
-------------------------- */
+========================= */
 
 function renderUndo(){
 
@@ -1900,7 +2192,9 @@ function renderUndo(){
 
     undoBar
       .classList
-      .remove("active");
+      .remove(
+        "active"
+      );
 
     return;
   }
@@ -1908,7 +2202,7 @@ function renderUndo(){
 
   if(
     lastFinish.action===
-    "paidFinish"
+    "paid"
   ){
 
     undoText.textContent=
@@ -1926,20 +2220,25 @@ function renderUndo(){
 
   undoBar
     .classList
-    .add("active");
+    .add(
+      "active"
+    );
 }
 
 
 function undoLastFinish(){
 
   if(!lastFinish){
+
     return;
   }
 
 
   const c=
     clients.find(
-      x=>x.id===lastFinish.id
+      x=>
+        x.id===
+        lastFinish.id
     );
 
 
@@ -1948,8 +2247,10 @@ function undoLastFinish(){
     c.nextDue=
       lastFinish.nextDue;
 
+
     c.paid=
       lastFinish.paid;
+
 
     c.finished=
       lastFinish.finished;
@@ -1958,6 +2259,7 @@ function undoLastFinish(){
 
 
   lastFinish=null;
+
 
   save();
 
@@ -1973,17 +2275,20 @@ function dismissUndo(){
 }
 
 
-/* -------------------------
+/* =========================
    PAID POPUP
-------------------------- */
+========================= */
 
 function openPaidPopup(id){
 
   pendingPaidId=id;
 
+
   paidPopup
     .classList
-    .add("active");
+    .add(
+      "active"
+    );
 }
 
 
@@ -1991,16 +2296,18 @@ function closePaidPopup(){
 
   pendingPaidId=null;
 
+
   paidPopup
     .classList
-    .remove("active");
+    .remove(
+      "active"
+    );
 }
 
 
-/* -------------------------
-   PAID = FINISHED + PAID
-   FOR NORMAL RECURRING JOB
-------------------------- */
+/* =========================
+   PAID
+========================= */
 
 function markPaidYes(){
 
@@ -2014,33 +2321,40 @@ function markPaidYes(){
 
   const c=
     clients.find(
-      x=>x.id===pendingPaidId
+      x=>
+        x.id===
+        pendingPaidId
     );
 
 
   if(c){
 
     /*
-      ONE-OFF JOBS
+      ONE-OFF JOB
 
-      Preserve the original behaviour:
-      once a one-off job is paid,
-      it is removed.
+      Same behaviour as before:
+      once paid, remove it.
     */
 
     if(c.type==="oneoff"){
 
       clients=
         clients.filter(
-          x=>x.id!==pendingPaidId
+          x=>
+            x.id!==
+            pendingPaidId
         );
 
 
       if(
-        lastFinish &&
-        lastFinish.id===pendingPaidId
+        lastFinish
+        &&
+        lastFinish.id===
+        pendingPaidId
       ){
+
         lastFinish=null;
+
       }
 
 
@@ -2050,77 +2364,64 @@ function markPaidYes(){
 
       /*
         RECURRING CLIENT
+
+        IMPORTANT RULE:
+
+        EVERY time Paid -> Yes is clicked,
+        it counts as the job being finished
+        on TODAY'S date.
+
+        The new due date is always:
+
+        TODAY + CLIENT CYCLE
+
+        Example:
+        30-day client
+        Paid on 14 Aug
+        = next due 13 Sep
+
+        Paid again on 15 Aug
+        = next due 14 Sep
       */
 
 
-      if(c.paid){
+      lastFinish={
 
-        /*
-          Client is currently in NORMAL JOBS.
+        id:c.id,
 
-          Clicking Paid now means:
+        name:c.name,
 
-          1. Job was finished.
-          2. Job was paid.
-          3. Next due date = today + cycle.
-          4. Client stays paid.
-          5. Undo can restore the old position.
-        */
+        nextDue:
+          c.nextDue,
 
+        paid:
+          c.paid,
 
-        lastFinish={
+        finished:
+          c.finished,
 
-          id:c.id,
-          name:c.name,
+        type:
+          c.type,
 
-          nextDue:
-            c.nextDue,
+        action:
+          "paid"
 
-          paid:
-            c.paid,
-
-          finished:
-            c.finished,
-
-          type:
-            c.type,
-
-          action:
-            "paidFinish"
-
-        };
+      };
 
 
-        c.nextDue=
-          iso(
-            addDays(
-              today(),
-              c.cycle
-            )
-          );
+      c.nextDue=
+        iso(
+          addDays(
+            today(),
+            c.cycle
+          )
+        );
 
 
-        c.paid=true;
+      c.paid=true;
 
-        selectedClientId=null;
 
-      }else{
-
-        /*
-          Client is already in UNPAID JOBS.
-
-          Finished was already pressed earlier.
-
-          Do NOT move their date again.
-
-          Just mark the finished job as paid.
-        */
-
-        c.paid=true;
-
-        selectedClientId=null;
-
-      }
+      selectedClientId=null;
 
     }
 
@@ -2142,41 +2443,52 @@ function markPaidYes(){
 }
 
 
-/* -------------------------
-   BUTTON EVENTS
-------------------------- */
+/* =========================
+   BUTTONS
+========================= */
 
 addClientTop.onclick=
   addClient;
 
+
 addOneOffTop.onclick=
   addOneOff;
 
+
 backHome.onclick=
-  ()=>show("homeScreen");
+  ()=>
+    show(
+      "homeScreen"
+    );
+
 
 saveClient.onclick=
   saveClientForm;
 
+
 deleteClient.onclick=
   deleteClientForm;
+
 
 paidYesBtn.onclick=
   markPaidYes;
 
+
 paidNoBtn.onclick=
   closePaidPopup;
 
+
 undoBtn.onclick=
   undoLastFinish;
+
 
 undoCloseBtn.onclick=
   dismissUndo;
 
 
-/* -------------------------
-   START APP
-------------------------- */
+/* =========================
+   START
+========================= */
 
 load();
 
