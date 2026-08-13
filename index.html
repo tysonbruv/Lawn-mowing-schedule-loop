@@ -556,6 +556,7 @@ textarea{
 }
 
 @media(max-width:620px){
+
   body{
     padding:0;
   }
@@ -586,12 +587,14 @@ textarea{
 <section id="homeScreen" class="screen active">
 
 <div class="top">
+
   <div></div>
 
   <div class="top-buttons">
     <button class="small-btn" id="addClientTop">+ Client</button>
     <button class="small-btn" id="addOneOffTop">+ One-off</button>
   </div>
+
 </div>
 
 <div class="today-line">
@@ -600,30 +603,48 @@ textarea{
 </div>
 
 <div class="undo-bar" id="undoBar">
+
   <span id="undoText">Job finished.</span>
 
   <div class="undo-actions">
     <button id="undoBtn">Undo</button>
     <button class="undo-close" id="undoCloseBtn">X</button>
   </div>
+
 </div>
 
-<div class="section-title">NORMAL JOBS</div>
+
+<div class="section-title">
+  NORMAL JOBS
+</div>
 
 <div id="clientList" class="list"></div>
 
+
 <div id="recurringUnpaidSection" class="unpaid-section">
-  <div class="section-title">UNPAID JOBS</div>
+
+  <div class="section-title">
+    UNPAID JOBS
+  </div>
+
   <div id="recurringUnpaidList" class="list"></div>
+
 </div>
+
 
 <div id="unpaidSection" class="unpaid-section">
-  <div class="section-title">ONE-OFF UNPAID JOBS</div>
+
+  <div class="section-title">
+    ONE-OFF UNPAID JOBS
+  </div>
+
   <div id="unpaidList" class="list"></div>
+
 </div>
 
+
 <div class="footer-note">
-  Finished = job done and unpaid. Paid = job done and paid. Both reset the repeat cycle from today.
+  Finished = job done, payment still owing. Paid from Normal Jobs = job done + paid. Paying an Unpaid Job does not change its next date.
 </div>
 
 </section>
@@ -634,61 +655,141 @@ textarea{
 <div class="top">
 
   <div>
-    <h1 id="formTitle">Add Client</h1>
-    <h3>Keep it simple</h3>
+
+    <h1 id="formTitle">
+      Add Client
+    </h1>
+
+    <h3>
+      Keep it simple
+    </h3>
+
   </div>
 
-  <button class="small-btn" id="backHome">Back</button>
+  <button class="small-btn" id="backHome">
+    Back
+  </button>
 
 </div>
+
 
 <div class="form-grid">
 
 <div class="field">
-  <label>Name</label>
-  <input id="nameInput" placeholder="Mary" />
+
+  <label>
+    Name
+  </label>
+
+  <input
+    id="nameInput"
+    placeholder="Mary"
+  />
+
 </div>
 
-<div class="field">
-  <label>Suburb</label>
-  <input id="suburbInput" placeholder="Blacktown" />
-</div>
 
 <div class="field">
-  <label>Price $</label>
-  <input id="priceInput" type="number" placeholder="70" />
+
+  <label>
+    Suburb
+  </label>
+
+  <input
+    id="suburbInput"
+    placeholder="Blacktown"
+  />
+
 </div>
+
+
+<div class="field">
+
+  <label>
+    Price $
+  </label>
+
+  <input
+    id="priceInput"
+    type="number"
+    placeholder="70"
+  />
+
+</div>
+
 
 <div class="field" id="cycleField">
-  <label>Repeat every</label>
+
+  <label>
+    Repeat every
+  </label>
 
   <select id="cycleInput">
-    <option value="7">7 days</option>
-    <option value="14">14 days</option>
-    <option value="21">21 days</option>
-    <option value="28">28 days</option>
-    <option value="30">30 days</option>
-    <option value="50">50 days</option>
+
+    <option value="7">
+      7 days
+    </option>
+
+    <option value="14">
+      14 days
+    </option>
+
+    <option value="21">
+      21 days
+    </option>
+
+    <option value="28">
+      28 days
+    </option>
+
+    <option value="30">
+      30 days
+    </option>
+
+    <option value="50">
+      50 days
+    </option>
+
   </select>
+
 </div>
+
 
 <div class="field">
-  <label>Next due date</label>
-  <input id="dueInput" type="date" />
+
+  <label>
+    Next due date
+  </label>
+
+  <input
+    id="dueInput"
+    type="date"
+  />
+
 </div>
 
+
 <div class="field full">
-  <label>Notes</label>
+
+  <label>
+    Notes
+  </label>
+
   <textarea
     id="notesInput"
     placeholder="Gate code, dog, green bin, cash, etc."
   ></textarea>
+
 </div>
 
 </div>
+
 
 <div class="form-actions">
-  <button class="main-btn" id="saveClient">Save Client</button>
+
+  <button class="main-btn" id="saveClient">
+    Save Client
+  </button>
 
   <button
     class="danger-btn"
@@ -697,6 +798,7 @@ textarea{
   >
     Delete Client
   </button>
+
 </div>
 
 </section>
@@ -706,11 +808,20 @@ textarea{
 
   <div class="paid-box">
 
-    <div class="paid-title">Paid?</div>
+    <div class="paid-title">
+      Paid?
+    </div>
 
     <div class="paid-actions">
-      <button class="yes-btn" id="paidYesBtn">Yes</button>
-      <button class="no-btn" id="paidNoBtn">No</button>
+
+      <button class="yes-btn" id="paidYesBtn">
+        Yes
+      </button>
+
+      <button class="no-btn" id="paidNoBtn">
+        No
+      </button>
+
     </div>
 
   </div>
@@ -725,17 +836,22 @@ textarea{
 const STORAGE_KEY="lawnLoop.clients.v1";
 
 let clients=[];
+
 let editingId=null;
+
 let selectedClientId=null;
+
 let pendingPaidId=null;
+
 let lastFinish=null;
+
 let formMode="recurring";
 
 const starter=[];
 
 
 /* =========================
-   DATES
+   DATE FUNCTIONS
 ========================= */
 
 function today(){
@@ -841,6 +957,7 @@ function dueText(s){
   const d=
     daysUntil(s);
 
+
   if(d<0){
 
     return (
@@ -856,17 +973,20 @@ function dueText(s){
 
   }
 
+
   if(d===0){
 
     return "Due today";
 
   }
 
+
   if(d===1){
 
     return "Tomorrow";
 
   }
+
 
   return "In "+d+" days";
 }
@@ -1134,7 +1254,7 @@ function show(id){
 
 
 /* =========================
-   MAIN RENDER
+   RENDER
 ========================= */
 
 function render(){
@@ -1408,7 +1528,7 @@ function renderList(list){
 
 
 /* =========================
-   RECURRING UNPAID JOBS
+   RECURRING UNPAID
 ========================= */
 
 function renderRecurringUnpaidList(list){
@@ -1574,7 +1694,7 @@ function renderRecurringUnpaidList(list){
 
 
 /* =========================
-   ONE-OFF UNPAID JOBS
+   ONE-OFF UNPAID
 ========================= */
 
 function renderUnpaidList(list){
@@ -1734,7 +1854,7 @@ function renderUnpaidList(list){
 
 
 /* =========================
-   SELECT
+   SELECT CLIENT
 ========================= */
 
 function selectClient(id){
@@ -1801,12 +1921,12 @@ function finishClient(id){
   }else{
 
     /*
-      IMPORTANT RULE:
+      RECURRING CLIENT
 
-      Every time Finished is clicked,
-      the new due date is:
-
-      TODAY + CLIENT CYCLE
+      FINISHED means:
+      - job completed today
+      - payment still owing
+      - new cycle starts today
     */
 
     c.nextDue=
@@ -1923,9 +2043,7 @@ function addClient(){
 
   editingId=null;
 
-
-  formMode=
-    "recurring";
+  formMode="recurring";
 
 
   formTitle.textContent=
@@ -1973,9 +2091,7 @@ function addOneOff(){
 
   editingId=null;
 
-
-  formMode=
-    "oneoff";
+  formMode="oneoff";
 
 
   formTitle.textContent=
@@ -2202,12 +2318,21 @@ function renderUndo(){
 
   if(
     lastFinish.action===
-    "paid"
+    "paidFinish"
   ){
 
     undoText.textContent=
       lastFinish.name+
       " paid + finished. Undo?";
+
+  }else if(
+    lastFinish.action===
+    "paidOnly"
+  ){
+
+    undoText.textContent=
+      lastFinish.name+
+      " marked paid. Undo?";
 
   }else{
 
@@ -2332,8 +2457,8 @@ function markPaidYes(){
     /*
       ONE-OFF JOB
 
-      Same behaviour as before:
-      once paid, remove it.
+      Once a completed one-off is paid,
+      remove it from the list.
     */
 
     if(c.type==="oneoff"){
@@ -2364,64 +2489,111 @@ function markPaidYes(){
 
       /*
         RECURRING CLIENT
-
-        IMPORTANT RULE:
-
-        EVERY time Paid -> Yes is clicked,
-        it counts as the job being finished
-        on TODAY'S date.
-
-        The new due date is always:
-
-        TODAY + CLIENT CYCLE
-
-        Example:
-        30-day client
-        Paid on 14 Aug
-        = next due 13 Sep
-
-        Paid again on 15 Aug
-        = next due 14 Sep
       */
 
 
-      lastFinish={
+      if(c.paid){
 
-        id:c.id,
+        /*
+          CLIENT IS IN NORMAL JOBS
 
-        name:c.name,
+          Paid means:
 
-        nextDue:
-          c.nextDue,
+          1. Job was completed today.
+          2. Client paid today.
+          3. New due date = TODAY + cycle.
+          4. Client stays in Normal Jobs.
+        */
 
-        paid:
-          c.paid,
+        lastFinish={
 
-        finished:
-          c.finished,
+          id:c.id,
 
-        type:
-          c.type,
+          name:c.name,
 
-        action:
-          "paid"
+          nextDue:
+            c.nextDue,
 
-      };
+          paid:
+            c.paid,
 
+          finished:
+            c.finished,
 
-      c.nextDue=
-        iso(
-          addDays(
-            today(),
-            c.cycle
-          )
-        );
+          type:
+            c.type,
 
+          action:
+            "paidFinish"
 
-      c.paid=true;
+        };
 
 
-      selectedClientId=null;
+        c.nextDue=
+          iso(
+            addDays(
+              today(),
+              c.cycle
+            )
+          );
+
+
+        c.paid=true;
+
+
+        selectedClientId=null;
+
+      }else{
+
+        /*
+          CLIENT IS ALREADY IN UNPAID JOBS
+
+          Finished was already pressed earlier.
+
+          Their mowing cycle was already reset
+          on the day the lawn was actually done.
+
+          Paid now ONLY means money was received.
+
+          DO NOT CHANGE nextDue.
+        */
+
+        lastFinish={
+
+          id:c.id,
+
+          name:c.name,
+
+          nextDue:
+            c.nextDue,
+
+          paid:
+            c.paid,
+
+          finished:
+            c.finished,
+
+          type:
+            c.type,
+
+          action:
+            "paidOnly"
+
+        };
+
+
+        c.paid=true;
+
+
+        /*
+          IMPORTANT:
+          NO nextDue calculation here.
+        */
+
+
+        selectedClientId=null;
+
+      }
 
     }
 
@@ -2444,7 +2616,7 @@ function markPaidYes(){
 
 
 /* =========================
-   BUTTONS
+   BUTTON EVENTS
 ========================= */
 
 addClientTop.onclick=
