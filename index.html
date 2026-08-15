@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
 
 <title>Lawn Schedule</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 :root{
   --bg:#0e0e0e;
   --panel:#161616;
@@ -135,6 +140,22 @@ button{
 }
 
 
+/* SEARCH */
+
+.search-wrap{
+  margin:10px 0 12px;
+}
+
+.search-input{
+  background:#0f0f0f;
+  color:var(--text);
+  border:1px solid #333;
+  border-radius:8px;
+  padding:10px 12px;
+  width:100%;
+}
+
+
 /* BACKUP STATUS */
 
 .backup-strip{
@@ -142,7 +163,7 @@ button{
   color:var(--muted2);
   font-size:12px;
   min-height:18px;
-  margin-bottom:14px;
+  margin-bottom:12px;
 }
 
 .backup-strip.good{
@@ -201,7 +222,7 @@ button{
 }
 
 
-/* JOB LIST */
+/* LIST */
 
 .section-title{
   color:var(--muted);
@@ -352,7 +373,7 @@ button{
 }
 
 
-/* PAID POPUP */
+/* POPUP */
 
 .paid-pop{
   display:none;
@@ -468,6 +489,24 @@ textarea{
   margin-top:14px;
 }
 
+.last-completed-box{
+  display:none;
+  background:#101010;
+  border:1px solid #292929;
+  border-radius:8px;
+  padding:10px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.last-completed-box.active{
+  display:block;
+}
+
+.last-completed-box strong{
+  color:var(--text);
+}
+
 .footer-note{
   color:var(--muted2);
   font-size:12px;
@@ -564,6 +603,24 @@ textarea{
   color:var(--orange);
 }
 
+.text-button{
+  border:0;
+  background:none;
+  color:var(--muted);
+  padding:8px 0;
+  margin-top:4px;
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+.account-danger{
+  border-top:1px solid #2a2a2a;
+  margin-top:18px;
+  padding-top:18px;
+}
+
+
+/* MOBILE */
 
 @media(max-width:620px){
 
@@ -597,95 +654,149 @@ textarea{
 
 <!-- HOME -->
 
-<section id="homeScreen" class="screen active">
+<section
+  id="homeScreen"
+  class="screen active"
+>
 
-  <div class="top home-top">
+<div class="top home-top">
 
-    <div class="top-buttons">
+  <div class="top-buttons">
 
-      <button class="small-btn" id="backupTop">
-        Backup
-      </button>
+    <button
+      class="small-btn"
+      id="backupTop"
+    >
+      Backup
+    </button>
 
-      <button class="small-btn" id="addClientTop">
-        + Client
-      </button>
+    <button
+      class="small-btn"
+      id="addClientTop"
+    >
+      + Client
+    </button>
 
-      <button class="small-btn" id="addOneOffTop">
-        + One-off
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <div class="today-line">
-    Date today:
-    <span id="todayDateText"></span>
-  </div>
-
-
-  <div class="backup-strip" id="backupStrip">
-    Saved on this device
-  </div>
-
-
-  <div class="undo-bar" id="undoBar">
-
-    <span id="undoText">
-      Job finished.
-    </span>
-
-    <div class="undo-actions">
-
-      <button id="undoBtn">
-        Undo
-      </button>
-
-      <button class="undo-close" id="undoCloseBtn">
-        X
-      </button>
-
-    </div>
+    <button
+      class="small-btn"
+      id="addOneOffTop"
+    >
+      + One-off
+    </button>
 
   </div>
 
+</div>
+
+
+<div class="today-line">
+
+  Date today:
+
+  <span id="todayDateText"></span>
+
+</div>
+
+
+<div
+  class="backup-strip"
+  id="backupStrip"
+>
+  Saved on this device
+</div>
+
+
+<div class="search-wrap">
+
+  <input
+    id="searchInput"
+    class="search-input"
+    type="search"
+    placeholder="Search name or suburb"
+    autocomplete="off"
+  />
+
+</div>
+
+
+<div
+  class="undo-bar"
+  id="undoBar"
+>
+
+  <span id="undoText">
+    Job finished.
+  </span>
+
+  <div class="undo-actions">
+
+    <button id="undoBtn">
+      Undo
+    </button>
+
+    <button
+      class="undo-close"
+      id="undoCloseBtn"
+    >
+      X
+    </button>
+
+  </div>
+
+</div>
+
+
+<div class="section-title">
+  NORMAL JOBS
+</div>
+
+<div
+  id="clientList"
+  class="list"
+></div>
+
+
+<div
+  id="recurringUnpaidSection"
+  class="unpaid-section"
+>
 
   <div class="section-title">
-    NORMAL JOBS
+    UNPAID JOBS
   </div>
 
-  <div id="clientList" class="list"></div>
+  <div
+    id="recurringUnpaidList"
+    class="list"
+  ></div>
+
+</div>
 
 
-  <div id="recurringUnpaidSection" class="unpaid-section">
+<div
+  id="unpaidSection"
+  class="unpaid-section"
+>
 
-    <div class="section-title">
-      UNPAID JOBS
-    </div>
-
-    <div id="recurringUnpaidList" class="list"></div>
-
+  <div class="section-title">
+    ONE-OFF UNPAID JOBS
   </div>
 
+  <div
+    id="unpaidList"
+    class="list"
+  ></div>
 
-  <div id="unpaidSection" class="unpaid-section">
-
-    <div class="section-title">
-      ONE-OFF UNPAID JOBS
-    </div>
-
-    <div id="unpaidList" class="list"></div>
-
-  </div>
+</div>
 
 
-  <div class="footer-note">
-    Finished = job done, payment still owing.
-    Paid from Normal Jobs = job done + paid.
-    Paying an Unpaid Job does not change its next mowing date.
-  </div>
+<div class="footer-note">
+
+  Finished = job done, payment still owing.
+  Paid from Normal Jobs = job done + paid.
+  Paying an Unpaid Job does not change its next mowing date.
+
+</div>
 
 </section>
 
@@ -693,284 +804,427 @@ textarea{
 
 <!-- CLIENT FORM -->
 
-<section id="formScreen" class="screen">
+<section
+  id="formScreen"
+  class="screen"
+>
 
-  <div class="top">
+<div class="top">
 
-    <div>
+  <div>
 
-      <h1 id="formTitle">
-        Add Client
-      </h1>
+    <h1 id="formTitle">
+      Add Client
+    </h1>
 
-      <h3>
-        Keep it simple
-      </h3>
-
-    </div>
-
-    <button class="small-btn" id="backHome">
-      Back
-    </button>
+    <h3>
+      Keep it simple
+    </h3>
 
   </div>
 
+  <button
+    class="small-btn"
+    id="backHome"
+  >
+    Back
+  </button>
 
-  <div class="form-grid">
-
-    <div class="field">
-
-      <label>
-        Name
-      </label>
-
-      <input
-        id="nameInput"
-        placeholder="Mary"
-      />
-
-    </div>
+</div>
 
 
-    <div class="field">
-
-      <label>
-        Suburb
-      </label>
-
-      <input
-        id="suburbInput"
-        placeholder="Blacktown"
-      />
-
-    </div>
+<div class="form-grid">
 
 
-    <div class="field">
+<div class="field">
 
-      <label>
-        Price $
-      </label>
+  <label>
+    Name
+  </label>
 
-      <input
-        id="priceInput"
-        type="number"
-        placeholder="70"
-      />
+  <input
+    id="nameInput"
+    placeholder="Mary"
+  />
 
-    </div>
-
-
-    <div class="field" id="cycleField">
-
-      <label>
-        Repeat every
-      </label>
-
-      <select id="cycleInput">
-
-        <option value="7">
-          7 days
-        </option>
-
-        <option value="14">
-          14 days
-        </option>
-
-        <option value="21">
-          21 days
-        </option>
-
-        <option value="28">
-          28 days
-        </option>
-
-        <option value="30">
-          30 days
-        </option>
-
-        <option value="50">
-          50 days
-        </option>
-
-      </select>
-
-    </div>
+</div>
 
 
-    <div class="field">
+<div class="field">
 
-      <label>
-        Next due date
-      </label>
+  <label>
+    Suburb
+  </label>
 
-      <input
-        id="dueInput"
-        type="date"
-      />
+  <input
+    id="suburbInput"
+    placeholder="Blacktown"
+  />
 
-    </div>
-
-
-    <div class="field full">
-
-      <label>
-        Notes
-      </label>
-
-      <textarea
-        id="notesInput"
-        placeholder="Gate code, dog, green bin, cash, etc."
-      ></textarea>
-
-    </div>
-
-  </div>
+</div>
 
 
-  <div class="form-actions">
+<div class="field">
 
-    <button class="main-btn" id="saveClient">
-      Save Client
-    </button>
+  <label>
+    Price $
+  </label>
 
-    <button
-      class="danger-btn"
-      id="deleteClient"
-      style="display:none"
-    >
-      Delete Client
-    </button>
+  <input
+    id="priceInput"
+    type="number"
+    placeholder="70"
+  />
+
+</div>
+
+
+<div
+  class="field"
+  id="cycleField"
+>
+
+  <label>
+    Repeat every
+  </label>
+
+  <select id="cycleInput">
+
+    <option value="7">
+      7 days
+    </option>
+
+    <option value="14">
+      14 days
+    </option>
+
+    <option value="21">
+      21 days
+    </option>
+
+    <option value="28">
+      28 days
+    </option>
+
+    <option value="30">
+      30 days
+    </option>
+
+    <option value="50">
+      50 days
+    </option>
+
+  </select>
+
+</div>
+
+
+<div class="field">
+
+  <label>
+    Next due date
+  </label>
+
+  <input
+    id="dueInput"
+    type="date"
+  />
+
+</div>
+
+
+<div class="field full">
+
+  <div
+    id="lastCompletedBox"
+    class="last-completed-box"
+  >
+
+    Last completed:
+
+    <strong id="lastCompletedText"></strong>
 
   </div>
+
+</div>
+
+
+<div class="field full">
+
+  <label>
+    Notes
+  </label>
+
+  <textarea
+    id="notesInput"
+    placeholder="Gate code, dog, green bin, cash, etc."
+  ></textarea>
+
+</div>
+
+
+</div>
+
+
+<div class="form-actions">
+
+  <button
+    class="main-btn"
+    id="saveClient"
+  >
+    Save Client
+  </button>
+
+  <button
+    class="danger-btn"
+    id="deleteClient"
+    style="display:none"
+  >
+    Delete Client
+  </button>
+
+</div>
 
 </section>
 
 
 
-<!-- BACKUP SCREEN -->
+<!-- ACCOUNT -->
 
-<section id="accountScreen" class="screen">
+<section
+  id="accountScreen"
+  class="screen"
+>
 
-  <div class="top">
+<div class="top">
 
-    <div>
+  <div>
 
-      <h1>
-        Backup
-      </h1>
+    <h1>
+      Backup
+    </h1>
 
-      <h3>
-        Optional
-      </h3>
+    <h3>
+      Optional
+    </h3>
 
-    </div>
+  </div>
 
-    <button class="small-btn" id="backFromAccount">
-      Back
+  <button
+    class="small-btn"
+    id="backFromAccount"
+  >
+    Back
+  </button>
+
+</div>
+
+
+<!-- GUEST -->
+
+<div
+  id="guestAccount"
+  class="account-card"
+>
+
+  <div class="account-title">
+    Back up your schedule
+  </div>
+
+  <div class="account-text">
+
+    You do not need an account to use the app.
+
+    <br><br>
+
+    Your schedule already saves on this device.
+
+    <br><br>
+
+    Create an account if you want your schedule backed up
+    so it can be restored if you lose or replace your phone.
+
+  </div>
+
+
+  <div class="auth-fields">
+
+    <input
+      id="authEmail"
+      type="email"
+      autocomplete="email"
+      placeholder="Email"
+    />
+
+    <input
+      id="authPassword"
+      type="password"
+      autocomplete="current-password"
+      placeholder="Password"
+    />
+
+  </div>
+
+
+  <div class="auth-buttons">
+
+    <button
+      class="main-btn"
+      id="createAccountBtn"
+    >
+      Create Account
+    </button>
+
+    <button
+      class="small-btn"
+      id="signInBtn"
+    >
+      Sign In
     </button>
 
   </div>
 
 
-  <div id="guestAccount" class="account-card">
-
-    <div class="account-title">
-      Back up your schedule
-    </div>
-
-
-    <div class="account-text">
-
-      You do not need an account to use the app.
-
-      <br><br>
-
-      Your schedule already saves on this device.
-
-      <br><br>
-
-      Create an account if you want your schedule backed up so it can be restored if you lose or replace your phone.
-
-    </div>
-
-
-    <div class="auth-fields">
-
-      <input
-        id="authEmail"
-        type="email"
-        autocomplete="email"
-        placeholder="Email"
-      />
-
-      <input
-        id="authPassword"
-        type="password"
-        autocomplete="current-password"
-        placeholder="Password"
-      />
-
-    </div>
-
-
-    <div class="auth-buttons">
-
-      <button class="main-btn" id="createAccountBtn">
-        Create Account
-      </button>
-
-      <button class="small-btn" id="signInBtn">
-        Sign In
-      </button>
-
-    </div>
-
-
-    <div class="auth-message" id="authMessage"></div>
-
-  </div>
+  <button
+    class="text-button"
+    id="forgotPasswordBtn"
+  >
+    Forgot password?
+  </button>
 
 
   <div
-    id="signedAccount"
-    class="account-card"
-    style="display:none"
-  >
+    class="auth-message"
+    id="authMessage"
+  ></div>
 
-    <div class="account-title">
-      Schedule backup
-    </div>
-
-    <div class="account-text">
-      Signed in as:
-    </div>
-
-    <div class="account-email" id="signedEmail"></div>
-
-    <div class="account-sync" id="accountSyncText">
-      Checking backup...
-    </div>
+</div>
 
 
-    <div class="signed-actions">
 
-      <button class="main-btn" id="backupNowBtn">
-        Back Up Now
-      </button>
+<!-- PASSWORD RECOVERY -->
 
-      <button class="ghost-btn" id="signOutBtn">
-        Sign Out
-      </button>
+<div
+  id="passwordResetCard"
+  class="account-card"
+  style="display:none"
+>
 
-    </div>
+  <div class="account-title">
+    Set new password
+  </div>
 
+  <div class="account-text">
 
-    <div class="footer-note">
-      Signing out does not delete the schedule saved on this device.
-    </div>
+    Enter your new password.
 
   </div>
+
+
+  <div class="auth-fields">
+
+    <input
+      id="newPasswordInput"
+      type="password"
+      autocomplete="new-password"
+      placeholder="New password"
+    />
+
+  </div>
+
+
+  <button
+    class="main-btn"
+    id="updatePasswordBtn"
+    style="margin-top:10px"
+  >
+    Save New Password
+  </button>
+
+
+  <div
+    class="auth-message"
+    id="resetPasswordMessage"
+  ></div>
+
+</div>
+
+
+
+<!-- SIGNED IN -->
+
+<div
+  id="signedAccount"
+  class="account-card"
+  style="display:none"
+>
+
+  <div class="account-title">
+    Schedule backup
+  </div>
+
+  <div class="account-text">
+    Signed in as:
+  </div>
+
+  <div
+    class="account-email"
+    id="signedEmail"
+  ></div>
+
+  <div
+    class="account-sync"
+    id="accountSyncText"
+  >
+    Checking backup...
+  </div>
+
+
+  <div class="signed-actions">
+
+    <button
+      class="main-btn"
+      id="backupNowBtn"
+    >
+      Back Up Now
+    </button>
+
+    <button
+      class="ghost-btn"
+      id="signOutBtn"
+    >
+      Sign Out
+    </button>
+
+  </div>
+
+
+  <div class="account-danger">
+
+    <div class="account-text">
+
+      Deleting your account permanently removes
+      the cloud account and cloud backup.
+
+      <br><br>
+
+      The schedule already stored on this device
+      will remain here and the app can continue
+      working without an account.
+
+    </div>
+
+    <button
+      class="danger-btn"
+      id="deleteAccountBtn"
+      style="width:100%;margin-top:12px"
+    >
+      Delete Account
+    </button>
+
+  </div>
+
+</div>
 
 </section>
 
@@ -978,7 +1232,10 @@ textarea{
 
 <!-- PAID POPUP -->
 
-<div class="paid-pop" id="paidPopup">
+<div
+  class="paid-pop"
+  id="paidPopup"
+>
 
   <div class="paid-box">
 
@@ -988,11 +1245,17 @@ textarea{
 
     <div class="paid-actions">
 
-      <button class="yes-btn" id="paidYesBtn">
+      <button
+        class="yes-btn"
+        id="paidYesBtn"
+      >
         Yes
       </button>
 
-      <button class="no-btn" id="paidNoBtn">
+      <button
+        class="no-btn"
+        id="paidNoBtn"
+      >
         No
       </button>
 
@@ -1019,8 +1282,8 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_OEqAYDNJC95tCGrFo1qAag_E5AmaBe_";
 
-const CLOUD_TABLE =
-  "lawn_schedule_backups";
+const CLOUD_CLIENT_TABLE =
+  "lawn_schedule_clients";
 
 
 /* =========================================================
@@ -1030,14 +1293,11 @@ const CLOUD_TABLE =
 const STORAGE_KEY =
   "lawnLoop.clients.v1";
 
-const LOCAL_UPDATED_KEY =
-  "lawnLoop.localUpdated.v1";
-
-const LAST_SYNC_USER_KEY =
-  "lawnLoop.lastSyncUser.v1";
+const DELETED_KEY =
+  "lawnLoop.deletedClients.v2";
 
 const LAST_SYNC_AT_KEY =
-  "lawnLoop.lastSyncAt.v1";
+  "lawnLoop.lastSyncAt.v2";
 
 
 /* =========================================================
@@ -1046,16 +1306,22 @@ const LAST_SYNC_AT_KEY =
 
 let clients = [];
 
+let deletedClients = {};
+
 let editingId = null;
 
 let selectedClientId = null;
 
 let pendingPaidId = null;
 
-let lastFinish = null;
+let lastAction = null;
 
 let formMode = "recurring";
 
+let searchQuery = "";
+
+
+/* CLOUD */
 
 let supabaseClient = null;
 
@@ -1066,6 +1332,8 @@ let syncTimer = null;
 let syncInProgress = false;
 
 let syncAgain = false;
+
+let passwordRecoveryMode = false;
 
 
 /* =========================================================
@@ -1086,6 +1354,9 @@ const addClientTop =
 
 const addOneOffTop =
   document.getElementById("addOneOffTop");
+
+const searchInput =
+  document.getElementById("searchInput");
 
 const undoBar =
   document.getElementById("undoBar");
@@ -1114,6 +1385,8 @@ const unpaidSection =
 const unpaidList =
   document.getElementById("unpaidList");
 
+
+/* FORM */
 
 const formTitle =
   document.getElementById("formTitle");
@@ -1148,6 +1421,14 @@ const saveClientBtn =
 const deleteClientBtn =
   document.getElementById("deleteClient");
 
+const lastCompletedBox =
+  document.getElementById("lastCompletedBox");
+
+const lastCompletedText =
+  document.getElementById("lastCompletedText");
+
+
+/* PAID */
 
 const paidPopup =
   document.getElementById("paidPopup");
@@ -1159,6 +1440,8 @@ const paidNoBtn =
   document.getElementById("paidNoBtn");
 
 
+/* ACCOUNT */
+
 const backFromAccount =
   document.getElementById("backFromAccount");
 
@@ -1167,6 +1450,9 @@ const guestAccount =
 
 const signedAccount =
   document.getElementById("signedAccount");
+
+const passwordResetCard =
+  document.getElementById("passwordResetCard");
 
 const authEmail =
   document.getElementById("authEmail");
@@ -1179,6 +1465,9 @@ const createAccountBtn =
 
 const signInBtn =
   document.getElementById("signInBtn");
+
+const forgotPasswordBtn =
+  document.getElementById("forgotPasswordBtn");
 
 const authMessage =
   document.getElementById("authMessage");
@@ -1195,16 +1484,41 @@ const backupNowBtn =
 const signOutBtn =
   document.getElementById("signOutBtn");
 
+const deleteAccountBtn =
+  document.getElementById("deleteAccountBtn");
+
+const newPasswordInput =
+  document.getElementById("newPasswordInput");
+
+const updatePasswordBtn =
+  document.getElementById("updatePasswordBtn");
+
+const resetPasswordMessage =
+  document.getElementById("resetPasswordMessage");
+
 
 /* =========================================================
-   DATES
+   DATE FUNCTIONS
 ========================================================= */
+
+function nowStamp(){
+
+  return new Date().toISOString();
+
+}
+
 
 function today(){
 
-  const d = new Date();
+  const d =
+    new Date();
 
-  d.setHours(0,0,0,0);
+  d.setHours(
+    0,
+    0,
+    0,
+    0
+  );
 
   return d;
 
@@ -1226,12 +1540,17 @@ function todayPretty(){
 }
 
 
-function addDays(date,days){
+function addDays(
+  date,
+  days
+){
 
-  const d = new Date(date);
+  const d =
+    new Date(date);
 
   d.setDate(
-    d.getDate() + Number(days)
+    d.getDate() +
+    Number(days)
   );
 
   return d;
@@ -1247,12 +1566,18 @@ function iso(d){
   const m =
     String(
       d.getMonth()+1
-    ).padStart(2,"0");
+    ).padStart(
+      2,
+      "0"
+    );
 
   const day =
     String(
       d.getDate()
-    ).padStart(2,"0");
+    ).padStart(
+      2,
+      "0"
+    );
 
   return `${y}-${m}-${day}`;
 
@@ -1270,12 +1595,39 @@ function dateFromIso(s){
 
 function pretty(s){
 
-  return dateFromIso(s).toLocaleDateString(
+  if(!s){
+    return "";
+  }
+
+  return dateFromIso(
+    s
+  ).toLocaleDateString(
     "en-AU",
     {
       weekday:"short",
       day:"numeric",
       month:"short"
+    }
+  );
+
+}
+
+
+function prettyCompleted(s){
+
+  if(!s){
+    return "Never";
+  }
+
+  return dateFromIso(
+    s
+  ).toLocaleDateString(
+    "en-AU",
+    {
+      weekday:"short",
+      day:"numeric",
+      month:"short",
+      year:"numeric"
     }
   );
 
@@ -1332,7 +1684,11 @@ function dueText(s){
   }
 
 
-  return "In " + d + " days";
+  return (
+    "In " +
+    d +
+    " days"
+  );
 
 }
 
@@ -1403,7 +1759,8 @@ function makeId(){
 
   if(
     window.crypto &&
-    typeof window.crypto.randomUUID === "function"
+    typeof window.crypto.randomUUID ===
+    "function"
   ){
 
     return window.crypto.randomUUID();
@@ -1417,6 +1774,15 @@ function makeId(){
     Math.random()
       .toString(36)
       .slice(2)
+  );
+
+}
+
+
+function deepCopy(value){
+
+  return JSON.parse(
+    JSON.stringify(value)
   );
 
 }
@@ -1444,27 +1810,117 @@ function esc(s){
   return String(
     s || ""
   )
-  .replaceAll("&","&amp;")
-  .replaceAll("<","&lt;")
-  .replaceAll(">","&gt;")
-  .replaceAll('"',"&quot;")
-  .replaceAll("'","&#039;");
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "'",
+    "&#039;"
+  );
 
 }
 
 
 function sortClients(list){
 
-  return [...list].sort(
+  return [
+    ...list
+  ].sort(
     (a,b) =>
-      dateFromIso(a.nextDue) -
-      dateFromIso(b.nextDue)
+      dateFromIso(
+        a.nextDue
+      )
+      -
+      dateFromIso(
+        b.nextDue
+      )
   );
 
 }
 
 
-function normalizeClients(list){
+function normalizeClient(
+  c,
+  fallbackStamp=null
+){
+
+  return {
+
+    id:
+      c.id ||
+      makeId(),
+
+    name:
+      c.name ||
+      "",
+
+    suburb:
+      c.suburb ||
+      "",
+
+    price:
+      Number(
+        c.price || 0
+      ),
+
+    cycle:
+      Number(
+        c.cycle || 0
+      ),
+
+    nextDue:
+      c.nextDue ||
+      iso(today()),
+
+    notes:
+      c.notes ||
+      "",
+
+    paid:
+      c.paid === undefined
+        ? true
+        : Boolean(c.paid),
+
+    type:
+      c.type ||
+      "recurring",
+
+    finished:
+      Boolean(
+        c.finished
+      ),
+
+    lastCompleted:
+      c.lastCompleted ||
+      null,
+
+    updatedAt:
+      c.updatedAt ||
+      fallbackStamp ||
+      nowStamp()
+
+  };
+
+}
+
+
+function normalizeClients(
+  list,
+  fallbackStamp=null
+){
 
   if(
     !Array.isArray(list)
@@ -1476,69 +1932,68 @@ function normalizeClients(list){
 
 
   return list.map(
-    c => ({
-
-      id:
-        c.id || makeId(),
-
-      name:
-        c.name || "",
-
-      suburb:
-        c.suburb || "",
-
-      price:
-        Number(c.price || 0),
-
-      cycle:
-        Number(c.cycle || 0),
-
-      nextDue:
-        c.nextDue || iso(today()),
-
-      notes:
-        c.notes || "",
-
-      paid:
-        c.paid === undefined
-          ? true
-          : Boolean(c.paid),
-
-      type:
-        c.type || "recurring",
-
-      finished:
-        Boolean(c.finished)
-
-    })
+    c =>
+      normalizeClient(
+        c,
+        fallbackStamp
+      )
   );
 
 }
 
 
-function mergeClientLists(cloudList,localList){
+function touchClient(c){
 
-  const merged =
-    new Map();
+  c.updatedAt =
+    nowStamp();
+
+}
 
 
-  cloudList.forEach(
-    c => merged.set(
-      c.id,
-      c
+function stampNumber(stamp){
+
+  const n =
+    Date.parse(
+      stamp || ""
+    );
+
+  return Number.isFinite(n)
+    ? n
+    : 0;
+
+}
+
+
+function matchesSearch(c){
+
+  const q =
+    searchQuery
+      .trim()
+      .toLowerCase();
+
+
+  if(!q){
+
+    return true;
+
+  }
+
+
+  return (
+    String(
+      c.name || ""
     )
-  );
+      .toLowerCase()
+      .includes(q)
 
+    ||
 
-  localList.forEach(
-    c => merged.set(
-      c.id,
-      c
+    String(
+      c.suburb || ""
     )
+      .toLowerCase()
+      .includes(q)
   );
-
-
-  return [...merged.values()];
 
 }
 
@@ -1547,30 +2002,36 @@ function mergeClientLists(cloudList,localList){
    LOCAL SAVE / LOAD
 ========================================================= */
 
-function save(syncCloud=true){
+function saveLocal(
+  syncCloud=true
+){
 
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify(clients)
+    JSON.stringify(
+      clients
+    )
+  );
+
+
+  localStorage.setItem(
+    DELETED_KEY,
+    JSON.stringify(
+      deletedClients
+    )
   );
 
 
   if(syncCloud){
 
-    localStorage.setItem(
-      LOCAL_UPDATED_KEY,
-      new Date().toISOString()
-    );
-
-
-    scheduleCloudBackup();
+    scheduleCloudSync();
 
   }
 
 }
 
 
-function load(){
+function loadLocal(){
 
   const raw =
     localStorage.getItem(
@@ -1587,62 +2048,119 @@ function load(){
           JSON.parse(raw)
         );
 
-
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(clients)
-      );
-
-
-      if(
-        clients.length > 0 &&
-        !localStorage.getItem(
-          LOCAL_UPDATED_KEY
-        )
-      ){
-
-        localStorage.setItem(
-          LOCAL_UPDATED_KEY,
-          new Date().toISOString()
-        );
-
-      }
-
-
-      return;
-
     }
     catch(error){
 
       console.error(
-        "Local schedule load error:",
+        "Could not load schedule:",
         error
       );
+
+      clients = [];
 
     }
 
   }
+  else{
+
+    clients = [];
+
+  }
 
 
-  clients = [];
+  const deletedRaw =
+    localStorage.getItem(
+      DELETED_KEY
+    );
 
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(clients)
-  );
+  if(deletedRaw){
+
+    try{
+
+      const parsed =
+        JSON.parse(
+          deletedRaw
+        );
+
+
+      deletedClients =
+        parsed &&
+        typeof parsed ===
+        "object"
+          ? parsed
+          : {};
+
+    }
+    catch{
+
+      deletedClients = {};
+
+    }
+
+  }
+  else{
+
+    deletedClients = {};
+
+  }
+
+
+  /*
+    Save once so old clients receive
+    updatedAt and lastCompleted fields.
+  */
+
+  saveLocal(false);
 
 }
 
 
 /* =========================================================
-   SCREEN
+   TOMBSTONES
+========================================================= */
+
+function markClientDeleted(c){
+
+  const stamp =
+    nowStamp();
+
+
+  deletedClients[
+    c.id
+  ] =
+    stamp;
+
+
+  clients =
+    clients.filter(
+      x =>
+        x.id !== c.id
+    );
+
+
+  return stamp;
+
+}
+
+
+function removeTombstone(id){
+
+  delete deletedClients[id];
+
+}
+
+
+/* =========================================================
+   SCREENS
 ========================================================= */
 
 function show(id){
 
   document
-    .querySelectorAll(".screen")
+    .querySelectorAll(
+      ".screen"
+    )
     .forEach(
       screen =>
         screen.classList.remove(
@@ -1652,7 +2170,9 @@ function show(id){
 
 
   document
-    .getElementById(id)
+    .getElementById(
+      id
+    )
     .classList.add(
       "active"
     );
@@ -1679,17 +2199,38 @@ function render(){
     sortClients(
       clients.filter(
         c =>
+
           !(
-            c.type === "oneoff" &&
-            c.finished &&
+            c.type ===
+            "oneoff"
+
+            &&
+
+            c.finished
+
+            &&
+
             !c.paid
           )
+
           &&
+
           !(
-            (c.type || "recurring") === "recurring" &&
+            (
+              c.type ||
+              "recurring"
+            )
+            ===
+            "recurring"
+
+            &&
+
             !c.paid
           )
       )
+    )
+    .filter(
+      matchesSearch
     );
 
 
@@ -1697,10 +2238,20 @@ function render(){
     sortClients(
       clients.filter(
         c =>
-          (c.type || "recurring") === "recurring"
+          (
+            c.type ||
+            "recurring"
+          )
+          ===
+          "recurring"
+
           &&
+
           !c.paid
       )
+    )
+    .filter(
+      matchesSearch
     );
 
 
@@ -1708,20 +2259,32 @@ function render(){
     sortClients(
       clients.filter(
         c =>
-          c.type === "oneoff"
+          c.type ===
+          "oneoff"
+
           &&
+
           c.finished
+
           &&
+
           !c.paid
       )
+    )
+    .filter(
+      matchesSearch
     );
 
 
-  renderNormalList(normal);
+  renderNormalList(
+    normal
+  );
+
 
   renderRecurringUnpaidList(
     recurringUnpaid
   );
+
 
   renderOneOffUnpaidList(
     oneOffUnpaid
@@ -1731,19 +2294,24 @@ function render(){
 
 
 /* =========================================================
-   NORMAL JOBS
+   NORMAL LIST
 ========================================================= */
 
 function renderNormalList(list){
 
-  clientList.innerHTML = "";
+  clientList.innerHTML =
+    "";
 
 
   if(!list.length){
 
     clientList.innerHTML =
       '<div class="empty">' +
-      'No clients yet. Add one to start the schedule.' +
+      (
+        searchQuery
+          ? "No matching jobs."
+          : "No clients yet. Add one to start the schedule."
+      ) +
       '</div>';
 
     return;
@@ -1768,14 +2336,16 @@ function renderNormalList(list){
             : ""
         ) +
         (
-          selectedClientId === c.id
+          selectedClientId ===
+          c.id
             ? " selected-row"
             : ""
         );
 
 
       const selected =
-        selectedClientId === c.id;
+        selectedClientId ===
+        c.id;
 
 
       const paidClass =
@@ -1785,6 +2355,7 @@ function renderNormalList(list){
 
 
       const paidButton =
+
         '<button class="paid-btn ' +
         paidClass +
         '" onclick="event.stopPropagation();openPaidPopup(\'' +
@@ -1812,27 +2383,33 @@ function renderNormalList(list){
           '</button>' +
 
           '</div>'
-          : '';
+          :
+          '';
 
 
       row.innerHTML =
+
         '<div>' +
 
           '<div class="row-title">' +
 
             (
               index === 0
-                ? 'NEXT - '
-                : ''
+                ? "NEXT - "
+                : ""
             ) +
 
-            esc(c.name) +
+            esc(
+              c.name
+            ) +
 
           '</div>' +
 
           '<div class="row-sub">' +
 
-            esc(c.suburb) +
+            esc(
+              c.suburb
+            ) +
 
             ' · ' +
 
@@ -1843,7 +2420,8 @@ function renderNormalList(list){
             ' · ' +
 
             (
-              c.type === "oneoff"
+              c.type ===
+              "oneoff"
                 ?
                 '<span class="oneoff-tag">ONE-OFF</span>'
                 :
@@ -1856,7 +2434,9 @@ function renderNormalList(list){
               c.notes
                 ?
                 ' · ' +
-                esc(c.notes)
+                esc(
+                  c.notes
+                )
                 :
                 ''
             ) +
@@ -1868,11 +2448,15 @@ function renderNormalList(list){
         '<div class="row-right">' +
 
           '<div class="price">' +
-            money(c.price) +
+            money(
+              c.price
+            ) +
           '</div>' +
 
           '<div>' +
-            pretty(c.nextDue) +
+            pretty(
+              c.nextDue
+            ) +
           '</div>' +
 
           paidButton +
@@ -1905,7 +2489,8 @@ function renderNormalList(list){
 
 function renderRecurringUnpaidList(list){
 
-  recurringUnpaidList.innerHTML = "";
+  recurringUnpaidList.innerHTML =
+    "";
 
 
   if(!list.length){
@@ -1940,17 +2525,20 @@ function renderRecurringUnpaidList(list){
       row.className =
         "row unpaid-row" +
         (
-          selectedClientId === c.id
+          selectedClientId ===
+          c.id
             ? " selected-row"
             : ""
         );
 
 
       const selected =
-        selectedClientId === c.id;
+        selectedClientId ===
+        c.id;
 
 
       const paidButton =
+
         '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\'' +
         c.id +
         '\')">' +
@@ -1976,19 +2564,25 @@ function renderRecurringUnpaidList(list){
           '</button>' +
 
           '</div>'
-          : '';
+          :
+          '';
 
 
       row.innerHTML =
+
         '<div>' +
 
           '<div class="row-title">' +
-            esc(c.name) +
+            esc(
+              c.name
+            ) +
           '</div>' +
 
           '<div class="row-sub">' +
 
-            esc(c.suburb) +
+            esc(
+              c.suburb
+            ) +
 
             ' · ' +
 
@@ -2004,7 +2598,9 @@ function renderRecurringUnpaidList(list){
               c.notes
                 ?
                 ' · ' +
-                esc(c.notes)
+                esc(
+                  c.notes
+                )
                 :
                 ''
             ) +
@@ -2016,7 +2612,9 @@ function renderRecurringUnpaidList(list){
         '<div class="row-right">' +
 
           '<div class="price">' +
-            money(c.price) +
+            money(
+              c.price
+            ) +
           '</div>' +
 
           '<div>Unpaid</div>' +
@@ -2035,9 +2633,10 @@ function renderRecurringUnpaidList(list){
           );
 
 
-      recurringUnpaidList.appendChild(
-        row
-      );
+      recurringUnpaidList
+        .appendChild(
+          row
+        );
 
     }
   );
@@ -2051,7 +2650,8 @@ function renderRecurringUnpaidList(list){
 
 function renderOneOffUnpaidList(list){
 
-  unpaidList.innerHTML = "";
+  unpaidList.innerHTML =
+    "";
 
 
   if(!list.length){
@@ -2086,17 +2686,20 @@ function renderOneOffUnpaidList(list){
       row.className =
         "row" +
         (
-          selectedClientId === c.id
+          selectedClientId ===
+          c.id
             ? " selected-row"
             : ""
         );
 
 
       const selected =
-        selectedClientId === c.id;
+        selectedClientId ===
+        c.id;
 
 
       const paidButton =
+
         '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\'' +
         c.id +
         '\')">' +
@@ -2122,19 +2725,25 @@ function renderOneOffUnpaidList(list){
           '</button>' +
 
           '</div>'
-          : '';
+          :
+          '';
 
 
       row.innerHTML =
+
         '<div>' +
 
           '<div class="row-title">' +
-            esc(c.name) +
+            esc(
+              c.name
+            ) +
           '</div>' +
 
           '<div class="row-sub">' +
 
-            esc(c.suburb) +
+            esc(
+              c.suburb
+            ) +
 
             ' · Finished · ' +
 
@@ -2144,7 +2753,9 @@ function renderOneOffUnpaidList(list){
               c.notes
                 ?
                 ' · ' +
-                esc(c.notes)
+                esc(
+                  c.notes
+                )
                 :
                 ''
             ) +
@@ -2156,7 +2767,9 @@ function renderOneOffUnpaidList(list){
         '<div class="row-right">' +
 
           '<div class="price">' +
-            money(c.price) +
+            money(
+              c.price
+            ) +
           '</div>' +
 
           '<div>Unpaid</div>' +
@@ -2203,6 +2816,30 @@ function selectClient(id){
 
 
 /* =========================================================
+   LAST ACTION
+========================================================= */
+
+function storeAction(
+  c,
+  action,
+  removed=false
+){
+
+  lastAction = {
+
+    action,
+
+    removed,
+
+    before:
+      deepCopy(c)
+
+  };
+
+}
+
+
+/* =========================================================
    FINISHED
 ========================================================= */
 
@@ -2210,7 +2847,8 @@ function finishClient(id){
 
   const c =
     clients.find(
-      x => x.id === id
+      x =>
+        x.id === id
     );
 
 
@@ -2221,45 +2859,36 @@ function finishClient(id){
   }
 
 
-  lastFinish = {
+  storeAction(
+    c,
+    "finish"
+  );
 
-    id:c.id,
 
-    name:c.name,
-
-    nextDue:c.nextDue,
-
-    paid:c.paid,
-
-    finished:c.finished,
-
-    type:c.type,
-
-    action:"finish"
-
-  };
+  c.lastCompleted =
+    iso(
+      today()
+    );
 
 
   if(
-    c.type === "oneoff"
+    c.type ===
+    "oneoff"
   ){
 
-    c.finished = true;
+    c.finished =
+      true;
 
-    c.paid = false;
+    c.paid =
+      false;
 
   }
   else{
 
     /*
-      RECURRING CLIENT
-
       Finished =
-      job completed today
-      but payment still owing.
-
-      New due date =
-      today + cycle.
+      completed today
+      but still unpaid.
     */
 
     c.nextDue =
@@ -2271,15 +2900,20 @@ function finishClient(id){
       );
 
 
-    c.paid = false;
+    c.paid =
+      false;
 
   }
 
 
-  selectedClientId = null;
+  touchClient(c);
 
 
-  save();
+  selectedClientId =
+    null;
+
+
+  saveLocal();
 
   render();
 
@@ -2298,7 +2932,9 @@ function finishClient(id){
 
 function openPaidPopup(id){
 
-  pendingPaidId = id;
+  pendingPaidId =
+    id;
+
 
   paidPopup
     .classList
@@ -2311,7 +2947,9 @@ function openPaidPopup(id){
 
 function closePaidPopup(){
 
-  pendingPaidId = null;
+  pendingPaidId =
+    null;
+
 
   paidPopup
     .classList
@@ -2342,7 +2980,8 @@ function markPaidYes(){
   const c =
     clients.find(
       x =>
-        x.id === pendingPaidId
+        x.id ===
+        pendingPaidId
     );
 
 
@@ -2356,74 +2995,56 @@ function markPaidYes(){
 
 
   /*
-    ONE-OFF JOB
+    ONE-OFF:
 
-    Paid removes it from
-    the active schedule.
+    Paid means complete and remove it
+    from the active schedule.
   */
 
   if(
-    c.type === "oneoff"
+    c.type ===
+    "oneoff"
   ){
 
-    clients =
-      clients.filter(
-        x =>
-          x.id !== c.id
-      );
+    storeAction(
+      c,
+      "oneoffPaid",
+      true
+    );
 
 
-    if(
-      lastFinish &&
-      lastFinish.id === c.id
-    ){
-
-      lastFinish = null;
-
-    }
+    markClientDeleted(
+      c
+    );
 
 
-    selectedClientId = null;
+    selectedClientId =
+      null;
 
   }
 
 
   /*
-    RECURRING CLIENT
-    CURRENTLY IN NORMAL JOBS
+    RECURRING NORMAL JOB:
+
+    Paid =
+    completed today + paid today.
   */
 
   else if(
     c.paid
   ){
 
-    /*
-      Paid here means:
+    storeAction(
+      c,
+      "paidFinish"
+    );
 
-      job completed today
-      AND paid today.
 
-      New due =
-      today + cycle.
-    */
-
-    lastFinish = {
-
-      id:c.id,
-
-      name:c.name,
-
-      nextDue:c.nextDue,
-
-      paid:c.paid,
-
-      finished:c.finished,
-
-      type:c.type,
-
-      action:"paidFinish"
-
-    };
+    c.lastCompleted =
+      iso(
+        today()
+      );
 
 
     c.nextDue =
@@ -2435,55 +3056,49 @@ function markPaidYes(){
       );
 
 
-    c.paid = true;
+    c.paid =
+      true;
 
-    selectedClientId = null;
+
+    touchClient(c);
+
+
+    selectedClientId =
+      null;
 
   }
 
 
   /*
-    RECURRING CLIENT
-    ALREADY IN UNPAID JOBS
+    RECURRING UNPAID:
+
+    Finished already reset the date.
+
+    Paid only clears the debt.
   */
 
   else{
 
-    /*
-      Finished already reset
-      their mowing cycle.
-
-      This payment must NOT
-      change nextDue.
-    */
-
-    lastFinish = {
-
-      id:c.id,
-
-      name:c.name,
-
-      nextDue:c.nextDue,
-
-      paid:c.paid,
-
-      finished:c.finished,
-
-      type:c.type,
-
-      action:"paidOnly"
-
-    };
+    storeAction(
+      c,
+      "paidOnly"
+    );
 
 
-    c.paid = true;
+    c.paid =
+      true;
 
-    selectedClientId = null;
+
+    touchClient(c);
+
+
+    selectedClientId =
+      null;
 
   }
 
 
-  save();
+  saveLocal();
 
   render();
 
@@ -2505,7 +3120,7 @@ function markPaidYes(){
 function renderUndo(){
 
   if(
-    !lastFinish
+    !lastAction
   ){
 
     undoBar
@@ -2519,32 +3134,47 @@ function renderUndo(){
   }
 
 
+  const name =
+    lastAction.before.name;
+
+
   if(
-    lastFinish.action ===
+    lastAction.action ===
     "paidFinish"
   ){
 
     undoText.textContent =
-      lastFinish.name +
+      name +
       " paid + finished. Undo?";
 
   }
 
   else if(
-    lastFinish.action ===
+    lastAction.action ===
     "paidOnly"
   ){
 
     undoText.textContent =
-      lastFinish.name +
+      name +
       " marked paid. Undo?";
+
+  }
+
+  else if(
+    lastAction.action ===
+    "oneoffPaid"
+  ){
+
+    undoText.textContent =
+      name +
+      " completed + paid. Undo?";
 
   }
 
   else{
 
     undoText.textContent =
-      lastFinish.name +
+      name +
       " finished. Undo?";
 
   }
@@ -2559,10 +3189,10 @@ function renderUndo(){
 }
 
 
-function undoLastFinish(){
+function undoLastAction(){
 
   if(
-    !lastFinish
+    !lastAction
   ){
 
     return;
@@ -2570,31 +3200,60 @@ function undoLastFinish(){
   }
 
 
-  const c =
-    clients.find(
-      x =>
-        x.id === lastFinish.id
+  const before =
+    deepCopy(
+      lastAction.before
     );
 
 
-  if(c){
+  if(
+    lastAction.removed
+  ){
 
-    c.nextDue =
-      lastFinish.nextDue;
+    removeTombstone(
+      before.id
+    );
 
-    c.paid =
-      lastFinish.paid;
 
-    c.finished =
-      lastFinish.finished;
+    before.updatedAt =
+      nowStamp();
+
+
+    clients.push(
+      before
+    );
+
+  }
+  else{
+
+    const c =
+      clients.find(
+        x =>
+          x.id ===
+          before.id
+      );
+
+
+    if(c){
+
+      Object.assign(
+        c,
+        before
+      );
+
+
+      touchClient(c);
+
+    }
 
   }
 
 
-  lastFinish = null;
+  lastAction =
+    null;
 
 
-  save();
+  saveLocal();
 
   render();
 
@@ -2603,7 +3262,8 @@ function undoLastFinish(){
 
 function dismissUndo(){
 
-  lastFinish = null;
+  lastAction =
+    null;
 
   render();
 
@@ -2616,9 +3276,11 @@ function dismissUndo(){
 
 function addClient(){
 
-  editingId = null;
+  editingId =
+    null;
 
-  formMode = "recurring";
+  formMode =
+    "recurring";
 
 
   formTitle.textContent =
@@ -2632,20 +3294,32 @@ function addClient(){
     );
 
 
-  nameInput.value = "";
+  nameInput.value =
+    "";
 
-  suburbInput.value = "";
+  suburbInput.value =
+    "";
 
-  priceInput.value = "";
+  priceInput.value =
+    "";
 
-  cycleInput.value = "14";
+  cycleInput.value =
+    "14";
 
   dueInput.value =
     iso(
       today()
     );
 
-  notesInput.value = "";
+  notesInput.value =
+    "";
+
+
+  lastCompletedBox
+    .classList
+    .remove(
+      "active"
+    );
 
 
   deleteClientBtn.style.display =
@@ -2665,9 +3339,11 @@ function addClient(){
 
 function addOneOff(){
 
-  editingId = null;
+  editingId =
+    null;
 
-  formMode = "oneoff";
+  formMode =
+    "oneoff";
 
 
   formTitle.textContent =
@@ -2681,20 +3357,32 @@ function addOneOff(){
     );
 
 
-  nameInput.value = "";
+  nameInput.value =
+    "";
 
-  suburbInput.value = "";
+  suburbInput.value =
+    "";
 
-  priceInput.value = "";
+  priceInput.value =
+    "";
 
-  cycleInput.value = "30";
+  cycleInput.value =
+    "30";
 
   dueInput.value =
     iso(
       today()
     );
 
-  notesInput.value = "";
+  notesInput.value =
+    "";
+
+
+  lastCompletedBox
+    .classList
+    .remove(
+      "active"
+    );
 
 
   deleteClientBtn.style.display =
@@ -2728,7 +3416,8 @@ function editClient(id){
   }
 
 
-  editingId = id;
+  editingId =
+    id;
 
 
   formMode =
@@ -2737,7 +3426,8 @@ function editClient(id){
 
 
   formTitle.textContent =
-    formMode === "oneoff"
+    formMode ===
+    "oneoff"
       ? "Edit One-off Job"
       : "Edit Client";
 
@@ -2746,7 +3436,8 @@ function editClient(id){
     .classList
     .toggle(
       "hidden-field",
-      formMode === "oneoff"
+      formMode ===
+      "oneoff"
     );
 
 
@@ -2760,13 +3451,43 @@ function editClient(id){
     c.price;
 
   cycleInput.value =
-    c.cycle || 30;
+    c.cycle ||
+    30;
 
   dueInput.value =
     c.nextDue;
 
   notesInput.value =
-    c.notes || "";
+    c.notes ||
+    "";
+
+
+  if(
+    c.lastCompleted
+  ){
+
+    lastCompletedText.textContent =
+      prettyCompleted(
+        c.lastCompleted
+      );
+
+
+    lastCompletedBox
+      .classList
+      .add(
+        "active"
+      );
+
+  }
+  else{
+
+    lastCompletedBox
+      .classList
+      .remove(
+        "active"
+      );
+
+  }
 
 
   deleteClientBtn.style.display =
@@ -2811,16 +3532,19 @@ function saveClientForm(){
     price:
       Number(
         priceInput.value
-      ) || 0,
+      ) ||
+      0,
 
     cycle:
-      formMode === "oneoff"
+      formMode ===
+      "oneoff"
         ? 0
         :
         (
           Number(
             cycleInput.value
-          ) || 14
+          ) ||
+          14
         ),
 
     nextDue:
@@ -2847,7 +3571,8 @@ function saveClientForm(){
     const c =
       clients.find(
         x =>
-          x.id === editingId
+          x.id ===
+          editingId
       );
 
 
@@ -2858,31 +3583,39 @@ function saveClientForm(){
         data
       );
 
+
+      touchClient(c);
+
     }
 
   }
   else{
 
-    clients.push({
+    clients.push(
+      normalizeClient({
+        id:makeId(),
 
-      id:
-        makeId(),
+        paid:
+          formMode ===
+          "oneoff"
+            ? false
+            : true,
 
-      paid:
-        formMode === "oneoff"
-          ? false
-          : true,
+        finished:false,
 
-      finished:false,
+        lastCompleted:null,
 
-      ...data
+        ...data,
 
-    });
+        updatedAt:
+          nowStamp()
+      })
+    );
 
   }
 
 
-  save();
+  saveLocal();
 
   render();
 
@@ -2908,6 +3641,21 @@ function deleteClientForm(){
   }
 
 
+  const c =
+    clients.find(
+      x =>
+        x.id ===
+        editingId
+    );
+
+
+  if(!c){
+
+    return;
+
+  }
+
+
   if(
     !confirm(
       "Delete this client?"
@@ -2919,27 +3667,28 @@ function deleteClientForm(){
   }
 
 
-  clients =
-    clients.filter(
-      c =>
-        c.id !== editingId
-    );
+  markClientDeleted(
+    c
+  );
 
 
   if(
-    lastFinish &&
-    lastFinish.id === editingId
+    lastAction &&
+    lastAction.before.id ===
+    editingId
   ){
 
-    lastFinish = null;
+    lastAction =
+      null;
 
   }
 
 
-  selectedClientId = null;
+  selectedClientId =
+    null;
 
 
-  save();
+  saveLocal();
 
   render();
 
@@ -2951,7 +3700,7 @@ function deleteClientForm(){
 
 
 /* =========================================================
-   BACKUP STATUS
+   ACCOUNT STATUS
 ========================================================= */
 
 function setBackupStatus(
@@ -3056,7 +3805,49 @@ function setAuthMessage(
 }
 
 
+function setResetMessage(
+  text,
+  state=""
+){
+
+  resetPasswordMessage.textContent =
+    text;
+
+
+  resetPasswordMessage.className =
+    "auth-message" +
+    (
+      state
+        ? " " + state
+        : ""
+    );
+
+}
+
+
 function renderAccount(){
+
+  if(
+    passwordRecoveryMode
+  ){
+
+    guestAccount.style.display =
+      "none";
+
+    signedAccount.style.display =
+      "none";
+
+    passwordResetCard.style.display =
+      "block";
+
+    return;
+
+  }
+
+
+  passwordResetCard.style.display =
+    "none";
+
 
   if(
     currentUser
@@ -3083,7 +3874,9 @@ function renderAccount(){
     if(last){
 
       const d =
-        new Date(last);
+        new Date(
+          last
+        );
 
 
       accountSyncText.textContent =
@@ -3165,6 +3958,92 @@ async function initCloud(){
       );
 
 
+    /*
+      Register auth listener immediately
+      so PASSWORD_RECOVERY can be caught.
+    */
+
+    supabaseClient
+      .auth
+      .onAuthStateChange(
+        (
+          event,
+          session
+        ) => {
+
+          currentUser =
+            session?.user ||
+            null;
+
+
+          if(
+            event ===
+            "PASSWORD_RECOVERY"
+          ){
+
+            passwordRecoveryMode =
+              true;
+
+
+            renderAccount();
+
+
+            show(
+              "accountScreen"
+            );
+
+          }
+
+
+          if(
+            event ===
+            "SIGNED_IN"
+          ){
+
+            renderAccount();
+
+            render();
+
+
+            setTimeout(
+              () => {
+                syncCloud();
+              },
+              0
+            );
+
+          }
+
+
+          if(
+            event ===
+            "SIGNED_OUT"
+          ){
+
+            currentUser =
+              null;
+
+
+            localStorage.removeItem(
+              LAST_SYNC_AT_KEY
+            );
+
+
+            setBackupStatus(
+              "Saved on this device"
+            );
+
+
+            renderAccount();
+
+            render();
+
+          }
+
+        }
+      );
+
+
     const {
       data,
       error
@@ -3195,41 +4074,9 @@ async function initCloud(){
       render();
 
 
-      await reconcileCloudBackup();
+      await syncCloud();
 
     }
-
-
-    supabaseClient
-      .auth
-      .onAuthStateChange(
-        (
-          event,
-          session
-        ) => {
-
-          currentUser =
-            session?.user ||
-            null;
-
-
-          if(
-            event === "SIGNED_OUT"
-          ){
-
-            setBackupStatus(
-              "Saved on this device"
-            );
-
-          }
-
-
-          renderAccount();
-
-          render();
-
-        }
-      );
 
 
     renderAccount();
@@ -3238,7 +4085,7 @@ async function initCloud(){
   catch(error){
 
     console.error(
-      "Supabase start error:",
+      "Supabase startup failed:",
       error
     );
 
@@ -3324,7 +4171,8 @@ async function createAccount(){
     }
 
 
-    authPassword.value = "";
+    authPassword.value =
+      "";
 
 
     if(
@@ -3336,7 +4184,7 @@ async function createAccount(){
         data.user;
 
 
-      await reconcileCloudBackup();
+      await syncCloud();
 
 
       setAuthMessage(
@@ -3353,7 +4201,7 @@ async function createAccount(){
     else{
 
       setAuthMessage(
-        "Account created. Check your email to confirm it, then come back and sign in. Your schedule is still saved locally.",
+        "Account created. Check your email to confirm it, then sign in. Your schedule is still saved on this device.",
         "good"
       );
 
@@ -3453,13 +4301,16 @@ async function signIn(){
       data.user;
 
 
-    authPassword.value = "";
+    authPassword.value =
+      "";
 
 
-    await reconcileCloudBackup();
+    await syncCloud();
 
 
-    setAuthMessage("");
+    setAuthMessage(
+      ""
+    );
 
 
     renderAccount();
@@ -3477,6 +4328,237 @@ async function signIn(){
     setAuthMessage(
       error.message ||
       "Could not sign in.",
+      "bad"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD
+========================================================= */
+
+function getAuthRedirectUrl(){
+
+  if(
+    window.location.protocol ===
+    "http:"
+
+    ||
+
+    window.location.protocol ===
+    "https:"
+  ){
+
+    return (
+      window.location.origin +
+      window.location.pathname
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+async function forgotPassword(){
+
+  if(
+    !supabaseClient
+  ){
+
+    setAuthMessage(
+      "Cloud backup is unavailable.",
+      "bad"
+    );
+
+    return;
+
+  }
+
+
+  const email =
+    authEmail
+      .value
+      .trim();
+
+
+  if(!email){
+
+    setAuthMessage(
+      "Enter your email first.",
+      "bad"
+    );
+
+    return;
+
+  }
+
+
+  setAuthMessage(
+    "Sending reset email..."
+  );
+
+
+  try{
+
+    const redirectUrl =
+      getAuthRedirectUrl();
+
+
+    const options =
+      redirectUrl
+        ? {
+            redirectTo:
+              redirectUrl
+          }
+        : undefined;
+
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .auth
+        .resetPasswordForEmail(
+          email,
+          options
+        );
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    setAuthMessage(
+      "Password reset email sent. Check your inbox.",
+      "good"
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      error
+    );
+
+
+    setAuthMessage(
+      error.message ||
+      "Could not send password reset email.",
+      "bad"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SET NEW PASSWORD
+========================================================= */
+
+async function updateRecoveredPassword(){
+
+  if(
+    !supabaseClient
+  ){
+
+    return;
+
+  }
+
+
+  const password =
+    newPasswordInput.value;
+
+
+  if(
+    !password ||
+    password.length < 6
+  ){
+
+    setResetMessage(
+      "Use at least 6 characters.",
+      "bad"
+    );
+
+    return;
+
+  }
+
+
+  setResetMessage(
+    "Saving password..."
+  );
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .auth
+        .updateUser({
+          password
+        });
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    currentUser =
+      data.user ||
+      currentUser;
+
+
+    passwordRecoveryMode =
+      false;
+
+
+    newPasswordInput.value =
+      "";
+
+
+    setResetMessage(
+      ""
+    );
+
+
+    renderAccount();
+
+    render();
+
+
+    setBackupStatus(
+      "Backed up",
+      "good"
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      error
+    );
+
+
+    setResetMessage(
+      error.message ||
+      "Could not update password.",
       "bad"
     );
 
@@ -3517,7 +4599,13 @@ async function signOut(){
     }
 
 
-    currentUser = null;
+    currentUser =
+      null;
+
+
+    localStorage.removeItem(
+      LAST_SYNC_AT_KEY
+    );
 
 
     setBackupStatus(
@@ -3551,10 +4639,10 @@ async function signOut(){
 
 
 /* =========================================================
-   CLOUD RESTORE / RECONCILE
+   DELETE ACCOUNT
 ========================================================= */
 
-async function reconcileCloudBackup(){
+async function deleteAccount(){
 
   if(
     !supabaseClient ||
@@ -3566,29 +4654,64 @@ async function reconcileCloudBackup(){
   }
 
 
-  setBackupStatus(
-    "Checking backup..."
-  );
+  const firstConfirm =
+    confirm(
+      "Permanently delete your account and cloud backup?\n\nThe schedule stored on this device will stay here."
+    );
+
+
+  if(
+    !firstConfirm
+  ){
+
+    return;
+
+  }
+
+
+  const secondConfirm =
+    confirm(
+      "Are you sure? Your cloud account cannot be recovered."
+    );
+
+
+  if(
+    !secondConfirm
+  ){
+
+    return;
+
+  }
+
+
+  deleteAccountBtn.disabled =
+    true;
+
+  deleteAccountBtn.textContent =
+    "Deleting...";
 
 
   try{
+
+    /*
+      functions.invoke sends the signed-in
+      user's session token.
+    */
 
     const {
       data,
       error
     } =
       await supabaseClient
-        .from(
-          CLOUD_TABLE
-        )
-        .select(
-          "clients, updated_at"
-        )
-        .eq(
-          "user_id",
-          currentUser.id
-        )
-        .maybeSingle();
+        .functions
+        .invoke(
+          "delete-account",
+          {
+            body:{
+              confirm:true
+            }
+          }
+        );
 
 
     if(error){
@@ -3598,280 +4721,91 @@ async function reconcileCloudBackup(){
     }
 
 
-    /*
-      No backup exists yet.
-
-      Upload the schedule already
-      on this phone/device.
-    */
-
-    if(!data){
-
-      await uploadCloudBackup();
-
-      return;
-
-    }
-
-
-    const cloudClients =
-      normalizeClients(
-        data.clients
-      );
-
-
-    const localHasData =
-      clients.length > 0;
-
-    const cloudHasData =
-      cloudClients.length > 0;
-
-
-    const lastSyncUser =
-      localStorage.getItem(
-        LAST_SYNC_USER_KEY
-      );
-
-
-    const localUpdated =
-      Date.parse(
-        localStorage.getItem(
-          LOCAL_UPDATED_KEY
-        ) || ""
-      ) || 0;
-
-
-    const lastSync =
-      Date.parse(
-        localStorage.getItem(
-          LAST_SYNC_AT_KEY
-        ) || ""
-      ) || 0;
-
-
-    const cloudUpdated =
-      Date.parse(
-        data.updated_at || ""
-      ) || 0;
-
-
-    /*
-      REPLACEMENT / NEW PHONE
-
-      Nothing local,
-      but cloud contains schedule.
-    */
-
     if(
-      !localHasData &&
-      cloudHasData
+      data &&
+      data.error
     ){
 
-      applyCloudBackup(
-        cloudClients,
-        data.updated_at
+      throw new Error(
+        data.error
       );
-
-
-      setBackupStatus(
-        "Schedule restored from backup",
-        "good"
-      );
-
-
-      return;
 
     }
 
 
     /*
-      THIS DEVICE HAS ALREADY
-      USED THIS SAME ACCOUNT.
+      Keep the local schedule,
+      but disconnect old account metadata.
     */
 
-    if(
-      lastSyncUser ===
-      currentUser.id
-    ){
-
-      /*
-        Local changes happened
-        after last backup.
-
-        Keep local version and upload.
-      */
-
-      if(
-        localUpdated >
-        lastSync + 1000
-        &&
-        localUpdated >= cloudUpdated
-      ){
-
-        await uploadCloudBackup();
-
-        return;
-
-      }
+    currentUser =
+      null;
 
 
-      /*
-        Cloud copy is newer.
-      */
-
-      if(
-        cloudUpdated >
-        localUpdated + 1000
-      ){
-
-        applyCloudBackup(
-          cloudClients,
-          data.updated_at
-        );
+    deletedClients =
+      {};
 
 
-        setBackupStatus(
-          "Schedule restored from backup",
-          "good"
-        );
-
-
-        return;
-
-      }
-
-
-      localStorage.setItem(
-        LAST_SYNC_USER_KEY,
-        currentUser.id
-      );
-
-
-      if(
-        data.updated_at
-      ){
-
-        localStorage.setItem(
-          LAST_SYNC_AT_KEY,
-          data.updated_at
-        );
-
-      }
-
-
-      setBackupStatus(
-        "Backed up",
-        "good"
-      );
-
-
-      renderAccount();
-
-      return;
-
-    }
-
-
-    /*
-      FIRST TIME THIS DEVICE
-      HAS BEEN CONNECTED TO
-      THIS ACCOUNT.
-
-      If both contain jobs,
-      merge them instead of
-      deleting either list.
-    */
-
-    if(
-      localHasData &&
-      cloudHasData
-    ){
-
-      clients =
-        mergeClientLists(
-          cloudClients,
-          clients
-        );
-
-
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(
-          clients
-        )
-      );
-
-
-      localStorage.setItem(
-        LOCAL_UPDATED_KEY,
-        new Date().toISOString()
-      );
-
-
-      render();
-
-
-      await uploadCloudBackup();
-
-      return;
-
-    }
-
-
-    /*
-      Device contains jobs
-      but cloud is empty.
-    */
-
-    if(
-      localHasData
-    ){
-
-      await uploadCloudBackup();
-
-      return;
-
-    }
-
-
-    /*
-      Both are empty.
-    */
-
-    localStorage.setItem(
-      LAST_SYNC_USER_KEY,
-      currentUser.id
+    localStorage.removeItem(
+      DELETED_KEY
     );
 
 
-    localStorage.setItem(
-      LAST_SYNC_AT_KEY,
-      data.updated_at ||
-      new Date().toISOString()
+    localStorage.removeItem(
+      LAST_SYNC_AT_KEY
     );
+
+
+    try{
+
+      await supabaseClient
+        .auth
+        .signOut();
+
+    }
+    catch{}
 
 
     setBackupStatus(
-      "Backed up",
-      "good"
+      "Saved on this device"
+    );
+
+
+    alert(
+      "Account deleted. Your schedule is still saved on this device."
     );
 
 
     renderAccount();
 
+    render();
+
+
+    show(
+      "homeScreen"
+    );
+
   }
   catch(error){
 
     console.error(
-      "Backup check failed:",
       error
     );
 
 
-    setBackupStatus(
-      "Saved locally • backup pending",
-      "warn"
+    alert(
+      error.message ||
+      "Could not delete account."
     );
+
+  }
+  finally{
+
+    deleteAccountBtn.disabled =
+      false;
+
+    deleteAccountBtn.textContent =
+      "Delete Account";
 
   }
 
@@ -3879,68 +4813,368 @@ async function reconcileCloudBackup(){
 
 
 /* =========================================================
-   APPLY CLOUD BACKUP
+   CLOUD FETCH
 ========================================================= */
 
-function applyCloudBackup(
-  cloudClients,
-  updatedAt
-){
+async function fetchCloudRows(){
 
-  clients =
-    normalizeClients(
-      cloudClients
-    );
-
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(
-      clients
-    )
-  );
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from(
+        CLOUD_CLIENT_TABLE
+      )
+      .select(
+        "client_id,data,updated_at,deleted_at"
+      );
 
 
-  const stamp =
-    updatedAt ||
-    new Date().toISOString();
+  if(error){
+
+    throw error;
+
+  }
 
 
-  localStorage.setItem(
-    LOCAL_UPDATED_KEY,
-    stamp
-  );
-
-
-  localStorage.setItem(
-    LAST_SYNC_USER_KEY,
-    currentUser.id
-  );
-
-
-  localStorage.setItem(
-    LAST_SYNC_AT_KEY,
-    stamp
-  );
-
-
-  selectedClientId = null;
-
-  lastFinish = null;
-
-
-  render();
-
-  renderAccount();
+  return data || [];
 
 }
 
 
 /* =========================================================
-   CLOUD UPLOAD
+   MERGE CLOUD INTO LOCAL
 ========================================================= */
 
-async function uploadCloudBackup(){
+function mergeCloudRows(
+  rows
+){
+
+  const localMap =
+    new Map(
+      clients.map(
+        c => [
+          c.id,
+          c
+        ]
+      )
+    );
+
+
+  for(
+    const row
+    of rows
+  ){
+
+    const id =
+      row.client_id;
+
+
+    if(!id){
+
+      continue;
+
+    }
+
+
+    const cloudStamp =
+      row.updated_at;
+
+
+    const cloudTime =
+      stampNumber(
+        cloudStamp
+      );
+
+
+    const local =
+      localMap.get(
+        id
+      );
+
+
+    const localTime =
+      local
+        ? stampNumber(
+            local.updatedAt
+          )
+        : 0;
+
+
+    const tombstoneStamp =
+      deletedClients[
+        id
+      ];
+
+
+    const tombstoneTime =
+      stampNumber(
+        tombstoneStamp
+      );
+
+
+    /*
+      CLOUD DELETION
+    */
+
+    if(
+      row.deleted_at
+    ){
+
+      if(
+        cloudTime >=
+        localTime
+
+        &&
+
+        cloudTime >=
+        tombstoneTime
+      ){
+
+        localMap.delete(
+          id
+        );
+
+
+        deletedClients[
+          id
+        ] =
+          cloudStamp;
+
+      }
+
+
+      continue;
+
+    }
+
+
+    /*
+      CLOUD ACTIVE CLIENT
+    */
+
+    if(
+      cloudTime >
+      localTime
+
+      &&
+
+      cloudTime >
+      tombstoneTime
+    ){
+
+      const cloudClient =
+        normalizeClient(
+          {
+            ...row.data,
+            id,
+            updatedAt:
+              cloudStamp
+          },
+          cloudStamp
+        );
+
+
+      localMap.set(
+        id,
+        cloudClient
+      );
+
+
+      delete deletedClients[
+        id
+      ];
+
+    }
+
+  }
+
+
+  clients =
+    [
+      ...localMap.values()
+    ];
+
+}
+
+
+/* =========================================================
+   BUILD LOCAL CHANGES
+========================================================= */
+
+function buildLocalChanges(
+  cloudRows
+){
+
+  const cloudTimes =
+    new Map();
+
+
+  cloudRows.forEach(
+    row => {
+
+      cloudTimes.set(
+        row.client_id,
+        stampNumber(
+          row.updated_at
+        )
+      );
+
+    }
+  );
+
+
+  const changes =
+    [];
+
+
+  /*
+    ACTIVE CLIENTS
+  */
+
+  clients.forEach(
+    c => {
+
+      const localTime =
+        stampNumber(
+          c.updatedAt
+        );
+
+
+      const cloudTime =
+        cloudTimes.get(
+          c.id
+        ) ||
+        0;
+
+
+      if(
+        localTime >
+        cloudTime
+      ){
+
+        changes.push({
+          client_id:
+            c.id,
+
+          data:
+            c,
+
+          updated_at:
+            c.updatedAt,
+
+          deleted_at:
+            null
+        });
+
+      }
+
+    }
+  );
+
+
+  /*
+    DELETED CLIENTS
+  */
+
+  Object.entries(
+    deletedClients
+  )
+  .forEach(
+    (
+      [
+        id,
+        stamp
+      ]
+    ) => {
+
+      const localTime =
+        stampNumber(
+          stamp
+        );
+
+
+      const cloudTime =
+        cloudTimes.get(
+          id
+        ) ||
+        0;
+
+
+      if(
+        localTime >
+        cloudTime
+      ){
+
+        changes.push({
+          client_id:
+            id,
+
+          data:{},
+
+          updated_at:
+            stamp,
+
+          deleted_at:
+            stamp
+        });
+
+      }
+
+    }
+  );
+
+
+  return changes;
+
+}
+
+
+/* =========================================================
+   PUSH CHANGES
+========================================================= */
+
+async function pushChanges(
+  changes
+){
+
+  if(
+    !changes.length
+  ){
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .rpc(
+        "sync_lawn_clients",
+        {
+          p_rows:
+            changes
+        }
+      );
+
+
+  if(error){
+
+    throw error;
+
+  }
+
+}
+
+
+/* =========================================================
+   CLOUD SYNC
+========================================================= */
+
+async function syncCloud(){
 
   if(
     !supabaseClient ||
@@ -3956,76 +5190,90 @@ async function uploadCloudBackup(){
     syncInProgress
   ){
 
-    syncAgain = true;
+    syncAgain =
+      true;
 
     return;
 
   }
 
 
-  syncInProgress = true;
+  syncInProgress =
+    true;
 
 
   setBackupStatus(
-    "Backing up..."
+    "Syncing...",
+    "warn"
   );
-
-
-  const stamp =
-    new Date().toISOString();
-
-
-  const backupClients =
-    JSON.parse(
-      JSON.stringify(
-        clients
-      )
-    );
 
 
   try{
 
-    const {
-      error
-    } =
-      await supabaseClient
-        .from(
-          CLOUD_TABLE
-        )
-        .upsert(
-          {
-            user_id:
-              currentUser.id,
+    /*
+      1. Get current cloud state.
+    */
 
-            clients:
-              backupClients,
-
-            updated_at:
-              stamp
-          },
-          {
-            onConflict:
-              "user_id"
-          }
-        );
+    const before =
+      await fetchCloudRows();
 
 
-    if(error){
+    /*
+      2. Bring newer cloud records
+         into local storage.
+    */
 
-      throw error;
+    mergeCloudRows(
+      before
+    );
 
-    }
+
+    /*
+      3. Find anything local that is
+         newer than the cloud.
+    */
+
+    const changes =
+      buildLocalChanges(
+        before
+      );
 
 
-    localStorage.setItem(
-      LAST_SYNC_USER_KEY,
-      currentUser.id
+    /*
+      4. Push those changes.
+
+         SQL refuses to let an older
+         version replace a newer row.
+    */
+
+    await pushChanges(
+      changes
+    );
+
+
+    /*
+      5. Fetch again so this device
+         ends with the final cloud state,
+         including changes from other devices.
+    */
+
+    const after =
+      await fetchCloudRows();
+
+
+    mergeCloudRows(
+      after
+    );
+
+
+    saveLocal(
+      false
     );
 
 
     localStorage.setItem(
       LAST_SYNC_AT_KEY,
-      stamp
+      nowStamp()
     );
 
 
@@ -4035,13 +5283,15 @@ async function uploadCloudBackup(){
     );
 
 
+    render();
+
     renderAccount();
 
   }
   catch(error){
 
     console.error(
-      "Cloud backup failed:",
+      "Cloud sync failed:",
       error
     );
 
@@ -4054,16 +5304,24 @@ async function uploadCloudBackup(){
   }
   finally{
 
-    syncInProgress = false;
+    syncInProgress =
+      false;
 
 
     if(
       syncAgain
     ){
 
-      syncAgain = false;
+      syncAgain =
+        false;
 
-      scheduleCloudBackup();
+
+      setTimeout(
+        () => {
+          syncCloud();
+        },
+        100
+      );
 
     }
 
@@ -4073,15 +5331,10 @@ async function uploadCloudBackup(){
 
 
 /* =========================================================
-   BACKUP QUEUE
+   SYNC QUEUE
 ========================================================= */
 
-function scheduleCloudBackup(){
-
-  /*
-    No account:
-    localStorage only.
-  */
+function scheduleCloudSync(){
 
   if(
     !currentUser ||
@@ -4116,9 +5369,11 @@ function scheduleCloudBackup(){
     setTimeout(
       () => {
 
-        syncTimer = null;
+        syncTimer =
+          null;
 
-        uploadCloudBackup();
+
+        syncCloud();
 
       },
       500
@@ -4139,10 +5394,29 @@ addOneOffTop.onclick =
   addOneOff;
 
 
+searchInput.addEventListener(
+  "input",
+  () => {
+
+    searchQuery =
+      searchInput.value;
+
+
+    selectedClientId =
+      null;
+
+
+    render();
+
+  }
+);
+
+
 backupTop.onclick =
   () => {
 
     renderAccount();
+
 
     show(
       "accountScreen"
@@ -4156,6 +5430,7 @@ backHome.onclick =
 
     render();
 
+
     show(
       "homeScreen"
     );
@@ -4167,6 +5442,7 @@ backFromAccount.onclick =
   () => {
 
     render();
+
 
     show(
       "homeScreen"
@@ -4192,7 +5468,7 @@ paidNoBtn.onclick =
 
 
 undoBtn.onclick =
-  undoLastFinish;
+  undoLastAction;
 
 
 undoCloseBtn.onclick =
@@ -4207,12 +5483,24 @@ signInBtn.onclick =
   signIn;
 
 
+forgotPasswordBtn.onclick =
+  forgotPassword;
+
+
+updatePasswordBtn.onclick =
+  updateRecoveredPassword;
+
+
 signOutBtn.onclick =
   signOut;
 
 
 backupNowBtn.onclick =
-  uploadCloudBackup;
+  syncCloud;
+
+
+deleteAccountBtn.onclick =
+  deleteAccount;
 
 
 /* ENTER PASSWORD = SIGN IN */
@@ -4222,7 +5510,8 @@ authPassword.addEventListener(
   event => {
 
     if(
-      event.key === "Enter"
+      event.key ===
+      "Enter"
     ){
 
       signIn();
@@ -4233,7 +5522,26 @@ authPassword.addEventListener(
 );
 
 
-/* INTERNET COMES BACK */
+/* ENTER NEW PASSWORD */
+
+newPasswordInput.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key ===
+      "Enter"
+    ){
+
+      updateRecoveredPassword();
+
+    }
+
+  }
+);
+
+
+/* INTERNET RETURNS */
 
 window.addEventListener(
   "online",
@@ -4243,7 +5551,31 @@ window.addEventListener(
       currentUser
     ){
 
-      uploadCloudBackup();
+      syncCloud();
+
+    }
+
+  }
+);
+
+
+/* CHECK OTHER DEVICE CHANGES
+   WHEN USER COMES BACK TO APP */
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+
+    if(
+      document.visibilityState ===
+      "visible"
+
+      &&
+
+      currentUser
+    ){
+
+      syncCloud();
 
     }
 
@@ -4252,10 +5584,10 @@ window.addEventListener(
 
 
 /* =========================================================
-   START APP
+   START
 ========================================================= */
 
-load();
+loadLocal();
 
 render();
 
