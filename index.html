@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>Lawn Schedule</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
@@ -54,17 +57,16 @@ h1{
   font-size:20px;
 }
 
-h2{
-  font-size:18px;
-}
-
 h3{
   font-size:15px;
   color:var(--muted);
   font-weight:500;
 }
 
-button,input,textarea,select{
+button,
+input,
+textarea,
+select{
   font:inherit;
 }
 
@@ -75,9 +77,13 @@ button{
 .top{
   display:flex;
   align-items:center;
-  justify-content:flex-end;
+  justify-content:space-between;
   gap:12px;
   margin-bottom:10px;
+}
+
+.home-top{
+  justify-content:flex-end;
 }
 
 .top-buttons{
@@ -87,17 +93,72 @@ button{
   justify-content:flex-end;
 }
 
+.small-btn,
+.main-btn,
+.ghost-btn,
+.danger-btn{
+  background:var(--input);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:6px;
+  min-height:38px;
+  padding:8px 12px;
+}
+
+.main-btn{
+  width:100%;
+  font-weight:700;
+  background:#132015;
+  border-color:#254a2a;
+}
+
+.danger-btn{
+  color:#fff;
+  background:var(--red);
+  border-color:var(--red);
+}
+
+.ghost-btn{
+  color:var(--muted);
+}
+
 .today-line{
   text-align:center;
   color:var(--muted);
   font-size:15px;
   font-weight:700;
-  margin:0 0 14px;
+  margin:0 0 8px;
 }
 
 .today-line span{
   color:var(--text);
 }
+
+
+/* BACKUP STATUS */
+
+.backup-strip{
+  text-align:center;
+  color:var(--muted2);
+  font-size:12px;
+  min-height:18px;
+  margin-bottom:14px;
+}
+
+.backup-strip.good{
+  color:var(--green);
+}
+
+.backup-strip.warn{
+  color:var(--orange);
+}
+
+.backup-strip.bad{
+  color:var(--red);
+}
+
+
+/* UNDO */
 
 .undo-bar{
   display:none;
@@ -139,148 +200,15 @@ button{
   min-width:38px;
 }
 
-.small-btn,
-.main-btn,
-.ghost-btn,
-.danger-btn{
-  background:var(--input);
-  color:var(--text);
-  border:1px solid var(--border);
-  border-radius:6px;
-  min-height:38px;
-  padding:8px 12px;
-}
 
-.main-btn{
-  width:100%;
-  font-weight:700;
-  background:#132015;
-  border-color:#254a2a;
-}
+/* JOB LIST */
 
-.danger-btn{
-  color:#fff;
-  background:var(--red);
-  border-color:var(--red);
-}
-
-.ghost-btn{
-  color:var(--muted);
-}
-
-.next-card{
-  background:var(--card);
-  border:1px solid var(--border2);
-  border-radius:12px;
-  padding:16px;
-  margin-bottom:16px;
-}
-
-.next-label{
+.section-title{
   color:var(--muted);
   font-size:13px;
-  margin-bottom:8px;
-}
-
-.client-name{
-  font-size:24px;
   font-weight:800;
-  margin-bottom:4px;
-}
-
-.suburb{
-  color:var(--muted);
-  margin-bottom:12px;
-}
-
-.meta-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:12px;
-}
-
-.pill{
-  border-radius:999px;
-  border:1px solid var(--border);
-  padding:6px 10px;
-  color:var(--muted);
-  background:#0f0f0f;
-  font-size:14px;
-}
-
-.pill.due{
-  color:var(--orange);
-  border-color:#5b3f1a;
-}
-
-.pill.overdue{
-  color:var(--red);
-  border-color:#5c2626;
-}
-
-.pill.future{
-  color:var(--green);
-  border-color:#244f2a;
-}
-
-.notes{
-  color:var(--muted);
-  margin:8px 0 14px;
-  line-height:1.35;
-}
-
-.action-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.summary{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin:14px 0 16px;
-}
-
-.summary-box{
-  background:#101010;
-  border:1px solid #242424;
-  border-radius:10px;
-  padding:12px;
-  text-align:center;
-}
-
-.summary-num{
-  font-size:22px;
-  font-weight:800;
-}
-
-.summary-label{
-  color:var(--muted);
-  font-size:13px;
-  margin-top:3px;
-}
-
-.tabs{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin-bottom:12px;
-}
-
-.tab{
-  background:#0f0f0f;
-  color:var(--muted);
-  border:1px solid var(--border);
-  border-radius:6px;
-  padding:8px 4px;
-}
-
-.tab.active{
-  color:#fff;
-  border-color:#f5f5f5;
-  background:#242424;
+  margin:18px 0 8px;
+  letter-spacing:.04em;
 }
 
 .list{
@@ -328,6 +256,18 @@ button{
   text-overflow:ellipsis;
 }
 
+.row-right{
+  text-align:right;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.price{
+  color:var(--text);
+  font-weight:700;
+  margin-bottom:3px;
+}
+
 .due-today{
   color:var(--green);
   font-weight:800;
@@ -343,25 +283,9 @@ button{
   font-weight:800;
 }
 
-.row-right{
-  text-align:right;
-  color:var(--muted);
-  font-size:14px;
-}
-
-.price{
-  color:var(--text);
-  font-weight:700;
-  margin-bottom:3px;
-}
-
 .oneoff-tag{
   color:var(--orange);
   font-weight:800;
-}
-
-.hidden-field{
-  display:none;
 }
 
 .finish-small{
@@ -383,12 +307,6 @@ button{
   padding:7px 12px;
   margin-top:6px;
   min-height:34px;
-}
-
-.row-buttons{
-  display:flex;
-  gap:6px;
-  justify-content:flex-end;
 }
 
 .paid-btn{
@@ -419,6 +337,22 @@ button{
 .selected-actions button{
   min-height:38px;
 }
+
+.unpaid-section{
+  display:none;
+}
+
+.unpaid-section.active{
+  display:block;
+}
+
+.empty{
+  color:var(--muted);
+  padding:12px;
+}
+
+
+/* PAID POPUP */
 
 .paid-pop{
   display:none;
@@ -473,26 +407,8 @@ button{
   min-height:42px;
 }
 
-.section-title{
-  color:var(--muted);
-  font-size:13px;
-  font-weight:800;
-  margin:18px 0 8px;
-  letter-spacing:.04em;
-}
 
-.unpaid-section{
-  display:none;
-}
-
-.unpaid-section.active{
-  display:block;
-}
-
-.empty{
-  color:var(--muted);
-  padding:12px;
-}
+/* FORMS */
 
 .screen{
   display:none;
@@ -517,6 +433,10 @@ button{
 
 .field.full{
   grid-column:1/-1;
+}
+
+.hidden-field{
+  display:none;
 }
 
 label{
@@ -553,7 +473,97 @@ textarea{
   font-size:12px;
   margin-top:14px;
   text-align:center;
+  line-height:1.4;
 }
+
+
+/* ACCOUNT */
+
+.account-card{
+  background:#111;
+  border:1px solid #2a2a2a;
+  border-radius:12px;
+  padding:16px;
+  margin-top:14px;
+}
+
+.account-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.account-text{
+  color:var(--muted);
+  line-height:1.45;
+  font-size:14px;
+}
+
+.account-email{
+  font-weight:800;
+  margin:10px 0 4px;
+  overflow-wrap:anywhere;
+}
+
+.account-sync{
+  color:var(--muted);
+  font-size:13px;
+  margin:4px 0 14px;
+}
+
+.account-sync.good{
+  color:var(--green);
+}
+
+.account-sync.warn{
+  color:var(--orange);
+}
+
+.account-sync.bad{
+  color:var(--red);
+}
+
+.auth-fields{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:14px;
+}
+
+.auth-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:10px;
+}
+
+.signed-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+
+.auth-message{
+  color:var(--muted);
+  font-size:13px;
+  min-height:18px;
+  margin-top:10px;
+  line-height:1.4;
+}
+
+.auth-message.good{
+  color:var(--green);
+}
+
+.auth-message.bad{
+  color:var(--red);
+}
+
+.auth-message.warn{
+  color:var(--orange);
+}
+
 
 @media(max-width:620px){
 
@@ -567,242 +577,406 @@ textarea{
     border:none;
   }
 
-  .tabs{
-    grid-template-columns:repeat(2,1fr);
-  }
-
   .form-grid,
-  .action-row,
-  .form-actions{
+  .form-actions,
+  .auth-buttons,
+  .signed-actions{
     grid-template-columns:1fr;
   }
+
 }
+
 </style>
 </head>
+
 
 <body>
 
 <main class="app">
 
+
+<!-- HOME -->
+
 <section id="homeScreen" class="screen active">
 
-<div class="top">
+  <div class="top home-top">
 
-  <div></div>
+    <div class="top-buttons">
 
-  <div class="top-buttons">
-    <button class="small-btn" id="addClientTop">+ Client</button>
-    <button class="small-btn" id="addOneOffTop">+ One-off</button>
+      <button class="small-btn" id="backupTop">
+        Backup
+      </button>
+
+      <button class="small-btn" id="addClientTop">
+        + Client
+      </button>
+
+      <button class="small-btn" id="addOneOffTop">
+        + One-off
+      </button>
+
+    </div>
+
   </div>
 
-</div>
 
-<div class="today-line">
-  Date today:
-  <span id="todayDateText"></span>
-</div>
-
-<div class="undo-bar" id="undoBar">
-
-  <span id="undoText">Job finished.</span>
-
-  <div class="undo-actions">
-    <button id="undoBtn">Undo</button>
-    <button class="undo-close" id="undoCloseBtn">X</button>
+  <div class="today-line">
+    Date today:
+    <span id="todayDateText"></span>
   </div>
 
-</div>
+
+  <div class="backup-strip" id="backupStrip">
+    Saved on this device
+  </div>
 
 
-<div class="section-title">
-  NORMAL JOBS
-</div>
+  <div class="undo-bar" id="undoBar">
 
-<div id="clientList" class="list"></div>
+    <span id="undoText">
+      Job finished.
+    </span>
 
+    <div class="undo-actions">
 
-<div id="recurringUnpaidSection" class="unpaid-section">
+      <button id="undoBtn">
+        Undo
+      </button>
+
+      <button class="undo-close" id="undoCloseBtn">
+        X
+      </button>
+
+    </div>
+
+  </div>
+
 
   <div class="section-title">
-    UNPAID JOBS
+    NORMAL JOBS
   </div>
 
-  <div id="recurringUnpaidList" class="list"></div>
-
-</div>
+  <div id="clientList" class="list"></div>
 
 
-<div id="unpaidSection" class="unpaid-section">
+  <div id="recurringUnpaidSection" class="unpaid-section">
 
-  <div class="section-title">
-    ONE-OFF UNPAID JOBS
+    <div class="section-title">
+      UNPAID JOBS
+    </div>
+
+    <div id="recurringUnpaidList" class="list"></div>
+
   </div>
 
-  <div id="unpaidList" class="list"></div>
 
-</div>
+  <div id="unpaidSection" class="unpaid-section">
+
+    <div class="section-title">
+      ONE-OFF UNPAID JOBS
+    </div>
+
+    <div id="unpaidList" class="list"></div>
+
+  </div>
 
 
-<div class="footer-note">
-  Finished = job done, payment still owing. Paid from Normal Jobs = job done + paid. Paying an Unpaid Job does not change its next date.
-</div>
+  <div class="footer-note">
+    Finished = job done, payment still owing.
+    Paid from Normal Jobs = job done + paid.
+    Paying an Unpaid Job does not change its next mowing date.
+  </div>
 
 </section>
 
+
+
+<!-- CLIENT FORM -->
 
 <section id="formScreen" class="screen">
 
-<div class="top">
+  <div class="top">
 
-  <div>
+    <div>
 
-    <h1 id="formTitle">
-      Add Client
-    </h1>
+      <h1 id="formTitle">
+        Add Client
+      </h1>
 
-    <h3>
-      Keep it simple
-    </h3>
+      <h3>
+        Keep it simple
+      </h3>
+
+    </div>
+
+    <button class="small-btn" id="backHome">
+      Back
+    </button>
 
   </div>
 
-  <button class="small-btn" id="backHome">
-    Back
-  </button>
 
-</div>
+  <div class="form-grid">
 
+    <div class="field">
 
-<div class="form-grid">
+      <label>
+        Name
+      </label>
 
-<div class="field">
+      <input
+        id="nameInput"
+        placeholder="Mary"
+      />
 
-  <label>
-    Name
-  </label>
-
-  <input
-    id="nameInput"
-    placeholder="Mary"
-  />
-
-</div>
+    </div>
 
 
-<div class="field">
+    <div class="field">
 
-  <label>
-    Suburb
-  </label>
+      <label>
+        Suburb
+      </label>
 
-  <input
-    id="suburbInput"
-    placeholder="Blacktown"
-  />
+      <input
+        id="suburbInput"
+        placeholder="Blacktown"
+      />
 
-</div>
-
-
-<div class="field">
-
-  <label>
-    Price $
-  </label>
-
-  <input
-    id="priceInput"
-    type="number"
-    placeholder="70"
-  />
-
-</div>
+    </div>
 
 
-<div class="field" id="cycleField">
+    <div class="field">
 
-  <label>
-    Repeat every
-  </label>
+      <label>
+        Price $
+      </label>
 
-  <select id="cycleInput">
+      <input
+        id="priceInput"
+        type="number"
+        placeholder="70"
+      />
 
-    <option value="7">
-      7 days
-    </option>
-
-    <option value="14">
-      14 days
-    </option>
-
-    <option value="21">
-      21 days
-    </option>
-
-    <option value="28">
-      28 days
-    </option>
-
-    <option value="30">
-      30 days
-    </option>
-
-    <option value="50">
-      50 days
-    </option>
-
-  </select>
-
-</div>
+    </div>
 
 
-<div class="field">
+    <div class="field" id="cycleField">
 
-  <label>
-    Next due date
-  </label>
+      <label>
+        Repeat every
+      </label>
 
-  <input
-    id="dueInput"
-    type="date"
-  />
+      <select id="cycleInput">
 
-</div>
+        <option value="7">
+          7 days
+        </option>
+
+        <option value="14">
+          14 days
+        </option>
+
+        <option value="21">
+          21 days
+        </option>
+
+        <option value="28">
+          28 days
+        </option>
+
+        <option value="30">
+          30 days
+        </option>
+
+        <option value="50">
+          50 days
+        </option>
+
+      </select>
+
+    </div>
 
 
-<div class="field full">
+    <div class="field">
 
-  <label>
-    Notes
-  </label>
+      <label>
+        Next due date
+      </label>
 
-  <textarea
-    id="notesInput"
-    placeholder="Gate code, dog, green bin, cash, etc."
-  ></textarea>
+      <input
+        id="dueInput"
+        type="date"
+      />
 
-</div>
-
-</div>
+    </div>
 
 
-<div class="form-actions">
+    <div class="field full">
 
-  <button class="main-btn" id="saveClient">
-    Save Client
-  </button>
+      <label>
+        Notes
+      </label>
 
-  <button
-    class="danger-btn"
-    id="deleteClient"
-    style="display:none"
-  >
-    Delete Client
-  </button>
+      <textarea
+        id="notesInput"
+        placeholder="Gate code, dog, green bin, cash, etc."
+      ></textarea>
 
-</div>
+    </div>
+
+  </div>
+
+
+  <div class="form-actions">
+
+    <button class="main-btn" id="saveClient">
+      Save Client
+    </button>
+
+    <button
+      class="danger-btn"
+      id="deleteClient"
+      style="display:none"
+    >
+      Delete Client
+    </button>
+
+  </div>
 
 </section>
 
+
+
+<!-- BACKUP SCREEN -->
+
+<section id="accountScreen" class="screen">
+
+  <div class="top">
+
+    <div>
+
+      <h1>
+        Backup
+      </h1>
+
+      <h3>
+        Optional
+      </h3>
+
+    </div>
+
+    <button class="small-btn" id="backFromAccount">
+      Back
+    </button>
+
+  </div>
+
+
+  <div id="guestAccount" class="account-card">
+
+    <div class="account-title">
+      Back up your schedule
+    </div>
+
+
+    <div class="account-text">
+
+      You do not need an account to use the app.
+
+      <br><br>
+
+      Your schedule already saves on this device.
+
+      <br><br>
+
+      Create an account if you want your schedule backed up so it can be restored if you lose or replace your phone.
+
+    </div>
+
+
+    <div class="auth-fields">
+
+      <input
+        id="authEmail"
+        type="email"
+        autocomplete="email"
+        placeholder="Email"
+      />
+
+      <input
+        id="authPassword"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Password"
+      />
+
+    </div>
+
+
+    <div class="auth-buttons">
+
+      <button class="main-btn" id="createAccountBtn">
+        Create Account
+      </button>
+
+      <button class="small-btn" id="signInBtn">
+        Sign In
+      </button>
+
+    </div>
+
+
+    <div class="auth-message" id="authMessage"></div>
+
+  </div>
+
+
+  <div
+    id="signedAccount"
+    class="account-card"
+    style="display:none"
+  >
+
+    <div class="account-title">
+      Schedule backup
+    </div>
+
+    <div class="account-text">
+      Signed in as:
+    </div>
+
+    <div class="account-email" id="signedEmail"></div>
+
+    <div class="account-sync" id="accountSyncText">
+      Checking backup...
+    </div>
+
+
+    <div class="signed-actions">
+
+      <button class="main-btn" id="backupNowBtn">
+        Back Up Now
+      </button>
+
+      <button class="ghost-btn" id="signOutBtn">
+        Sign Out
+      </button>
+
+    </div>
+
+
+    <div class="footer-note">
+      Signing out does not delete the schedule saved on this device.
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- PAID POPUP -->
 
 <div class="paid-pop" id="paidPopup">
 
@@ -828,44 +1002,212 @@ textarea{
 
 </div>
 
+
 </main>
+
 
 
 <script>
 
-const STORAGE_KEY="lawnLoop.clients.v1";
+/* =========================================================
+   SUPABASE
+========================================================= */
 
-let clients=[];
+const SUPABASE_URL =
+  "https://eccwappeihjkkmqupngv.supabase.co";
 
-let editingId=null;
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_OEqAYDNJC95tCGrFo1qAag_E5AmaBe_";
 
-let selectedClientId=null;
-
-let pendingPaidId=null;
-
-let lastFinish=null;
-
-let formMode="recurring";
-
-const starter=[];
+const CLOUD_TABLE =
+  "lawn_schedule_backups";
 
 
-/* =========================
-   DATE FUNCTIONS
-========================= */
+/* =========================================================
+   LOCAL STORAGE
+========================================================= */
+
+const STORAGE_KEY =
+  "lawnLoop.clients.v1";
+
+const LOCAL_UPDATED_KEY =
+  "lawnLoop.localUpdated.v1";
+
+const LAST_SYNC_USER_KEY =
+  "lawnLoop.lastSyncUser.v1";
+
+const LAST_SYNC_AT_KEY =
+  "lawnLoop.lastSyncAt.v1";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let clients = [];
+
+let editingId = null;
+
+let selectedClientId = null;
+
+let pendingPaidId = null;
+
+let lastFinish = null;
+
+let formMode = "recurring";
+
+
+let supabaseClient = null;
+
+let currentUser = null;
+
+let syncTimer = null;
+
+let syncInProgress = false;
+
+let syncAgain = false;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const todayDateText =
+  document.getElementById("todayDateText");
+
+const backupStrip =
+  document.getElementById("backupStrip");
+
+const backupTop =
+  document.getElementById("backupTop");
+
+const addClientTop =
+  document.getElementById("addClientTop");
+
+const addOneOffTop =
+  document.getElementById("addOneOffTop");
+
+const undoBar =
+  document.getElementById("undoBar");
+
+const undoText =
+  document.getElementById("undoText");
+
+const undoBtn =
+  document.getElementById("undoBtn");
+
+const undoCloseBtn =
+  document.getElementById("undoCloseBtn");
+
+const clientList =
+  document.getElementById("clientList");
+
+const recurringUnpaidSection =
+  document.getElementById("recurringUnpaidSection");
+
+const recurringUnpaidList =
+  document.getElementById("recurringUnpaidList");
+
+const unpaidSection =
+  document.getElementById("unpaidSection");
+
+const unpaidList =
+  document.getElementById("unpaidList");
+
+
+const formTitle =
+  document.getElementById("formTitle");
+
+const backHome =
+  document.getElementById("backHome");
+
+const nameInput =
+  document.getElementById("nameInput");
+
+const suburbInput =
+  document.getElementById("suburbInput");
+
+const priceInput =
+  document.getElementById("priceInput");
+
+const cycleField =
+  document.getElementById("cycleField");
+
+const cycleInput =
+  document.getElementById("cycleInput");
+
+const dueInput =
+  document.getElementById("dueInput");
+
+const notesInput =
+  document.getElementById("notesInput");
+
+const saveClientBtn =
+  document.getElementById("saveClient");
+
+const deleteClientBtn =
+  document.getElementById("deleteClient");
+
+
+const paidPopup =
+  document.getElementById("paidPopup");
+
+const paidYesBtn =
+  document.getElementById("paidYesBtn");
+
+const paidNoBtn =
+  document.getElementById("paidNoBtn");
+
+
+const backFromAccount =
+  document.getElementById("backFromAccount");
+
+const guestAccount =
+  document.getElementById("guestAccount");
+
+const signedAccount =
+  document.getElementById("signedAccount");
+
+const authEmail =
+  document.getElementById("authEmail");
+
+const authPassword =
+  document.getElementById("authPassword");
+
+const createAccountBtn =
+  document.getElementById("createAccountBtn");
+
+const signInBtn =
+  document.getElementById("signInBtn");
+
+const authMessage =
+  document.getElementById("authMessage");
+
+const signedEmail =
+  document.getElementById("signedEmail");
+
+const accountSyncText =
+  document.getElementById("accountSyncText");
+
+const backupNowBtn =
+  document.getElementById("backupNowBtn");
+
+const signOutBtn =
+  document.getElementById("signOutBtn");
+
+
+/* =========================================================
+   DATES
+========================================================= */
 
 function today(){
 
-  const d=new Date();
+  const d = new Date();
 
-  d.setHours(
-    0,
-    0,
-    0,
-    0
-  );
+  d.setHours(0,0,0,0);
 
   return d;
+
 }
 
 
@@ -880,52 +1222,55 @@ function todayPretty(){
       year:"numeric"
     }
   );
+
 }
 
 
 function addDays(date,days){
 
-  const d=new Date(date);
+  const d = new Date(date);
 
   d.setDate(
-    d.getDate()+
-    Number(days)
+    d.getDate() + Number(days)
   );
 
   return d;
+
 }
 
 
 function iso(d){
 
-  const y=
+  const y =
     d.getFullYear();
 
-  const m=
+  const m =
     String(
       d.getMonth()+1
-    ).padStart(
-      2,
-      "0"
-    );
+    ).padStart(2,"0");
 
-  const day=
+  const day =
     String(
       d.getDate()
-    ).padStart(
-      2,
-      "0"
-    );
+    ).padStart(2,"0");
 
   return `${y}-${m}-${day}`;
+
+}
+
+
+function dateFromIso(s){
+
+  return new Date(
+    s+"T00:00:00"
+  );
+
 }
 
 
 function pretty(s){
 
-  return new Date(
-    s+"T00:00:00"
-  ).toLocaleDateString(
+  return dateFromIso(s).toLocaleDateString(
     "en-AU",
     {
       weekday:"short",
@@ -933,6 +1278,7 @@ function pretty(s){
       month:"short"
     }
   );
+
 }
 
 
@@ -940,105 +1286,104 @@ function daysUntil(s){
 
   return Math.round(
     (
-      new Date(
-        s+"T00:00:00"
-      )
-      -
+      dateFromIso(s) -
       today()
     )
     /
     86400000
   );
+
 }
 
 
 function dueText(s){
 
-  const d=
+  const d =
     daysUntil(s);
 
 
-  if(d<0){
+  if(d < 0){
 
     return (
-      Math.abs(d)+
-      " day"+
+      Math.abs(d) +
+      " day" +
       (
         Math.abs(d)===1
-          ?""
-          :"s"
-      )+
+          ? ""
+          : "s"
+      ) +
       " overdue"
     );
 
   }
 
 
-  if(d===0){
+  if(d === 0){
 
     return "Due today";
 
   }
 
 
-  if(d===1){
+  if(d === 1){
 
     return "Tomorrow";
 
   }
 
 
-  return "In "+d+" days";
+  return "In " + d + " days";
+
 }
 
 
 function dueTextStyled(s){
 
-  const d=
+  const d =
     daysUntil(s);
 
-  const text=
+  const text =
     dueText(s);
 
 
-  if(d<0){
+  if(d < 0){
 
     return (
-      '<span class="due-now">'+
-      text+
+      '<span class="due-now">' +
+      text +
       '</span>'
     );
 
   }
 
 
-  if(d===0){
+  if(d === 0){
 
     return (
-      '<span class="due-today">'+
-      text+
+      '<span class="due-today">' +
+      text +
       '</span>'
     );
 
   }
 
 
-  if(d===1){
+  if(d === 1){
 
     return (
-      '<span class="due-now">'+
-      text+
+      '<span class="due-now">' +
+      text +
       '</span>'
     );
 
   }
 
 
-  if(d<=4){
+  if(d <= 4){
 
     return (
-      '<span class="due-warn">'+
-      text+
+      '<span class="due-warn">' +
+      text +
       '</span>'
     );
 
@@ -1046,19 +1391,43 @@ function dueTextStyled(s){
 
 
   return text;
+
 }
 
 
-/* =========================
+/* =========================================================
    HELPERS
-========================= */
+========================================================= */
+
+function makeId(){
+
+  if(
+    window.crypto &&
+    typeof window.crypto.randomUUID === "function"
+  ){
+
+    return window.crypto.randomUUID();
+
+  }
+
+
+  return (
+    Date.now().toString() +
+    "-" +
+    Math.random()
+      .toString(36)
+      .slice(2)
+  );
+
+}
+
 
 function money(n){
 
   return (
-    "$"+
+    "$" +
     Number(
-      n||0
+      n || 0
     ).toLocaleString(
       "en-AU",
       {
@@ -1066,72 +1435,144 @@ function money(n){
       }
     )
   );
+
 }
 
 
 function esc(s){
 
   return String(
-    s||""
+    s || ""
   )
-  .replaceAll(
-    "&",
-    "&amp;"
-  )
-  .replaceAll(
-    "<",
-    "&lt;"
-  )
-  .replaceAll(
-    ">",
-    "&gt;"
-  )
-  .replaceAll(
-    '"',
-    "&quot;"
-  )
-  .replaceAll(
-    "'",
-    "&#039;"
-  );
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
+
 }
 
 
-function sort(list){
+function sortClients(list){
 
-  return [
-    ...list
-  ].sort(
-    (a,b)=>
-      new Date(
-        a.nextDue
-      )
-      -
-      new Date(
-        b.nextDue
-      )
+  return [...list].sort(
+    (a,b) =>
+      dateFromIso(a.nextDue) -
+      dateFromIso(b.nextDue)
   );
+
 }
 
 
-/* =========================
-   SAVE / LOAD
-========================= */
+function normalizeClients(list){
 
-function save(){
+  if(
+    !Array.isArray(list)
+  ){
+
+    return [];
+
+  }
+
+
+  return list.map(
+    c => ({
+
+      id:
+        c.id || makeId(),
+
+      name:
+        c.name || "",
+
+      suburb:
+        c.suburb || "",
+
+      price:
+        Number(c.price || 0),
+
+      cycle:
+        Number(c.cycle || 0),
+
+      nextDue:
+        c.nextDue || iso(today()),
+
+      notes:
+        c.notes || "",
+
+      paid:
+        c.paid === undefined
+          ? true
+          : Boolean(c.paid),
+
+      type:
+        c.type || "recurring",
+
+      finished:
+        Boolean(c.finished)
+
+    })
+  );
+
+}
+
+
+function mergeClientLists(cloudList,localList){
+
+  const merged =
+    new Map();
+
+
+  cloudList.forEach(
+    c => merged.set(
+      c.id,
+      c
+    )
+  );
+
+
+  localList.forEach(
+    c => merged.set(
+      c.id,
+      c
+    )
+  );
+
+
+  return [...merged.values()];
+
+}
+
+
+/* =========================================================
+   LOCAL SAVE / LOAD
+========================================================= */
+
+function save(syncCloud=true){
 
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify(
-      clients
-    )
+    JSON.stringify(clients)
   );
+
+
+  if(syncCloud){
+
+    localStorage.setItem(
+      LOCAL_UPDATED_KEY,
+      new Date().toISOString()
+    );
+
+
+    scheduleCloudBackup();
+
+  }
+
 }
 
 
 function load(){
 
-  const raw=
+  const raw =
     localStorage.getItem(
       STORAGE_KEY
     );
@@ -1141,186 +1582,133 @@ function load(){
 
     try{
 
-      clients=
-        JSON.parse(
-          raw
+      clients =
+        normalizeClients(
+          JSON.parse(raw)
         );
 
 
-      clients=
-        clients.map(
-          c=>({
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(clients)
+      );
 
-            ...c,
 
-            paid:
-              c.paid===undefined
-                ?true
-                :c.paid,
+      if(
+        clients.length > 0 &&
+        !localStorage.getItem(
+          LOCAL_UPDATED_KEY
+        )
+      ){
 
-            type:
-              c.type||
-              "recurring",
-
-            finished:
-              c.finished||
-              false
-
-          })
+        localStorage.setItem(
+          LOCAL_UPDATED_KEY,
+          new Date().toISOString()
         );
 
+      }
 
-      save();
 
       return;
 
-    }catch{}
+    }
+    catch(error){
+
+      console.error(
+        "Local schedule load error:",
+        error
+      );
+
+    }
+
   }
 
 
-  const t=
-    today();
+  clients = [];
 
 
-  clients=
-    starter.map(
-      (c,i)=>({
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(clients)
+  );
 
-        id:
-          crypto.randomUUID
-            ?crypto.randomUUID()
-            :String(
-              Date.now()+i
-            ),
-
-        name:c[0],
-
-        suburb:c[1],
-
-        price:c[2],
-
-        cycle:c[3],
-
-        nextDue:
-          iso(
-            addDays(
-              t,
-              c[4]
-            )
-          ),
-
-        notes:c[5],
-
-        paid:true,
-
-        type:"recurring",
-
-        finished:false
-
-      })
-    );
-
-
-  save();
 }
 
 
-/* =========================
-   SCREENS
-========================= */
+/* =========================================================
+   SCREEN
+========================================================= */
 
 function show(id){
 
   document
-    .querySelectorAll(
-      ".screen"
-    )
+    .querySelectorAll(".screen")
     .forEach(
-      s=>
-        s.classList.remove(
+      screen =>
+        screen.classList.remove(
           "active"
         )
     );
 
 
   document
-    .getElementById(
-      id
-    )
+    .getElementById(id)
     .classList.add(
       "active"
     );
+
 }
 
 
-/* =========================
+/* =========================================================
    RENDER
-========================= */
+========================================================= */
 
 function render(){
 
-  document
-    .getElementById(
-      "todayDateText"
-    )
-    .textContent=
-      todayPretty();
+  todayDateText.textContent =
+    todayPretty();
 
 
   renderUndo();
 
+  renderBackupStrip();
 
-  const normal=
-    sort(
+
+  const normal =
+    sortClients(
       clients.filter(
-        c=>
-
+        c =>
           !(
-            c.type==="oneoff"
-            &&
-            c.finished
-            &&
+            c.type === "oneoff" &&
+            c.finished &&
             !c.paid
           )
-
           &&
-
           !(
-            (
-              c.type||
-              "recurring"
-            )
-            ===
-            "recurring"
-            &&
+            (c.type || "recurring") === "recurring" &&
             !c.paid
           )
       )
     );
 
 
-  const recurringUnpaid=
-    sort(
+  const recurringUnpaid =
+    sortClients(
       clients.filter(
-        c=>
-          (
-            c.type||
-            "recurring"
-          )
-          ===
-          "recurring"
+        c =>
+          (c.type || "recurring") === "recurring"
           &&
           !c.paid
       )
     );
 
 
-  const unpaid=
-    sort(
+  const oneOffUnpaid =
+    sortClients(
       clients.filter(
-        c=>
-          c.type===
-          "oneoff"
+        c =>
+          c.type === "oneoff"
           &&
           c.finished
           &&
@@ -1329,238 +1717,211 @@ function render(){
     );
 
 
-  renderList(
-    normal
-  );
-
+  renderNormalList(normal);
 
   renderRecurringUnpaidList(
     recurringUnpaid
   );
 
-
-  renderUnpaidList(
-    unpaid
+  renderOneOffUnpaidList(
+    oneOffUnpaid
   );
+
 }
 
 
-/* =========================
+/* =========================================================
    NORMAL JOBS
-========================= */
+========================================================= */
 
-function renderList(list){
+function renderNormalList(list){
 
-  const el=
-    document.getElementById(
-      "clientList"
-    );
-
-
-  el.innerHTML="";
+  clientList.innerHTML = "";
 
 
   if(!list.length){
 
-    el.innerHTML=
-      '<div class="empty">'+
-      'No clients yet. Add one to start the schedule.'+
+    clientList.innerHTML =
+      '<div class="empty">' +
+      'No clients yet. Add one to start the schedule.' +
       '</div>';
 
     return;
+
   }
 
 
   list.forEach(
-    (c,index)=>{
+    (c,index) => {
 
-      const row=
+      const row =
         document.createElement(
           "div"
         );
 
 
-      row.className=
-        "row"+
+      row.className =
+        "row" +
         (
-          index===0
-            ?" next-row"
-            :""
-        )+
+          index === 0
+            ? " next-row"
+            : ""
+        ) +
         (
-          selectedClientId===c.id
-            ?" selected-row"
-            :""
+          selectedClientId === c.id
+            ? " selected-row"
+            : ""
         );
 
 
-      const isSelected=
-        selectedClientId===c.id;
+      const selected =
+        selectedClientId === c.id;
 
 
-      const paidClass=
+      const paidClass =
         c.paid
-          ?"paid-yes"
-          :"";
+          ? "paid-yes"
+          : "";
 
 
-      const paidBtn=
-
-        '<button class="paid-btn '+
-        paidClass+
-        '" onclick="event.stopPropagation();openPaidPopup(\''+
-        c.id+
-        '\')">'+
-        'Paid'+
+      const paidButton =
+        '<button class="paid-btn ' +
+        paidClass +
+        '" onclick="event.stopPropagation();openPaidPopup(\'' +
+        c.id +
+        '\')">' +
+        'Paid' +
         '</button>';
 
 
-      const actions=
-        isSelected
+      const actions =
+        selected
           ?
-          '<div class="selected-actions">'+
+          '<div class="selected-actions">' +
 
-          '<button class="finish-small" onclick="event.stopPropagation();finishClient(\''+
-          c.id+
-          '\')">'+
-          'Finished'+
-          '</button>'+
+          '<button class="finish-small" onclick="event.stopPropagation();finishClient(\'' +
+          c.id +
+          '\')">' +
+          'Finished' +
+          '</button>' +
 
-          '<button class="edit-small" onclick="event.stopPropagation();editClient(\''+
-          c.id+
-          '\')">'+
-          'Edit'+
-          '</button>'+
+          '<button class="edit-small" onclick="event.stopPropagation();editClient(\'' +
+          c.id +
+          '\')">' +
+          'Edit' +
+          '</button>' +
 
           '</div>'
-          :"";
+          : '';
 
 
-      row.innerHTML=
+      row.innerHTML =
+        '<div>' +
 
-        '<div>'+
+          '<div class="row-title">' +
 
-          '<div class="row-title">'+
             (
-              index===0
-                ?"NEXT - "
-                :""
-            )+
-            esc(
-              c.name
-            )+
-          '</div>'+
+              index === 0
+                ? 'NEXT - '
+                : ''
+            ) +
 
-          '<div class="row-sub">'+
+            esc(c.name) +
 
-            esc(
-              c.suburb
-            )+
+          '</div>' +
 
-            ' · '+
+          '<div class="row-sub">' +
+
+            esc(c.suburb) +
+
+            ' · ' +
 
             dueTextStyled(
               c.nextDue
-            )+
+            ) +
 
-            ' · '+
+            ' · ' +
 
             (
-              c.type==="oneoff"
+              c.type === "oneoff"
                 ?
                 '<span class="oneoff-tag">ONE-OFF</span>'
                 :
-                'every '+
-                c.cycle+
+                'every ' +
+                c.cycle +
                 ' days'
-            )+
+            ) +
 
             (
               c.notes
                 ?
-                ' · '+
-                esc(
-                  c.notes
-                )
+                ' · ' +
+                esc(c.notes)
                 :
                 ''
-            )+
+            ) +
 
-          '</div>'+
+          '</div>' +
 
-        '</div>'+
+        '</div>' +
 
-        '<div class="row-right">'+
+        '<div class="row-right">' +
 
-          '<div class="price">'+
-            money(
-              c.price
-            )+
-          '</div>'+
+          '<div class="price">' +
+            money(c.price) +
+          '</div>' +
 
-          '<div>'+
-            pretty(
-              c.nextDue
-            )+
-          '</div>'+
+          '<div>' +
+            pretty(c.nextDue) +
+          '</div>' +
 
-          paidBtn+
+          paidButton +
 
-        '</div>'+
+        '</div>' +
 
         actions;
 
 
-      row.onclick=
-        ()=>
+      row.onclick =
+        () =>
           selectClient(
             c.id
           );
 
 
-      el.appendChild(
+      clientList.appendChild(
         row
       );
 
     }
   );
+
 }
 
 
-/* =========================
+/* =========================================================
    RECURRING UNPAID
-========================= */
+========================================================= */
 
 function renderRecurringUnpaidList(list){
 
-  const section=
-    document.getElementById(
-      "recurringUnpaidSection"
-    );
-
-
-  const el=
-    document.getElementById(
-      "recurringUnpaidList"
-    );
-
-
-  el.innerHTML="";
+  recurringUnpaidList.innerHTML = "";
 
 
   if(!list.length){
 
-    section
+    recurringUnpaidSection
       .classList
       .remove(
         "active"
       );
 
     return;
+
   }
 
 
-  section
+  recurringUnpaidSection
     .classList
     .add(
       "active"
@@ -1568,165 +1929,145 @@ function renderRecurringUnpaidList(list){
 
 
   list.forEach(
-    c=>{
+    c => {
 
-      const row=
+      const row =
         document.createElement(
           "div"
         );
 
 
-      row.className=
-        "row unpaid-row"+
+      row.className =
+        "row unpaid-row" +
         (
-          selectedClientId===c.id
-            ?" selected-row"
-            :""
+          selectedClientId === c.id
+            ? " selected-row"
+            : ""
         );
 
 
-      const isSelected=
-        selectedClientId===c.id;
+      const selected =
+        selectedClientId === c.id;
 
 
-      const paidBtn=
-
-        '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\''+
-        c.id+
-        '\')">'+
-        'Paid'+
+      const paidButton =
+        '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\'' +
+        c.id +
+        '\')">' +
+        'Paid' +
         '</button>';
 
 
-      const actions=
-        isSelected
+      const actions =
+        selected
           ?
-          '<div class="selected-actions">'+
+          '<div class="selected-actions">' +
 
-          '<button class="edit-small" onclick="event.stopPropagation();editClient(\''+
-          c.id+
-          '\')">'+
-          'Edit'+
-          '</button>'+
+          '<button class="edit-small" onclick="event.stopPropagation();editClient(\'' +
+          c.id +
+          '\')">' +
+          'Edit' +
+          '</button>' +
 
-          '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\''+
-          c.id+
-          '\')">'+
-          'Paid'+
-          '</button>'+
+          '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\'' +
+          c.id +
+          '\')">' +
+          'Paid' +
+          '</button>' +
 
           '</div>'
-          :"";
+          : '';
 
 
-      row.innerHTML=
+      row.innerHTML =
+        '<div>' +
 
-        '<div>'+
+          '<div class="row-title">' +
+            esc(c.name) +
+          '</div>' +
 
-          '<div class="row-title">'+
-            esc(
-              c.name
-            )+
-          '</div>'+
+          '<div class="row-sub">' +
 
-          '<div class="row-sub">'+
+            esc(c.suburb) +
 
-            esc(
-              c.suburb
-            )+
-
-            ' · '+
+            ' · ' +
 
             dueTextStyled(
               c.nextDue
-            )+
+            ) +
 
-            ' · every '+
-            c.cycle+
-            ' days'+
+            ' · every ' +
+            c.cycle +
+            ' days' +
 
             (
               c.notes
                 ?
-                ' · '+
-                esc(
-                  c.notes
-                )
+                ' · ' +
+                esc(c.notes)
                 :
                 ''
-            )+
+            ) +
 
-          '</div>'+
+          '</div>' +
 
-        '</div>'+
+        '</div>' +
 
-        '<div class="row-right">'+
+        '<div class="row-right">' +
 
-          '<div class="price">'+
-            money(
-              c.price
-            )+
-          '</div>'+
+          '<div class="price">' +
+            money(c.price) +
+          '</div>' +
 
-          '<div>Unpaid</div>'+
+          '<div>Unpaid</div>' +
 
-          paidBtn+
+          paidButton +
 
-        '</div>'+
+        '</div>' +
 
         actions;
 
 
-      row.onclick=
-        ()=>
+      row.onclick =
+        () =>
           selectClient(
             c.id
           );
 
 
-      el.appendChild(
+      recurringUnpaidList.appendChild(
         row
       );
 
     }
   );
+
 }
 
 
-/* =========================
+/* =========================================================
    ONE-OFF UNPAID
-========================= */
+========================================================= */
 
-function renderUnpaidList(list){
+function renderOneOffUnpaidList(list){
 
-  const section=
-    document.getElementById(
-      "unpaidSection"
-    );
-
-
-  const el=
-    document.getElementById(
-      "unpaidList"
-    );
-
-
-  el.innerHTML="";
+  unpaidList.innerHTML = "";
 
 
   if(!list.length){
 
-    section
+    unpaidSection
       .classList
       .remove(
         "active"
       );
 
     return;
+
   }
 
 
-  section
+  unpaidSection
     .classList
     .add(
       "active"
@@ -1734,202 +2075,194 @@ function renderUnpaidList(list){
 
 
   list.forEach(
-    c=>{
+    c => {
 
-      const row=
+      const row =
         document.createElement(
           "div"
         );
 
 
-      row.className=
-        "row"+
+      row.className =
+        "row" +
         (
-          selectedClientId===c.id
-            ?" selected-row"
-            :""
+          selectedClientId === c.id
+            ? " selected-row"
+            : ""
         );
 
 
-      const isSelected=
-        selectedClientId===c.id;
+      const selected =
+        selectedClientId === c.id;
 
 
-      const paidBtn=
-
-        '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\''+
-        c.id+
-        '\')">'+
-        'Paid'+
+      const paidButton =
+        '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\'' +
+        c.id +
+        '\')">' +
+        'Paid' +
         '</button>';
 
 
-      const actions=
-        isSelected
+      const actions =
+        selected
           ?
-          '<div class="selected-actions">'+
+          '<div class="selected-actions">' +
 
-          '<button class="edit-small" onclick="event.stopPropagation();editClient(\''+
-          c.id+
-          '\')">'+
-          'Edit'+
-          '</button>'+
+          '<button class="edit-small" onclick="event.stopPropagation();editClient(\'' +
+          c.id +
+          '\')">' +
+          'Edit' +
+          '</button>' +
 
-          '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\''+
-          c.id+
-          '\')">'+
-          'Paid'+
-          '</button>'+
+          '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\'' +
+          c.id +
+          '\')">' +
+          'Paid' +
+          '</button>' +
 
           '</div>'
-          :"";
+          : '';
 
 
-      row.innerHTML=
+      row.innerHTML =
+        '<div>' +
 
-        '<div>'+
+          '<div class="row-title">' +
+            esc(c.name) +
+          '</div>' +
 
-          '<div class="row-title">'+
-            esc(
-              c.name
-            )+
-          '</div>'+
+          '<div class="row-sub">' +
 
-          '<div class="row-sub">'+
+            esc(c.suburb) +
 
-            esc(
-              c.suburb
-            )+
+            ' · Finished · ' +
 
-            ' · Finished · '+
-
-            '<span class="oneoff-tag">ONE-OFF</span>'+
+            '<span class="oneoff-tag">ONE-OFF</span>' +
 
             (
               c.notes
                 ?
-                ' · '+
-                esc(
-                  c.notes
-                )
+                ' · ' +
+                esc(c.notes)
                 :
                 ''
-            )+
+            ) +
 
-          '</div>'+
+          '</div>' +
 
-        '</div>'+
+        '</div>' +
 
-        '<div class="row-right">'+
+        '<div class="row-right">' +
 
-          '<div class="price">'+
-            money(
-              c.price
-            )+
-          '</div>'+
+          '<div class="price">' +
+            money(c.price) +
+          '</div>' +
 
-          '<div>Unpaid</div>'+
+          '<div>Unpaid</div>' +
 
-          paidBtn+
+          paidButton +
 
-        '</div>'+
+        '</div>' +
 
         actions;
 
 
-      row.onclick=
-        ()=>
+      row.onclick =
+        () =>
           selectClient(
             c.id
           );
 
 
-      el.appendChild(
+      unpaidList.appendChild(
         row
       );
 
     }
   );
+
 }
 
 
-/* =========================
-   SELECT CLIENT
-========================= */
+/* =========================================================
+   SELECT
+========================================================= */
 
 function selectClient(id){
 
-  selectedClientId=
-    selectedClientId===id
-      ?null
-      :id;
+  selectedClientId =
+    selectedClientId === id
+      ? null
+      : id;
 
 
   render();
+
 }
 
 
-/* =========================
+/* =========================================================
    FINISHED
-========================= */
+========================================================= */
 
 function finishClient(id){
 
-  const c=
+  const c =
     clients.find(
-      x=>
-        x.id===id
+      x => x.id === id
     );
 
 
   if(!c){
 
     return;
+
   }
 
 
-  lastFinish={
+  lastFinish = {
 
     id:c.id,
 
     name:c.name,
 
-    nextDue:
-      c.nextDue,
+    nextDue:c.nextDue,
 
-    paid:
-      c.paid,
+    paid:c.paid,
 
-    finished:
-      c.finished,
+    finished:c.finished,
 
-    type:
-      c.type,
+    type:c.type,
 
-    action:
-      "finish"
+    action:"finish"
 
   };
 
 
-  if(c.type==="oneoff"){
+  if(
+    c.type === "oneoff"
+  ){
 
-    c.finished=true;
+    c.finished = true;
 
-    c.paid=false;
+    c.paid = false;
 
-  }else{
+  }
+  else{
 
     /*
       RECURRING CLIENT
 
-      FINISHED means:
-      - job completed today
-      - payment still owing
-      - new cycle starts today
+      Finished =
+      job completed today
+      but payment still owing.
+
+      New due date =
+      today + cycle.
     */
 
-    c.nextDue=
+    c.nextDue =
       iso(
         addDays(
           today(),
@@ -1938,12 +2271,12 @@ function finishClient(id){
       );
 
 
-    c.paid=false;
+    c.paid = false;
 
   }
 
 
-  selectedClientId=null;
+  selectedClientId = null;
 
 
   save();
@@ -1951,102 +2284,344 @@ function finishClient(id){
   render();
 
 
-  scrollTo({
+  window.scrollTo({
     top:0,
     behavior:"smooth"
   });
+
 }
 
 
-/* =========================
-   EDIT CLIENT
-========================= */
+/* =========================================================
+   PAID POPUP
+========================================================= */
 
-function editClient(id){
+function openPaidPopup(id){
 
-  const c=
+  pendingPaidId = id;
+
+  paidPopup
+    .classList
+    .add(
+      "active"
+    );
+
+}
+
+
+function closePaidPopup(){
+
+  pendingPaidId = null;
+
+  paidPopup
+    .classList
+    .remove(
+      "active"
+    );
+
+}
+
+
+/* =========================================================
+   PAID
+========================================================= */
+
+function markPaidYes(){
+
+  if(
+    !pendingPaidId
+  ){
+
+    closePaidPopup();
+
+    return;
+
+  }
+
+
+  const c =
     clients.find(
-      x=>
-        x.id===id
+      x =>
+        x.id === pendingPaidId
     );
 
 
   if(!c){
 
+    closePaidPopup();
+
     return;
+
   }
 
 
-  editingId=id;
+  /*
+    ONE-OFF JOB
+
+    Paid removes it from
+    the active schedule.
+  */
+
+  if(
+    c.type === "oneoff"
+  ){
+
+    clients =
+      clients.filter(
+        x =>
+          x.id !== c.id
+      );
 
 
-  formMode=
-    c.type||
-    "recurring";
+    if(
+      lastFinish &&
+      lastFinish.id === c.id
+    ){
+
+      lastFinish = null;
+
+    }
 
 
-  formTitle.textContent=
-    formMode==="oneoff"
-      ?"Edit One-off Job"
-      :"Edit Client";
+    selectedClientId = null;
+
+  }
 
 
-  cycleField
-    .classList
-    .toggle(
-      "hidden-field",
-      formMode==="oneoff"
-    );
+  /*
+    RECURRING CLIENT
+    CURRENTLY IN NORMAL JOBS
+  */
+
+  else if(
+    c.paid
+  ){
+
+    /*
+      Paid here means:
+
+      job completed today
+      AND paid today.
+
+      New due =
+      today + cycle.
+    */
+
+    lastFinish = {
+
+      id:c.id,
+
+      name:c.name,
+
+      nextDue:c.nextDue,
+
+      paid:c.paid,
+
+      finished:c.finished,
+
+      type:c.type,
+
+      action:"paidFinish"
+
+    };
 
 
-  nameInput.value=
-    c.name;
+    c.nextDue =
+      iso(
+        addDays(
+          today(),
+          c.cycle
+        )
+      );
 
 
-  suburbInput.value=
-    c.suburb;
+    c.paid = true;
+
+    selectedClientId = null;
+
+  }
 
 
-  priceInput.value=
-    c.price;
+  /*
+    RECURRING CLIENT
+    ALREADY IN UNPAID JOBS
+  */
+
+  else{
+
+    /*
+      Finished already reset
+      their mowing cycle.
+
+      This payment must NOT
+      change nextDue.
+    */
+
+    lastFinish = {
+
+      id:c.id,
+
+      name:c.name,
+
+      nextDue:c.nextDue,
+
+      paid:c.paid,
+
+      finished:c.finished,
+
+      type:c.type,
+
+      action:"paidOnly"
+
+    };
 
 
-  cycleInput.value=
-    c.cycle||
-    30;
+    c.paid = true;
+
+    selectedClientId = null;
+
+  }
 
 
-  dueInput.value=
-    c.nextDue;
+  save();
+
+  render();
+
+  closePaidPopup();
 
 
-  notesInput.value=
-    c.notes||
-    "";
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 
-
-  deleteClient.style.display=
-    "block";
-
-
-  show(
-    "formScreen"
-  );
 }
 
 
-/* =========================
+/* =========================================================
+   UNDO
+========================================================= */
+
+function renderUndo(){
+
+  if(
+    !lastFinish
+  ){
+
+    undoBar
+      .classList
+      .remove(
+        "active"
+      );
+
+    return;
+
+  }
+
+
+  if(
+    lastFinish.action ===
+    "paidFinish"
+  ){
+
+    undoText.textContent =
+      lastFinish.name +
+      " paid + finished. Undo?";
+
+  }
+
+  else if(
+    lastFinish.action ===
+    "paidOnly"
+  ){
+
+    undoText.textContent =
+      lastFinish.name +
+      " marked paid. Undo?";
+
+  }
+
+  else{
+
+    undoText.textContent =
+      lastFinish.name +
+      " finished. Undo?";
+
+  }
+
+
+  undoBar
+    .classList
+    .add(
+      "active"
+    );
+
+}
+
+
+function undoLastFinish(){
+
+  if(
+    !lastFinish
+  ){
+
+    return;
+
+  }
+
+
+  const c =
+    clients.find(
+      x =>
+        x.id === lastFinish.id
+    );
+
+
+  if(c){
+
+    c.nextDue =
+      lastFinish.nextDue;
+
+    c.paid =
+      lastFinish.paid;
+
+    c.finished =
+      lastFinish.finished;
+
+  }
+
+
+  lastFinish = null;
+
+
+  save();
+
+  render();
+
+}
+
+
+function dismissUndo(){
+
+  lastFinish = null;
+
+  render();
+
+}
+
+
+/* =========================================================
    ADD CLIENT
-========================= */
+========================================================= */
 
 function addClient(){
 
-  editingId=null;
+  editingId = null;
 
-  formMode="recurring";
+  formMode = "recurring";
 
 
-  formTitle.textContent=
+  formTitle.textContent =
     "Add Client";
 
 
@@ -2057,44 +2632,45 @@ function addClient(){
     );
 
 
-  nameInput.value="";
+  nameInput.value = "";
 
-  suburbInput.value="";
+  suburbInput.value = "";
 
-  priceInput.value="";
+  priceInput.value = "";
 
-  cycleInput.value="14";
+  cycleInput.value = "14";
 
-  dueInput.value=
+  dueInput.value =
     iso(
       today()
     );
 
-  notesInput.value="";
+  notesInput.value = "";
 
 
-  deleteClient.style.display=
+  deleteClientBtn.style.display =
     "none";
 
 
   show(
     "formScreen"
   );
+
 }
 
 
-/* =========================
+/* =========================================================
    ADD ONE-OFF
-========================= */
+========================================================= */
 
 function addOneOff(){
 
-  editingId=null;
+  editingId = null;
 
-  formMode="oneoff";
+  formMode = "oneoff";
 
 
-  formTitle.textContent=
+  formTitle.textContent =
     "Add One-off Job";
 
 
@@ -2105,39 +2681,112 @@ function addOneOff(){
     );
 
 
-  nameInput.value="";
+  nameInput.value = "";
 
-  suburbInput.value="";
+  suburbInput.value = "";
 
-  priceInput.value="";
+  priceInput.value = "";
 
-  cycleInput.value="30";
+  cycleInput.value = "30";
 
-  dueInput.value=
+  dueInput.value =
     iso(
       today()
     );
 
-  notesInput.value="";
+  notesInput.value = "";
 
 
-  deleteClient.style.display=
+  deleteClientBtn.style.display =
     "none";
 
 
   show(
     "formScreen"
   );
+
 }
 
 
-/* =========================
+/* =========================================================
+   EDIT CLIENT
+========================================================= */
+
+function editClient(id){
+
+  const c =
+    clients.find(
+      x =>
+        x.id === id
+    );
+
+
+  if(!c){
+
+    return;
+
+  }
+
+
+  editingId = id;
+
+
+  formMode =
+    c.type ||
+    "recurring";
+
+
+  formTitle.textContent =
+    formMode === "oneoff"
+      ? "Edit One-off Job"
+      : "Edit Client";
+
+
+  cycleField
+    .classList
+    .toggle(
+      "hidden-field",
+      formMode === "oneoff"
+    );
+
+
+  nameInput.value =
+    c.name;
+
+  suburbInput.value =
+    c.suburb;
+
+  priceInput.value =
+    c.price;
+
+  cycleInput.value =
+    c.cycle || 30;
+
+  dueInput.value =
+    c.nextDue;
+
+  notesInput.value =
+    c.notes || "";
+
+
+  deleteClientBtn.style.display =
+    "block";
+
+
+  show(
+    "formScreen"
+  );
+
+}
+
+
+/* =========================================================
    SAVE CLIENT
-========================= */
+========================================================= */
 
 function saveClientForm(){
 
-  const name=
+  const name =
     nameInput
       .value
       .trim();
@@ -2146,10 +2795,11 @@ function saveClientForm(){
   if(!name){
 
     return;
+
   }
 
 
-  const data={
+  const data = {
 
     name,
 
@@ -2161,22 +2811,20 @@ function saveClientForm(){
     price:
       Number(
         priceInput.value
-      )||
-      0,
+      ) || 0,
 
     cycle:
-      formMode==="oneoff"
-        ?0
+      formMode === "oneoff"
+        ? 0
         :
         (
           Number(
             cycleInput.value
-          )||
-          14
+          ) || 14
         ),
 
     nextDue:
-      dueInput.value||
+      dueInput.value ||
       iso(
         today()
       ),
@@ -2192,12 +2840,14 @@ function saveClientForm(){
   };
 
 
-  if(editingId){
+  if(
+    editingId
+  ){
 
-    const c=
+    const c =
       clients.find(
-        x=>
-          x.id===editingId
+        x =>
+          x.id === editingId
       );
 
 
@@ -2210,21 +2860,18 @@ function saveClientForm(){
 
     }
 
-  }else{
+  }
+  else{
 
     clients.push({
 
       id:
-        crypto.randomUUID
-          ?crypto.randomUUID()
-          :String(
-            Date.now()
-          ),
+        makeId(),
 
       paid:
-        formMode==="oneoff"
-          ?false
-          :true,
+        formMode === "oneoff"
+          ? false
+          : true,
 
       finished:false,
 
@@ -2242,18 +2889,22 @@ function saveClientForm(){
   show(
     "homeScreen"
   );
+
 }
 
 
-/* =========================
+/* =========================================================
    DELETE CLIENT
-========================= */
+========================================================= */
 
 function deleteClientForm(){
 
-  if(!editingId){
+  if(
+    !editingId
+  ){
 
     return;
+
   }
 
 
@@ -2264,28 +2915,28 @@ function deleteClientForm(){
   ){
 
     return;
+
   }
 
 
-  clients=
+  clients =
     clients.filter(
-      c=>
-        c.id!==editingId
+      c =>
+        c.id !== editingId
     );
 
 
   if(
-    lastFinish
-    &&
-    lastFinish.id===editingId
+    lastFinish &&
+    lastFinish.id === editingId
   ){
 
-    lastFinish=null;
+    lastFinish = null;
 
   }
 
 
-  selectedClientId=null;
+  selectedClientId = null;
 
 
   save();
@@ -2295,376 +2946,1322 @@ function deleteClientForm(){
   show(
     "homeScreen"
   );
+
 }
 
 
-/* =========================
-   UNDO
-========================= */
+/* =========================================================
+   BACKUP STATUS
+========================================================= */
 
-function renderUndo(){
+function setBackupStatus(
+  text,
+  state=""
+){
 
-  if(!lastFinish){
+  backupStrip.textContent =
+    text;
 
-    undoBar
-      .classList
-      .remove(
-        "active"
-      );
 
-    return;
-  }
+  backupStrip.className =
+    "backup-strip" +
+    (
+      state
+        ? " " + state
+        : ""
+    );
 
+
+  accountSyncText.textContent =
+    text;
+
+
+  accountSyncText.className =
+    "account-sync" +
+    (
+      state
+        ? " " + state
+        : ""
+    );
+
+}
+
+
+function renderBackupStrip(){
 
   if(
-    lastFinish.action===
-    "paidFinish"
+    currentUser
   ){
 
-    undoText.textContent=
-      lastFinish.name+
-      " paid + finished. Undo?";
+    const last =
+      localStorage.getItem(
+        LAST_SYNC_AT_KEY
+      );
 
-  }else if(
-    lastFinish.action===
-    "paidOnly"
+
+    if(last){
+
+      backupStrip.textContent =
+        "Backed up";
+
+      backupStrip.className =
+        "backup-strip good";
+
+    }
+    else{
+
+      backupStrip.textContent =
+        "Signed in • backup pending";
+
+      backupStrip.className =
+        "backup-strip warn";
+
+    }
+
+  }
+  else{
+
+    backupStrip.textContent =
+      "Saved on this device";
+
+    backupStrip.className =
+      "backup-strip";
+
+  }
+
+}
+
+
+/* =========================================================
+   ACCOUNT UI
+========================================================= */
+
+function setAuthMessage(
+  text,
+  state=""
+){
+
+  authMessage.textContent =
+    text;
+
+
+  authMessage.className =
+    "auth-message" +
+    (
+      state
+        ? " " + state
+        : ""
+    );
+
+}
+
+
+function renderAccount(){
+
+  if(
+    currentUser
   ){
 
-    undoText.textContent=
-      lastFinish.name+
-      " marked paid. Undo?";
+    guestAccount.style.display =
+      "none";
 
-  }else{
-
-    undoText.textContent=
-      lastFinish.name+
-      " finished. Undo?";
-
-  }
+    signedAccount.style.display =
+      "block";
 
 
-  undoBar
-    .classList
-    .add(
-      "active"
-    );
-}
+    signedEmail.textContent =
+      currentUser.email ||
+      "Signed in";
 
 
-function undoLastFinish(){
-
-  if(!lastFinish){
-
-    return;
-  }
+    const last =
+      localStorage.getItem(
+        LAST_SYNC_AT_KEY
+      );
 
 
-  const c=
-    clients.find(
-      x=>
-        x.id===
-        lastFinish.id
-    );
+    if(last){
+
+      const d =
+        new Date(last);
 
 
-  if(c){
-
-    c.nextDue=
-      lastFinish.nextDue;
-
-
-    c.paid=
-      lastFinish.paid;
-
-
-    c.finished=
-      lastFinish.finished;
-
-  }
-
-
-  lastFinish=null;
-
-
-  save();
-
-  render();
-}
-
-
-function dismissUndo(){
-
-  lastFinish=null;
-
-  render();
-}
-
-
-/* =========================
-   PAID POPUP
-========================= */
-
-function openPaidPopup(id){
-
-  pendingPaidId=id;
-
-
-  paidPopup
-    .classList
-    .add(
-      "active"
-    );
-}
-
-
-function closePaidPopup(){
-
-  pendingPaidId=null;
-
-
-  paidPopup
-    .classList
-    .remove(
-      "active"
-    );
-}
-
-
-/* =========================
-   PAID
-========================= */
-
-function markPaidYes(){
-
-  if(!pendingPaidId){
-
-    closePaidPopup();
-
-    return;
-  }
-
-
-  const c=
-    clients.find(
-      x=>
-        x.id===
-        pendingPaidId
-    );
-
-
-  if(c){
-
-    /*
-      ONE-OFF JOB
-
-      Once a completed one-off is paid,
-      remove it from the list.
-    */
-
-    if(c.type==="oneoff"){
-
-      clients=
-        clients.filter(
-          x=>
-            x.id!==
-            pendingPaidId
+      accountSyncText.textContent =
+        "Backed up • " +
+        d.toLocaleString(
+          "en-AU",
+          {
+            day:"numeric",
+            month:"short",
+            hour:"numeric",
+            minute:"2-digit"
+          }
         );
 
 
-      if(
-        lastFinish
-        &&
-        lastFinish.id===
-        pendingPaidId
-      ){
+      accountSyncText.className =
+        "account-sync good";
 
-        lastFinish=null;
+    }
+    else{
 
-      }
+      accountSyncText.textContent =
+        "Backup pending";
 
+      accountSyncText.className =
+        "account-sync warn";
 
-      selectedClientId=null;
+    }
 
-    }else{
+  }
+  else{
 
-      /*
-        RECURRING CLIENT
-      */
+    guestAccount.style.display =
+      "block";
 
+    signedAccount.style.display =
+      "none";
 
-      if(c.paid){
+  }
 
-        /*
-          CLIENT IS IN NORMAL JOBS
-
-          Paid means:
-
-          1. Job was completed today.
-          2. Client paid today.
-          3. New due date = TODAY + cycle.
-          4. Client stays in Normal Jobs.
-        */
-
-        lastFinish={
-
-          id:c.id,
-
-          name:c.name,
-
-          nextDue:
-            c.nextDue,
-
-          paid:
-            c.paid,
-
-          finished:
-            c.finished,
-
-          type:
-            c.type,
-
-          action:
-            "paidFinish"
-
-        };
+}
 
 
-        c.nextDue=
-          iso(
-            addDays(
-              today(),
-              c.cycle
-            )
-          );
+/* =========================================================
+   SUPABASE START
+========================================================= */
+
+async function initCloud(){
+
+  if(
+    !window.supabase ||
+    typeof window.supabase.createClient !==
+    "function"
+  ){
+
+    setBackupStatus(
+      "Saved locally • cloud unavailable",
+      "warn"
+    );
+
+    return;
+
+  }
 
 
-        c.paid=true;
+  try{
+
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth:{
+            persistSession:true,
+            autoRefreshToken:true,
+            detectSessionInUrl:true
+          }
+        }
+      );
 
 
-        selectedClientId=null;
-
-      }else{
-
-        /*
-          CLIENT IS ALREADY IN UNPAID JOBS
-
-          Finished was already pressed earlier.
-
-          Their mowing cycle was already reset
-          on the day the lawn was actually done.
-
-          Paid now ONLY means money was received.
-
-          DO NOT CHANGE nextDue.
-        */
-
-        lastFinish={
-
-          id:c.id,
-
-          name:c.name,
-
-          nextDue:
-            c.nextDue,
-
-          paid:
-            c.paid,
-
-          finished:
-            c.finished,
-
-          type:
-            c.type,
-
-          action:
-            "paidOnly"
-
-        };
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .auth
+        .getSession();
 
 
-        c.paid=true;
+    if(error){
 
-
-        /*
-          IMPORTANT:
-          NO nextDue calculation here.
-        */
-
-
-        selectedClientId=null;
-
-      }
+      throw error;
 
     }
 
 
-    save();
+    if(
+      data.session &&
+      data.session.user
+    ){
 
-    render();
+      currentUser =
+        data.session.user;
+
+
+      renderAccount();
+
+      render();
+
+
+      await reconcileCloudBackup();
+
+    }
+
+
+    supabaseClient
+      .auth
+      .onAuthStateChange(
+        (
+          event,
+          session
+        ) => {
+
+          currentUser =
+            session?.user ||
+            null;
+
+
+          if(
+            event === "SIGNED_OUT"
+          ){
+
+            setBackupStatus(
+              "Saved on this device"
+            );
+
+          }
+
+
+          renderAccount();
+
+          render();
+
+        }
+      );
+
+
+    renderAccount();
+
+  }
+  catch(error){
+
+    console.error(
+      "Supabase start error:",
+      error
+    );
+
+
+    setBackupStatus(
+      "Saved locally • cloud unavailable",
+      "warn"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CREATE ACCOUNT
+========================================================= */
+
+async function createAccount(){
+
+  if(
+    !supabaseClient
+  ){
+
+    setAuthMessage(
+      "Cloud backup is unavailable.",
+      "bad"
+    );
+
+    return;
 
   }
 
 
-  closePaidPopup();
+  const email =
+    authEmail
+      .value
+      .trim();
 
 
-  scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  const password =
+    authPassword.value;
+
+
+  if(
+    !email ||
+    !password
+  ){
+
+    setAuthMessage(
+      "Enter your email and password.",
+      "bad"
+    );
+
+    return;
+
+  }
+
+
+  setAuthMessage(
+    "Creating account..."
+  );
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .auth
+        .signUp({
+          email,
+          password
+        });
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    authPassword.value = "";
+
+
+    if(
+      data.session &&
+      data.user
+    ){
+
+      currentUser =
+        data.user;
+
+
+      await reconcileCloudBackup();
+
+
+      setAuthMessage(
+        "Account created and schedule backed up.",
+        "good"
+      );
+
+
+      renderAccount();
+
+      render();
+
+    }
+    else{
+
+      setAuthMessage(
+        "Account created. Check your email to confirm it, then come back and sign in. Your schedule is still saved locally.",
+        "good"
+      );
+
+    }
+
+  }
+  catch(error){
+
+    console.error(
+      error
+    );
+
+
+    setAuthMessage(
+      error.message ||
+      "Could not create account.",
+      "bad"
+    );
+
+  }
+
 }
 
 
-/* =========================
-   BUTTON EVENTS
-========================= */
+/* =========================================================
+   SIGN IN
+========================================================= */
 
-addClientTop.onclick=
+async function signIn(){
+
+  if(
+    !supabaseClient
+  ){
+
+    setAuthMessage(
+      "Cloud backup is unavailable.",
+      "bad"
+    );
+
+    return;
+
+  }
+
+
+  const email =
+    authEmail
+      .value
+      .trim();
+
+
+  const password =
+    authPassword.value;
+
+
+  if(
+    !email ||
+    !password
+  ){
+
+    setAuthMessage(
+      "Enter your email and password.",
+      "bad"
+    );
+
+    return;
+
+  }
+
+
+  setAuthMessage(
+    "Signing in..."
+  );
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .auth
+        .signInWithPassword({
+          email,
+          password
+        });
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    currentUser =
+      data.user;
+
+
+    authPassword.value = "";
+
+
+    await reconcileCloudBackup();
+
+
+    setAuthMessage("");
+
+
+    renderAccount();
+
+    render();
+
+  }
+  catch(error){
+
+    console.error(
+      error
+    );
+
+
+    setAuthMessage(
+      error.message ||
+      "Could not sign in.",
+      "bad"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SIGN OUT
+========================================================= */
+
+async function signOut(){
+
+  if(
+    !supabaseClient
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .auth
+        .signOut();
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    currentUser = null;
+
+
+    setBackupStatus(
+      "Saved on this device"
+    );
+
+
+    renderAccount();
+
+    render();
+
+  }
+  catch(error){
+
+    console.error(
+      error
+    );
+
+
+    accountSyncText.textContent =
+      error.message ||
+      "Could not sign out";
+
+
+    accountSyncText.className =
+      "account-sync bad";
+
+  }
+
+}
+
+
+/* =========================================================
+   CLOUD RESTORE / RECONCILE
+========================================================= */
+
+async function reconcileCloudBackup(){
+
+  if(
+    !supabaseClient ||
+    !currentUser
+  ){
+
+    return;
+
+  }
+
+
+  setBackupStatus(
+    "Checking backup..."
+  );
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from(
+          CLOUD_TABLE
+        )
+        .select(
+          "clients, updated_at"
+        )
+        .eq(
+          "user_id",
+          currentUser.id
+        )
+        .maybeSingle();
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    /*
+      No backup exists yet.
+
+      Upload the schedule already
+      on this phone/device.
+    */
+
+    if(!data){
+
+      await uploadCloudBackup();
+
+      return;
+
+    }
+
+
+    const cloudClients =
+      normalizeClients(
+        data.clients
+      );
+
+
+    const localHasData =
+      clients.length > 0;
+
+    const cloudHasData =
+      cloudClients.length > 0;
+
+
+    const lastSyncUser =
+      localStorage.getItem(
+        LAST_SYNC_USER_KEY
+      );
+
+
+    const localUpdated =
+      Date.parse(
+        localStorage.getItem(
+          LOCAL_UPDATED_KEY
+        ) || ""
+      ) || 0;
+
+
+    const lastSync =
+      Date.parse(
+        localStorage.getItem(
+          LAST_SYNC_AT_KEY
+        ) || ""
+      ) || 0;
+
+
+    const cloudUpdated =
+      Date.parse(
+        data.updated_at || ""
+      ) || 0;
+
+
+    /*
+      REPLACEMENT / NEW PHONE
+
+      Nothing local,
+      but cloud contains schedule.
+    */
+
+    if(
+      !localHasData &&
+      cloudHasData
+    ){
+
+      applyCloudBackup(
+        cloudClients,
+        data.updated_at
+      );
+
+
+      setBackupStatus(
+        "Schedule restored from backup",
+        "good"
+      );
+
+
+      return;
+
+    }
+
+
+    /*
+      THIS DEVICE HAS ALREADY
+      USED THIS SAME ACCOUNT.
+    */
+
+    if(
+      lastSyncUser ===
+      currentUser.id
+    ){
+
+      /*
+        Local changes happened
+        after last backup.
+
+        Keep local version and upload.
+      */
+
+      if(
+        localUpdated >
+        lastSync + 1000
+        &&
+        localUpdated >= cloudUpdated
+      ){
+
+        await uploadCloudBackup();
+
+        return;
+
+      }
+
+
+      /*
+        Cloud copy is newer.
+      */
+
+      if(
+        cloudUpdated >
+        localUpdated + 1000
+      ){
+
+        applyCloudBackup(
+          cloudClients,
+          data.updated_at
+        );
+
+
+        setBackupStatus(
+          "Schedule restored from backup",
+          "good"
+        );
+
+
+        return;
+
+      }
+
+
+      localStorage.setItem(
+        LAST_SYNC_USER_KEY,
+        currentUser.id
+      );
+
+
+      if(
+        data.updated_at
+      ){
+
+        localStorage.setItem(
+          LAST_SYNC_AT_KEY,
+          data.updated_at
+        );
+
+      }
+
+
+      setBackupStatus(
+        "Backed up",
+        "good"
+      );
+
+
+      renderAccount();
+
+      return;
+
+    }
+
+
+    /*
+      FIRST TIME THIS DEVICE
+      HAS BEEN CONNECTED TO
+      THIS ACCOUNT.
+
+      If both contain jobs,
+      merge them instead of
+      deleting either list.
+    */
+
+    if(
+      localHasData &&
+      cloudHasData
+    ){
+
+      clients =
+        mergeClientLists(
+          cloudClients,
+          clients
+        );
+
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+          clients
+        )
+      );
+
+
+      localStorage.setItem(
+        LOCAL_UPDATED_KEY,
+        new Date().toISOString()
+      );
+
+
+      render();
+
+
+      await uploadCloudBackup();
+
+      return;
+
+    }
+
+
+    /*
+      Device contains jobs
+      but cloud is empty.
+    */
+
+    if(
+      localHasData
+    ){
+
+      await uploadCloudBackup();
+
+      return;
+
+    }
+
+
+    /*
+      Both are empty.
+    */
+
+    localStorage.setItem(
+      LAST_SYNC_USER_KEY,
+      currentUser.id
+    );
+
+
+    localStorage.setItem(
+      LAST_SYNC_AT_KEY,
+      data.updated_at ||
+      new Date().toISOString()
+    );
+
+
+    setBackupStatus(
+      "Backed up",
+      "good"
+    );
+
+
+    renderAccount();
+
+  }
+  catch(error){
+
+    console.error(
+      "Backup check failed:",
+      error
+    );
+
+
+    setBackupStatus(
+      "Saved locally • backup pending",
+      "warn"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   APPLY CLOUD BACKUP
+========================================================= */
+
+function applyCloudBackup(
+  cloudClients,
+  updatedAt
+){
+
+  clients =
+    normalizeClients(
+      cloudClients
+    );
+
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(
+      clients
+    )
+  );
+
+
+  const stamp =
+    updatedAt ||
+    new Date().toISOString();
+
+
+  localStorage.setItem(
+    LOCAL_UPDATED_KEY,
+    stamp
+  );
+
+
+  localStorage.setItem(
+    LAST_SYNC_USER_KEY,
+    currentUser.id
+  );
+
+
+  localStorage.setItem(
+    LAST_SYNC_AT_KEY,
+    stamp
+  );
+
+
+  selectedClientId = null;
+
+  lastFinish = null;
+
+
+  render();
+
+  renderAccount();
+
+}
+
+
+/* =========================================================
+   CLOUD UPLOAD
+========================================================= */
+
+async function uploadCloudBackup(){
+
+  if(
+    !supabaseClient ||
+    !currentUser
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    syncInProgress
+  ){
+
+    syncAgain = true;
+
+    return;
+
+  }
+
+
+  syncInProgress = true;
+
+
+  setBackupStatus(
+    "Backing up..."
+  );
+
+
+  const stamp =
+    new Date().toISOString();
+
+
+  const backupClients =
+    JSON.parse(
+      JSON.stringify(
+        clients
+      )
+    );
+
+
+  try{
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from(
+          CLOUD_TABLE
+        )
+        .upsert(
+          {
+            user_id:
+              currentUser.id,
+
+            clients:
+              backupClients,
+
+            updated_at:
+              stamp
+          },
+          {
+            onConflict:
+              "user_id"
+          }
+        );
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    localStorage.setItem(
+      LAST_SYNC_USER_KEY,
+      currentUser.id
+    );
+
+
+    localStorage.setItem(
+      LAST_SYNC_AT_KEY,
+      stamp
+    );
+
+
+    setBackupStatus(
+      "Backed up",
+      "good"
+    );
+
+
+    renderAccount();
+
+  }
+  catch(error){
+
+    console.error(
+      "Cloud backup failed:",
+      error
+    );
+
+
+    setBackupStatus(
+      "Saved locally • backup pending",
+      "warn"
+    );
+
+  }
+  finally{
+
+    syncInProgress = false;
+
+
+    if(
+      syncAgain
+    ){
+
+      syncAgain = false;
+
+      scheduleCloudBackup();
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   BACKUP QUEUE
+========================================================= */
+
+function scheduleCloudBackup(){
+
+  /*
+    No account:
+    localStorage only.
+  */
+
+  if(
+    !currentUser ||
+    !supabaseClient
+  ){
+
+    renderBackupStrip();
+
+    return;
+
+  }
+
+
+  if(
+    syncTimer
+  ){
+
+    clearTimeout(
+      syncTimer
+    );
+
+  }
+
+
+  setBackupStatus(
+    "Saved locally • backing up...",
+    "warn"
+  );
+
+
+  syncTimer =
+    setTimeout(
+      () => {
+
+        syncTimer = null;
+
+        uploadCloudBackup();
+
+      },
+      500
+    );
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+addClientTop.onclick =
   addClient;
 
 
-addOneOffTop.onclick=
+addOneOffTop.onclick =
   addOneOff;
 
 
-backHome.onclick=
-  ()=>
+backupTop.onclick =
+  () => {
+
+    renderAccount();
+
+    show(
+      "accountScreen"
+    );
+
+  };
+
+
+backHome.onclick =
+  () => {
+
+    render();
+
     show(
       "homeScreen"
     );
 
+  };
 
-saveClient.onclick=
+
+backFromAccount.onclick =
+  () => {
+
+    render();
+
+    show(
+      "homeScreen"
+    );
+
+  };
+
+
+saveClientBtn.onclick =
   saveClientForm;
 
 
-deleteClient.onclick=
+deleteClientBtn.onclick =
   deleteClientForm;
 
 
-paidYesBtn.onclick=
+paidYesBtn.onclick =
   markPaidYes;
 
 
-paidNoBtn.onclick=
+paidNoBtn.onclick =
   closePaidPopup;
 
 
-undoBtn.onclick=
+undoBtn.onclick =
   undoLastFinish;
 
 
-undoCloseBtn.onclick=
+undoCloseBtn.onclick =
   dismissUndo;
 
 
-/* =========================
-   START
-========================= */
+createAccountBtn.onclick =
+  createAccount;
+
+
+signInBtn.onclick =
+  signIn;
+
+
+signOutBtn.onclick =
+  signOut;
+
+
+backupNowBtn.onclick =
+  uploadCloudBackup;
+
+
+/* ENTER PASSWORD = SIGN IN */
+
+authPassword.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key === "Enter"
+    ){
+
+      signIn();
+
+    }
+
+  }
+);
+
+
+/* INTERNET COMES BACK */
+
+window.addEventListener(
+  "online",
+  () => {
+
+    if(
+      currentUser
+    ){
+
+      uploadCloudBackup();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   START APP
+========================================================= */
 
 load();
 
 render();
+
+renderAccount();
+
+initCloud();
 
 </script>
 
