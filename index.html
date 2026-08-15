@@ -79,6 +79,11 @@ button{
   cursor:pointer;
 }
 
+
+/* =========================
+   TOP BAR
+========================= */
+
 .top{
   display:flex;
   align-items:center;
@@ -88,7 +93,7 @@ button{
 }
 
 .home-top{
-  justify-content:flex-end;
+  justify-content:space-between;
 }
 
 .top-buttons{
@@ -97,6 +102,35 @@ button{
   flex-wrap:wrap;
   justify-content:flex-end;
 }
+
+
+/* MODE BADGE */
+
+.mode-badge{
+  flex:0 0 auto;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.02em;
+  border:1px solid;
+  white-space:nowrap;
+}
+
+.mode-badge.guest{
+  color:var(--orange);
+  background:#2a1f0d;
+  border-color:#5b3f1a;
+}
+
+.mode-badge.signed{
+  color:var(--green);
+  background:#132015;
+  border-color:#254a2a;
+}
+
+
+/* BUTTONS */
 
 .small-btn,
 .main-btn,
@@ -126,6 +160,9 @@ button{
 .ghost-btn{
   color:var(--muted);
 }
+
+
+/* DATE */
 
 .today-line{
   text-align:center;
@@ -429,7 +466,7 @@ button{
 }
 
 
-/* FORMS */
+/* SCREENS / FORMS */
 
 .screen{
   display:none;
@@ -538,6 +575,17 @@ textarea{
   font-size:14px;
 }
 
+.guest-info{
+  background:#171208;
+  border:1px solid #5b3f1a;
+  color:var(--orange);
+  border-radius:8px;
+  padding:10px;
+  margin-top:12px;
+  font-size:13px;
+  line-height:1.4;
+}
+
 .account-email{
   font-weight:800;
   margin:10px 0 4px;
@@ -634,6 +682,19 @@ textarea{
     border:none;
   }
 
+  .home-top{
+    align-items:flex-start;
+  }
+
+  .top-buttons{
+    gap:6px;
+  }
+
+  .small-btn{
+    padding-left:9px;
+    padding-right:9px;
+  }
+
   .form-grid,
   .form-actions,
   .auth-buttons,
@@ -652,7 +713,9 @@ textarea{
 <main class="app">
 
 
-<!-- HOME -->
+<!-- =========================
+     HOME
+========================= -->
 
 <section
   id="homeScreen"
@@ -660,6 +723,14 @@ textarea{
 >
 
 <div class="top home-top">
+
+  <div
+    id="modeBadge"
+    class="mode-badge guest"
+  >
+    Guest Mode
+  </div>
+
 
   <div class="top-buttons">
 
@@ -802,7 +873,9 @@ textarea{
 
 
 
-<!-- CLIENT FORM -->
+<!-- =========================
+     CLIENT FORM
+========================= -->
 
 <section
   id="formScreen"
@@ -890,29 +963,12 @@ textarea{
 
   <select id="cycleInput">
 
-    <option value="7">
-      7 days
-    </option>
-
-    <option value="14">
-      14 days
-    </option>
-
-    <option value="21">
-      21 days
-    </option>
-
-    <option value="28">
-      28 days
-    </option>
-
-    <option value="30">
-      30 days
-    </option>
-
-    <option value="50">
-      50 days
-    </option>
+    <option value="7">7 days</option>
+    <option value="14">14 days</option>
+    <option value="21">21 days</option>
+    <option value="28">28 days</option>
+    <option value="30">30 days</option>
+    <option value="50">50 days</option>
 
   </select>
 
@@ -962,7 +1018,6 @@ textarea{
 
 </div>
 
-
 </div>
 
 
@@ -989,7 +1044,9 @@ textarea{
 
 
 
-<!-- ACCOUNT -->
+<!-- =========================
+     ACCOUNT
+========================= -->
 
 <section
   id="accountScreen"
@@ -1020,7 +1077,8 @@ textarea{
 </div>
 
 
-<!-- GUEST -->
+
+<!-- GUEST ACCOUNT SCREEN -->
 
 <div
   id="guestAccount"
@@ -1031,18 +1089,25 @@ textarea{
     Back up your schedule
   </div>
 
+
   <div class="account-text">
 
     You do not need an account to use the app.
 
     <br><br>
 
-    Your schedule already saves on this device.
+    Guest Mode saves your schedule only on this device.
+
+  </div>
+
+
+  <div class="guest-info">
+
+    Signing in switches to that account's own schedule.
 
     <br><br>
 
-    Create an account if you want your schedule backed up
-    so it can be restored if you lose or replace your phone.
+    Your Guest Mode schedule stays saved separately on this device and will return when you sign out.
 
   </div>
 
@@ -1102,7 +1167,7 @@ textarea{
 
 
 
-<!-- PASSWORD RECOVERY -->
+<!-- PASSWORD RESET -->
 
 <div
   id="passwordResetCard"
@@ -1115,9 +1180,7 @@ textarea{
   </div>
 
   <div class="account-text">
-
     Enter your new password.
-
   </div>
 
 
@@ -1204,13 +1267,12 @@ textarea{
     <div class="account-text">
 
       Deleting your account permanently removes
-      the cloud account and cloud backup.
+      the online account and cloud backup.
 
       <br><br>
 
-      The schedule already stored on this device
-      will remain here and the app can continue
-      working without an account.
+      Your current schedule will be kept on this device
+      and returned to Guest Mode.
 
     </div>
 
@@ -1230,7 +1292,9 @@ textarea{
 
 
 
-<!-- PAID POPUP -->
+<!-- =========================
+     PAID POPUP
+========================= -->
 
 <div
   class="paid-pop"
@@ -1287,17 +1351,81 @@ const CLOUD_CLIENT_TABLE =
 
 
 /* =========================================================
-   LOCAL STORAGE
+   STORAGE
 ========================================================= */
 
-const STORAGE_KEY =
+/*
+  OLD VERSION USED THIS ONE KEY
+  FOR EVERYONE ON THE DEVICE.
+
+  We only use it once now,
+  to preserve the old schedule
+  as the Guest Mode schedule.
+*/
+
+const LEGACY_STORAGE_KEY =
   "lawnLoop.clients.v1";
 
-const DELETED_KEY =
-  "lawnLoop.deletedClients.v2";
 
-const LAST_SYNC_AT_KEY =
-  "lawnLoop.lastSyncAt.v2";
+/*
+  GUEST MODE
+*/
+
+const GUEST_STORAGE_KEY =
+  "lawnLoop.guest.clients.v3";
+
+
+/*
+  STORAGE MIGRATION MARKER
+*/
+
+const STORAGE_MIGRATION_KEY =
+  "lawnLoop.storageSeparated.v3";
+
+
+/*
+  NEW ACCOUNT GUEST IMPORT MARKER
+*/
+
+const PENDING_GUEST_IMPORT_KEY =
+  "lawnLoop.pendingGuestImport.v3";
+
+
+/*
+  ACCOUNT-SPECIFIC KEYS
+*/
+
+function userClientsKey(userId){
+
+  return (
+    "lawnLoop.user." +
+    userId +
+    ".clients.v3"
+  );
+
+}
+
+
+function userDeletedKey(userId){
+
+  return (
+    "lawnLoop.user." +
+    userId +
+    ".deleted.v3"
+  );
+
+}
+
+
+function userLastSyncKey(userId){
+
+  return (
+    "lawnLoop.user." +
+    userId +
+    ".lastSyncAt.v3"
+  );
+
+}
 
 
 /* =========================================================
@@ -1321,11 +1449,15 @@ let formMode = "recurring";
 let searchQuery = "";
 
 
-/* CLOUD */
+/*
+  AUTH / CLOUD
+*/
 
 let supabaseClient = null;
 
 let currentUser = null;
+
+let activeStorageMode = "guest";
 
 let syncTimer = null;
 
@@ -1340,170 +1472,274 @@ let passwordRecoveryMode = false;
    ELEMENTS
 ========================================================= */
 
+const modeBadge =
+  document.getElementById(
+    "modeBadge"
+  );
+
 const todayDateText =
-  document.getElementById("todayDateText");
+  document.getElementById(
+    "todayDateText"
+  );
 
 const backupStrip =
-  document.getElementById("backupStrip");
+  document.getElementById(
+    "backupStrip"
+  );
 
 const backupTop =
-  document.getElementById("backupTop");
+  document.getElementById(
+    "backupTop"
+  );
 
 const addClientTop =
-  document.getElementById("addClientTop");
+  document.getElementById(
+    "addClientTop"
+  );
 
 const addOneOffTop =
-  document.getElementById("addOneOffTop");
+  document.getElementById(
+    "addOneOffTop"
+  );
 
 const searchInput =
-  document.getElementById("searchInput");
+  document.getElementById(
+    "searchInput"
+  );
 
 const undoBar =
-  document.getElementById("undoBar");
+  document.getElementById(
+    "undoBar"
+  );
 
 const undoText =
-  document.getElementById("undoText");
+  document.getElementById(
+    "undoText"
+  );
 
 const undoBtn =
-  document.getElementById("undoBtn");
+  document.getElementById(
+    "undoBtn"
+  );
 
 const undoCloseBtn =
-  document.getElementById("undoCloseBtn");
+  document.getElementById(
+    "undoCloseBtn"
+  );
 
 const clientList =
-  document.getElementById("clientList");
+  document.getElementById(
+    "clientList"
+  );
 
 const recurringUnpaidSection =
-  document.getElementById("recurringUnpaidSection");
+  document.getElementById(
+    "recurringUnpaidSection"
+  );
 
 const recurringUnpaidList =
-  document.getElementById("recurringUnpaidList");
+  document.getElementById(
+    "recurringUnpaidList"
+  );
 
 const unpaidSection =
-  document.getElementById("unpaidSection");
+  document.getElementById(
+    "unpaidSection"
+  );
 
 const unpaidList =
-  document.getElementById("unpaidList");
+  document.getElementById(
+    "unpaidList"
+  );
 
 
 /* FORM */
 
 const formTitle =
-  document.getElementById("formTitle");
+  document.getElementById(
+    "formTitle"
+  );
 
 const backHome =
-  document.getElementById("backHome");
+  document.getElementById(
+    "backHome"
+  );
 
 const nameInput =
-  document.getElementById("nameInput");
+  document.getElementById(
+    "nameInput"
+  );
 
 const suburbInput =
-  document.getElementById("suburbInput");
+  document.getElementById(
+    "suburbInput"
+  );
 
 const priceInput =
-  document.getElementById("priceInput");
+  document.getElementById(
+    "priceInput"
+  );
 
 const cycleField =
-  document.getElementById("cycleField");
+  document.getElementById(
+    "cycleField"
+  );
 
 const cycleInput =
-  document.getElementById("cycleInput");
+  document.getElementById(
+    "cycleInput"
+  );
 
 const dueInput =
-  document.getElementById("dueInput");
+  document.getElementById(
+    "dueInput"
+  );
 
 const notesInput =
-  document.getElementById("notesInput");
+  document.getElementById(
+    "notesInput"
+  );
 
 const saveClientBtn =
-  document.getElementById("saveClient");
+  document.getElementById(
+    "saveClient"
+  );
 
 const deleteClientBtn =
-  document.getElementById("deleteClient");
+  document.getElementById(
+    "deleteClient"
+  );
 
 const lastCompletedBox =
-  document.getElementById("lastCompletedBox");
+  document.getElementById(
+    "lastCompletedBox"
+  );
 
 const lastCompletedText =
-  document.getElementById("lastCompletedText");
+  document.getElementById(
+    "lastCompletedText"
+  );
 
 
 /* PAID */
 
 const paidPopup =
-  document.getElementById("paidPopup");
+  document.getElementById(
+    "paidPopup"
+  );
 
 const paidYesBtn =
-  document.getElementById("paidYesBtn");
+  document.getElementById(
+    "paidYesBtn"
+  );
 
 const paidNoBtn =
-  document.getElementById("paidNoBtn");
+  document.getElementById(
+    "paidNoBtn"
+  );
 
 
 /* ACCOUNT */
 
 const backFromAccount =
-  document.getElementById("backFromAccount");
+  document.getElementById(
+    "backFromAccount"
+  );
 
 const guestAccount =
-  document.getElementById("guestAccount");
+  document.getElementById(
+    "guestAccount"
+  );
 
 const signedAccount =
-  document.getElementById("signedAccount");
+  document.getElementById(
+    "signedAccount"
+  );
 
 const passwordResetCard =
-  document.getElementById("passwordResetCard");
+  document.getElementById(
+    "passwordResetCard"
+  );
 
 const authEmail =
-  document.getElementById("authEmail");
+  document.getElementById(
+    "authEmail"
+  );
 
 const authPassword =
-  document.getElementById("authPassword");
+  document.getElementById(
+    "authPassword"
+  );
 
 const createAccountBtn =
-  document.getElementById("createAccountBtn");
+  document.getElementById(
+    "createAccountBtn"
+  );
 
 const signInBtn =
-  document.getElementById("signInBtn");
+  document.getElementById(
+    "signInBtn"
+  );
 
 const forgotPasswordBtn =
-  document.getElementById("forgotPasswordBtn");
+  document.getElementById(
+    "forgotPasswordBtn"
+  );
 
 const authMessage =
-  document.getElementById("authMessage");
+  document.getElementById(
+    "authMessage"
+  );
 
 const signedEmail =
-  document.getElementById("signedEmail");
+  document.getElementById(
+    "signedEmail"
+  );
 
 const accountSyncText =
-  document.getElementById("accountSyncText");
+  document.getElementById(
+    "accountSyncText"
+  );
 
 const backupNowBtn =
-  document.getElementById("backupNowBtn");
+  document.getElementById(
+    "backupNowBtn"
+  );
 
 const signOutBtn =
-  document.getElementById("signOutBtn");
+  document.getElementById(
+    "signOutBtn"
+  );
 
 const deleteAccountBtn =
-  document.getElementById("deleteAccountBtn");
+  document.getElementById(
+    "deleteAccountBtn"
+  );
 
 const newPasswordInput =
-  document.getElementById("newPasswordInput");
+  document.getElementById(
+    "newPasswordInput"
+  );
 
 const updatePasswordBtn =
-  document.getElementById("updatePasswordBtn");
+  document.getElementById(
+    "updatePasswordBtn"
+  );
 
 const resetPasswordMessage =
-  document.getElementById("resetPasswordMessage");
+  document.getElementById(
+    "resetPasswordMessage"
+  );
 
 
 /* =========================================================
-   DATE FUNCTIONS
+   DATES
 ========================================================= */
 
 function nowStamp(){
 
-  return new Date().toISOString();
+  return new Date()
+    .toISOString();
 
 }
 
@@ -1527,15 +1763,16 @@ function today(){
 
 function todayPretty(){
 
-  return new Date().toLocaleDateString(
-    "en-AU",
-    {
-      weekday:"short",
-      day:"numeric",
-      month:"short",
-      year:"numeric"
-    }
-  );
+  return new Date()
+    .toLocaleDateString(
+      "en-AU",
+      {
+        weekday:"short",
+        day:"numeric",
+        month:"short",
+        year:"numeric"
+      }
+    );
 
 }
 
@@ -1546,7 +1783,9 @@ function addDays(
 ){
 
   const d =
-    new Date(date);
+    new Date(
+      date
+    );
 
   d.setDate(
     d.getDate() +
@@ -1599,6 +1838,7 @@ function pretty(s){
     return "";
   }
 
+
   return dateFromIso(
     s
   ).toLocaleDateString(
@@ -1616,8 +1856,11 @@ function pretty(s){
 function prettyCompleted(s){
 
   if(!s){
+
     return "Never";
+
   }
+
 
   return dateFromIso(
     s
@@ -1651,7 +1894,9 @@ function daysUntil(s){
 function dueText(s){
 
   const d =
-    daysUntil(s);
+    daysUntil(
+      s
+    );
 
 
   if(d < 0){
@@ -1660,7 +1905,7 @@ function dueText(s){
       Math.abs(d) +
       " day" +
       (
-        Math.abs(d)===1
+        Math.abs(d) === 1
           ? ""
           : "s"
       ) +
@@ -1696,10 +1941,14 @@ function dueText(s){
 function dueTextStyled(s){
 
   const d =
-    daysUntil(s);
+    daysUntil(
+      s
+    );
 
   const text =
-    dueText(s);
+    dueText(
+      s
+    );
 
 
   if(d < 0){
@@ -1763,7 +2012,8 @@ function makeId(){
     "function"
   ){
 
-    return window.crypto.randomUUID();
+    return window.crypto
+      .randomUUID();
 
   }
 
@@ -1782,7 +2032,9 @@ function makeId(){
 function deepCopy(value){
 
   return JSON.parse(
-    JSON.stringify(value)
+    JSON.stringify(
+      value
+    )
   );
 
 }
@@ -1834,20 +2086,17 @@ function esc(s){
 }
 
 
-function sortClients(list){
+function stampNumber(stamp){
 
-  return [
-    ...list
-  ].sort(
-    (a,b) =>
-      dateFromIso(
-        a.nextDue
-      )
-      -
-      dateFromIso(
-        b.nextDue
-      )
-  );
+  const n =
+    Date.parse(
+      stamp || ""
+    );
+
+
+  return Number.isFinite(n)
+    ? n
+    : 0;
 
 }
 
@@ -1883,7 +2132,9 @@ function normalizeClient(
 
     nextDue:
       c.nextDue ||
-      iso(today()),
+      iso(
+        today()
+      ),
 
     notes:
       c.notes ||
@@ -1892,7 +2143,9 @@ function normalizeClient(
     paid:
       c.paid === undefined
         ? true
-        : Boolean(c.paid),
+        : Boolean(
+            c.paid
+          ),
 
     type:
       c.type ||
@@ -1923,7 +2176,9 @@ function normalizeClients(
 ){
 
   if(
-    !Array.isArray(list)
+    !Array.isArray(
+      list
+    )
   ){
 
     return [];
@@ -1942,24 +2197,28 @@ function normalizeClients(
 }
 
 
-function touchClient(c){
+function sortClients(list){
 
-  c.updatedAt =
-    nowStamp();
+  return [
+    ...list
+  ].sort(
+    (a,b) =>
+      dateFromIso(
+        a.nextDue
+      )
+      -
+      dateFromIso(
+        b.nextDue
+      )
+  );
 
 }
 
 
-function stampNumber(stamp){
+function touchClient(c){
 
-  const n =
-    Date.parse(
-      stamp || ""
-    );
-
-  return Number.isFinite(n)
-    ? n
-    : 0;
+  c.updatedAt =
+    nowStamp();
 
 }
 
@@ -1980,6 +2239,7 @@ function matchesSearch(c){
 
 
   return (
+
     String(
       c.name || ""
     )
@@ -1993,49 +2253,203 @@ function matchesSearch(c){
     )
       .toLowerCase()
       .includes(q)
+
   );
 
 }
 
 
 /* =========================================================
-   LOCAL SAVE / LOAD
+   OLD STORAGE MIGRATION
 ========================================================= */
 
-function saveLocal(
-  syncCloud=true
-){
+function migrateOldStorageToGuest(){
+
+  if(
+    localStorage.getItem(
+      STORAGE_MIGRATION_KEY
+    )
+  ){
+
+    return;
+
+  }
+
+
+  const existingGuest =
+    localStorage.getItem(
+      GUEST_STORAGE_KEY
+    );
+
+
+  /*
+    Only copy the old device-wide schedule
+    into Guest Mode when Guest Mode
+    does not already have its own data.
+  */
+
+  if(
+    !existingGuest
+  ){
+
+    const legacy =
+      localStorage.getItem(
+        LEGACY_STORAGE_KEY
+      );
+
+
+    if(legacy){
+
+      try{
+
+        const oldClients =
+          normalizeClients(
+            JSON.parse(
+              legacy
+            )
+          );
+
+
+        localStorage.setItem(
+          GUEST_STORAGE_KEY,
+          JSON.stringify(
+            oldClients
+          )
+        );
+
+      }
+      catch(error){
+
+        console.error(
+          "Old schedule migration failed:",
+          error
+        );
+
+      }
+
+    }
+
+  }
+
 
   localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(
-      clients
-    )
+    STORAGE_MIGRATION_KEY,
+    "1"
   );
 
-
-  localStorage.setItem(
-    DELETED_KEY,
-    JSON.stringify(
-      deletedClients
-    )
-  );
+}
 
 
-  if(syncCloud){
+/* =========================================================
+   GUEST STORAGE
+========================================================= */
 
-    scheduleCloudSync();
+function readGuestClients(){
+
+  const raw =
+    localStorage.getItem(
+      GUEST_STORAGE_KEY
+    );
+
+
+  if(!raw){
+
+    return [];
+
+  }
+
+
+  try{
+
+    return normalizeClients(
+      JSON.parse(
+        raw
+      )
+    );
+
+  }
+  catch{
+
+    return [];
 
   }
 
 }
 
 
-function loadLocal(){
+function writeGuestClients(list){
+
+  localStorage.setItem(
+    GUEST_STORAGE_KEY,
+    JSON.stringify(
+      normalizeClients(
+        list
+      )
+    )
+  );
+
+}
+
+
+function loadGuestMode(){
+
+  currentUser =
+    null;
+
+  activeStorageMode =
+    "guest";
+
+
+  clients =
+    readGuestClients();
+
+
+  deletedClients =
+    {};
+
+
+  editingId =
+    null;
+
+  selectedClientId =
+    null;
+
+  pendingPaidId =
+    null;
+
+  lastAction =
+    null;
+
+
+  searchQuery =
+    "";
+
+  searchInput.value =
+    "";
+
+
+  render();
+
+  renderAccount();
+
+}
+
+
+/* =========================================================
+   USER LOCAL STORAGE
+========================================================= */
+
+function loadUserLocal(userId){
+
+  activeStorageMode =
+    "user";
+
 
   const raw =
     localStorage.getItem(
-      STORAGE_KEY
+      userClientsKey(
+        userId
+      )
     );
 
 
@@ -2045,32 +2459,33 @@ function loadLocal(){
 
       clients =
         normalizeClients(
-          JSON.parse(raw)
+          JSON.parse(
+            raw
+          )
         );
 
     }
-    catch(error){
+    catch{
 
-      console.error(
-        "Could not load schedule:",
-        error
-      );
-
-      clients = [];
+      clients =
+        [];
 
     }
 
   }
   else{
 
-    clients = [];
+    clients =
+      [];
 
   }
 
 
   const deletedRaw =
     localStorage.getItem(
-      DELETED_KEY
+      userDeletedKey(
+        userId
+      )
     );
 
 
@@ -2085,33 +2500,150 @@ function loadLocal(){
 
 
       deletedClients =
-        parsed &&
-        typeof parsed ===
-        "object"
+        (
+          parsed &&
+          typeof parsed ===
+          "object"
+        )
           ? parsed
           : {};
 
     }
     catch{
 
-      deletedClients = {};
+      deletedClients =
+        {};
 
     }
 
   }
   else{
 
-    deletedClients = {};
+    deletedClients =
+      {};
+
+  }
+
+
+  editingId =
+    null;
+
+  selectedClientId =
+    null;
+
+  pendingPaidId =
+    null;
+
+  lastAction =
+    null;
+
+
+  searchQuery =
+    "";
+
+  searchInput.value =
+    "";
+
+
+  saveLocal(
+    false
+  );
+
+}
+
+
+/* =========================================================
+   SAVE CURRENT MODE
+========================================================= */
+
+function saveLocal(
+  syncCloud=true
+){
+
+  /*
+    SIGNED-IN ACCOUNT STORAGE
+  */
+
+  if(
+    currentUser &&
+    activeStorageMode ===
+    "user"
+  ){
+
+    localStorage.setItem(
+      userClientsKey(
+        currentUser.id
+      ),
+      JSON.stringify(
+        clients
+      )
+    );
+
+
+    localStorage.setItem(
+      userDeletedKey(
+        currentUser.id
+      ),
+      JSON.stringify(
+        deletedClients
+      )
+    );
+
+
+    if(syncCloud){
+
+      scheduleCloudSync();
+
+    }
+
+
+    return;
 
   }
 
 
   /*
-    Save once so old clients receive
-    updatedAt and lastCompleted fields.
+    GUEST MODE STORAGE
   */
 
-  saveLocal(false);
+  localStorage.setItem(
+    GUEST_STORAGE_KEY,
+    JSON.stringify(
+      clients
+    )
+  );
+
+}
+
+
+/* =========================================================
+   MODE INDICATOR
+========================================================= */
+
+function renderModeIndicator(){
+
+  if(
+    currentUser &&
+    activeStorageMode ===
+    "user"
+  ){
+
+    modeBadge.textContent =
+      "Signed In";
+
+    modeBadge.className =
+      "mode-badge signed";
+
+  }
+  else{
+
+    modeBadge.textContent =
+      "Guest Mode";
+
+    modeBadge.className =
+      "mode-badge guest";
+
+  }
 
 }
 
@@ -2121,6 +2653,28 @@ function loadLocal(){
 ========================================================= */
 
 function markClientDeleted(c){
+
+  /*
+    Guest Mode does not need cloud tombstones.
+  */
+
+  if(
+    !currentUser ||
+    activeStorageMode !==
+    "user"
+  ){
+
+    clients =
+      clients.filter(
+        x =>
+          x.id !==
+          c.id
+      );
+
+    return;
+
+  }
+
 
   const stamp =
     nowStamp();
@@ -2135,24 +2689,24 @@ function markClientDeleted(c){
   clients =
     clients.filter(
       x =>
-        x.id !== c.id
+        x.id !==
+        c.id
     );
-
-
-  return stamp;
 
 }
 
 
 function removeTombstone(id){
 
-  delete deletedClients[id];
+  delete deletedClients[
+    id
+  ];
 
 }
 
 
 /* =========================================================
-   SCREENS
+   SCREEN
 ========================================================= */
 
 function show(id){
@@ -2181,7 +2735,7 @@ function show(id){
 
 
 /* =========================================================
-   RENDER
+   MAIN RENDER
 ========================================================= */
 
 function render(){
@@ -2189,6 +2743,8 @@ function render(){
   todayDateText.textContent =
     todayPretty();
 
+
+  renderModeIndicator();
 
   renderUndo();
 
@@ -2832,7 +3388,9 @@ function storeAction(
     removed,
 
     before:
-      deepCopy(c)
+      deepCopy(
+        c
+      )
 
   };
 
@@ -2885,12 +3443,6 @@ function finishClient(id){
   }
   else{
 
-    /*
-      Finished =
-      completed today
-      but still unpaid.
-    */
-
     c.nextDue =
       iso(
         addDays(
@@ -2906,7 +3458,9 @@ function finishClient(id){
   }
 
 
-  touchClient(c);
+  touchClient(
+    c
+  );
 
 
   selectedClientId =
@@ -2995,10 +3549,7 @@ function markPaidYes(){
 
 
   /*
-    ONE-OFF:
-
-    Paid means complete and remove it
-    from the active schedule.
+    ONE-OFF
   */
 
   if(
@@ -3025,10 +3576,7 @@ function markPaidYes(){
 
 
   /*
-    RECURRING NORMAL JOB:
-
-    Paid =
-    completed today + paid today.
+    NORMAL RECURRING JOB
   */
 
   else if(
@@ -3060,7 +3608,9 @@ function markPaidYes(){
       true;
 
 
-    touchClient(c);
+    touchClient(
+      c
+    );
 
 
     selectedClientId =
@@ -3070,11 +3620,7 @@ function markPaidYes(){
 
 
   /*
-    RECURRING UNPAID:
-
-    Finished already reset the date.
-
-    Paid only clears the debt.
+    ALREADY FINISHED + UNPAID
   */
 
   else{
@@ -3089,7 +3635,9 @@ function markPaidYes(){
       true;
 
 
-    touchClient(c);
+    touchClient(
+      c
+    );
 
 
     selectedClientId =
@@ -3242,7 +3790,9 @@ function undoLastAction(){
       );
 
 
-      touchClient(c);
+      touchClient(
+        c
+      );
 
     }
 
@@ -3584,7 +4134,9 @@ function saveClientForm(){
       );
 
 
-      touchClient(c);
+      touchClient(
+        c
+      );
 
     }
 
@@ -3593,7 +4145,9 @@ function saveClientForm(){
 
     clients.push(
       normalizeClient({
-        id:makeId(),
+
+        id:
+          makeId(),
 
         paid:
           formMode ===
@@ -3601,14 +4155,17 @@ function saveClientForm(){
             ? false
             : true,
 
-        finished:false,
+        finished:
+          false,
 
-        lastCompleted:null,
+        lastCompleted:
+          null,
 
         ...data,
 
         updatedAt:
           nowStamp()
+
       })
     );
 
@@ -3700,7 +4257,7 @@ function deleteClientForm(){
 
 
 /* =========================================================
-   ACCOUNT STATUS
+   BACKUP STATUS
 ========================================================= */
 
 function setBackupStatus(
@@ -3739,12 +4296,16 @@ function setBackupStatus(
 function renderBackupStrip(){
 
   if(
-    currentUser
+    currentUser &&
+    activeStorageMode ===
+    "user"
   ){
 
     const last =
       localStorage.getItem(
-        LAST_SYNC_AT_KEY
+        userLastSyncKey(
+          currentUser.id
+        )
       );
 
 
@@ -3850,7 +4411,9 @@ function renderAccount(){
 
 
   if(
-    currentUser
+    currentUser &&
+    activeStorageMode ===
+    "user"
   ){
 
     guestAccount.style.display =
@@ -3867,7 +4430,9 @@ function renderAccount(){
 
     const last =
       localStorage.getItem(
-        LAST_SYNC_AT_KEY
+        userLastSyncKey(
+          currentUser.id
+        )
       );
 
 
@@ -3921,6 +4486,288 @@ function renderAccount(){
 
 
 /* =========================================================
+   PENDING GUEST IMPORT
+========================================================= */
+
+function savePendingGuestImport(
+  email
+){
+
+  localStorage.setItem(
+    PENDING_GUEST_IMPORT_KEY,
+    JSON.stringify({
+      email:
+        String(
+          email
+        )
+        .trim()
+        .toLowerCase(),
+
+      createdAt:
+        nowStamp()
+    })
+  );
+
+}
+
+
+function clearPendingGuestImport(){
+
+  localStorage.removeItem(
+    PENDING_GUEST_IMPORT_KEY
+  );
+
+}
+
+
+function readPendingGuestImport(){
+
+  const raw =
+    localStorage.getItem(
+      PENDING_GUEST_IMPORT_KEY
+    );
+
+
+  if(!raw){
+
+    return null;
+
+  }
+
+
+  try{
+
+    return JSON.parse(
+      raw
+    );
+
+  }
+  catch{
+
+    return null;
+
+  }
+
+}
+
+
+/* =========================================================
+   IMPORT GUEST INTO NEW ACCOUNT
+========================================================= */
+
+async function maybeImportGuestIntoAccount(){
+
+  if(
+    !currentUser
+  ){
+
+    return;
+
+  }
+
+
+  const pending =
+    readPendingGuestImport();
+
+
+  if(!pending){
+
+    return;
+
+  }
+
+
+  const userEmail =
+    String(
+      currentUser.email || ""
+    )
+    .trim()
+    .toLowerCase();
+
+
+  if(
+    pending.email !==
+    userEmail
+  ){
+
+    return;
+
+  }
+
+
+  const guestClients =
+    readGuestClients();
+
+
+  if(
+    !guestClients.length
+  ){
+
+    clearPendingGuestImport();
+
+    return;
+
+  }
+
+
+  /*
+    We sync this account first.
+
+    If this "new" account already had
+    cloud data for some reason,
+    do not silently combine schedules.
+  */
+
+  if(
+    clients.length > 0
+  ){
+
+    const shouldAdd =
+      confirm(
+        "This account already has a schedule.\n\nDo you also want to copy your Guest Mode clients into this account?"
+      );
+
+
+    if(
+      !shouldAdd
+    ){
+
+      clearPendingGuestImport();
+
+      return;
+
+    }
+
+  }
+
+
+  const map =
+    new Map(
+      clients.map(
+        c => [
+          c.id,
+          c
+        ]
+      )
+    );
+
+
+  guestClients.forEach(
+    guestClient => {
+
+      /*
+        Do not overwrite an existing
+        account client with the same ID.
+      */
+
+      if(
+        !map.has(
+          guestClient.id
+        )
+      ){
+
+        const copy =
+          deepCopy(
+            guestClient
+          );
+
+
+        copy.updatedAt =
+          nowStamp();
+
+
+        map.set(
+          copy.id,
+          copy
+        );
+
+      }
+
+    }
+  );
+
+
+  clients =
+    [
+      ...map.values()
+    ];
+
+
+  clearPendingGuestImport();
+
+
+  saveLocal(
+    false
+  );
+
+
+  await syncCloud();
+
+
+  render();
+
+}
+
+
+/* =========================================================
+   ACTIVATE SIGNED-IN USER
+========================================================= */
+
+async function activateUserSession(user){
+
+  if(!user){
+
+    return;
+
+  }
+
+
+  /*
+    Switch storage FIRST.
+
+    Guest clients are not reused here.
+  */
+
+  currentUser =
+    user;
+
+
+  loadUserLocal(
+    user.id
+  );
+
+
+  render();
+
+  renderAccount();
+
+
+  /*
+    Restore/sync only THIS user's
+    Supabase schedule.
+  */
+
+  await syncCloud();
+
+
+  /*
+    Only Create Account can set
+    the guest-import marker.
+
+    Normal Sign In does not.
+  */
+
+  await maybeImportGuestIntoAccount();
+
+
+  render();
+
+  renderAccount();
+
+}
+
+
+/* =========================================================
    SUPABASE START
 ========================================================= */
 
@@ -3958,11 +4805,6 @@ async function initCloud(){
       );
 
 
-    /*
-      Register auth listener immediately
-      so PASSWORD_RECOVERY can be caught.
-    */
-
     supabaseClient
       .auth
       .onAuthStateChange(
@@ -3971,15 +4813,16 @@ async function initCloud(){
           session
         ) => {
 
-          currentUser =
-            session?.user ||
-            null;
-
 
           if(
             event ===
             "PASSWORD_RECOVERY"
           ){
+
+            currentUser =
+              session?.user ||
+              null;
+
 
             passwordRecoveryMode =
               true;
@@ -3992,22 +4835,32 @@ async function initCloud(){
               "accountScreen"
             );
 
+
+            return;
+
           }
 
 
           if(
             event ===
             "SIGNED_IN"
+
+            &&
+
+            session?.user
           ){
 
-            renderAccount();
-
-            render();
-
+            /*
+              Defer work outside auth callback.
+            */
 
             setTimeout(
               () => {
-                syncCloud();
+
+                activateUserSession(
+                  session.user
+                );
+
               },
               0
             );
@@ -4020,23 +4873,18 @@ async function initCloud(){
             "SIGNED_OUT"
           ){
 
-            currentUser =
-              null;
+            setTimeout(
+              () => {
 
+                loadGuestMode();
 
-            localStorage.removeItem(
-              LAST_SYNC_AT_KEY
+                setBackupStatus(
+                  "Saved on this device"
+                );
+
+              },
+              0
             );
-
-
-            setBackupStatus(
-              "Saved on this device"
-            );
-
-
-            renderAccount();
-
-            render();
 
           }
 
@@ -4065,21 +4913,16 @@ async function initCloud(){
       data.session.user
     ){
 
-      currentUser =
-        data.session.user;
-
-
-      renderAccount();
-
-      render();
-
-
-      await syncCloud();
+      await activateUserSession(
+        data.session.user
+      );
 
     }
+    else{
 
+      loadGuestMode();
 
-    renderAccount();
+    }
 
   }
   catch(error){
@@ -4088,6 +4931,9 @@ async function initCloud(){
       "Supabase startup failed:",
       error
     );
+
+
+    loadGuestMode();
 
 
     setBackupStatus(
@@ -4145,6 +4991,48 @@ async function createAccount(){
   }
 
 
+  /*
+    Creating a NEW account is the only
+    time we offer to copy Guest Mode
+    into the account.
+  */
+
+  let copyGuest =
+    false;
+
+
+  const guestClients =
+    readGuestClients();
+
+
+  if(
+    guestClients.length > 0
+  ){
+
+    copyGuest =
+      confirm(
+        "Back up your current Guest Mode schedule with this new account?\n\nOK = copy these Guest clients into the new account.\n\nCancel = create the account with an empty schedule.\n\nYour Guest Mode schedule will stay saved on this device either way."
+      );
+
+  }
+
+
+  if(
+    copyGuest
+  ){
+
+    savePendingGuestImport(
+      email
+    );
+
+  }
+  else{
+
+    clearPendingGuestImport();
+
+  }
+
+
   setAuthMessage(
     "Creating account..."
   );
@@ -4180,28 +5068,27 @@ async function createAccount(){
       data.user
     ){
 
-      currentUser =
-        data.user;
-
-
-      await syncCloud();
-
-
-      setAuthMessage(
-        "Account created and schedule backed up.",
-        "good"
+      await activateUserSession(
+        data.user
       );
 
 
-      renderAccount();
-
-      render();
+      setAuthMessage(
+        copyGuest
+          ? "Account created and Guest schedule backed up."
+          : "Account created.",
+        "good"
+      );
 
     }
     else{
 
       setAuthMessage(
-        "Account created. Check your email to confirm it, then sign in. Your schedule is still saved on this device.",
+        copyGuest
+          ?
+          "Account created. Check your email to confirm it, then sign in. Your Guest schedule will be copied into this account after you sign in."
+          :
+          "Account created. Check your email to confirm it, then sign in.",
         "good"
       );
 
@@ -4209,6 +5096,14 @@ async function createAccount(){
 
   }
   catch(error){
+
+    /*
+      Failed account creation must not
+      leave an import marker behind.
+    */
+
+    clearPendingGuestImport();
+
 
     console.error(
       error
@@ -4297,15 +5192,23 @@ async function signIn(){
     }
 
 
-    currentUser =
-      data.user;
-
-
     authPassword.value =
       "";
 
 
-    await syncCloud();
+    /*
+      IMPORTANT:
+
+      We do NOT copy Guest Mode here.
+
+      This account gets only:
+      - its own device cache
+      - its own Supabase schedule
+    */
+
+    await activateUserSession(
+      data.user
+    );
 
 
     setAuthMessage(
@@ -4313,9 +5216,9 @@ async function signIn(){
     );
 
 
-    renderAccount();
-
-    render();
+    show(
+      "homeScreen"
+    );
 
   }
   catch(error){
@@ -4462,7 +5365,7 @@ async function forgotPassword(){
 
 
 /* =========================================================
-   SET NEW PASSWORD
+   UPDATE RECOVERED PASSWORD
 ========================================================= */
 
 async function updateRecoveredPassword(){
@@ -4538,15 +5441,20 @@ async function updateRecoveredPassword(){
     );
 
 
+    if(
+      currentUser
+    ){
+
+      await activateUserSession(
+        currentUser
+      );
+
+    }
+
+
     renderAccount();
 
     render();
-
-
-    setBackupStatus(
-      "Backed up",
-      "good"
-    );
 
   }
   catch(error){
@@ -4584,6 +5492,16 @@ async function signOut(){
 
   try{
 
+    /*
+      Current account schedule has already
+      been saved in its user-specific cache.
+    */
+
+    saveLocal(
+      false
+    );
+
+
     const {
       error
     } =
@@ -4599,23 +5517,19 @@ async function signOut(){
     }
 
 
-    currentUser =
-      null;
+    /*
+      Guest Mode comes back.
+
+      Account clients are NOT copied
+      into Guest Mode.
+    */
+
+    loadGuestMode();
 
 
-    localStorage.removeItem(
-      LAST_SYNC_AT_KEY
+    show(
+      "homeScreen"
     );
-
-
-    setBackupStatus(
-      "Saved on this device"
-    );
-
-
-    renderAccount();
-
-    render();
 
   }
   catch(error){
@@ -4656,7 +5570,7 @@ async function deleteAccount(){
 
   const firstConfirm =
     confirm(
-      "Permanently delete your account and cloud backup?\n\nThe schedule stored on this device will stay here."
+      "Permanently delete your account and cloud backup?\n\nYour current schedule will be kept on this device in Guest Mode."
     );
 
 
@@ -4671,7 +5585,7 @@ async function deleteAccount(){
 
   const secondConfirm =
     confirm(
-      "Are you sure? Your cloud account cannot be recovered."
+      "Are you sure? The online account cannot be recovered."
     );
 
 
@@ -4691,12 +5605,17 @@ async function deleteAccount(){
     "Deleting...";
 
 
-  try{
+  const deletedUserId =
+    currentUser.id;
 
-    /*
-      functions.invoke sends the signed-in
-      user's session token.
-    */
+
+  const accountSchedule =
+    deepCopy(
+      clients
+    );
+
+
+  try{
 
     const {
       data,
@@ -4734,26 +5653,88 @@ async function deleteAccount(){
 
 
     /*
-      Keep the local schedule,
-      but disconnect old account metadata.
+      Copy the deleted account's current
+      schedule into Guest Mode so it
+      remains usable locally.
     */
+
+    const guestMap =
+      new Map(
+        readGuestClients()
+          .map(
+            c => [
+              c.id,
+              c
+            ]
+          )
+      );
+
+
+    accountSchedule.forEach(
+      c => {
+
+        const copy =
+          deepCopy(
+            c
+          );
+
+
+        copy.updatedAt =
+          nowStamp();
+
+
+        /*
+          Current account version wins
+          when same client ID exists.
+        */
+
+        guestMap.set(
+          copy.id,
+          copy
+        );
+
+      }
+    );
+
+
+    writeGuestClients(
+      [
+        ...guestMap.values()
+      ]
+    );
+
+
+    /*
+      Remove local cache belonging
+      to the deleted online account.
+    */
+
+    localStorage.removeItem(
+      userClientsKey(
+        deletedUserId
+      )
+    );
+
+
+    localStorage.removeItem(
+      userDeletedKey(
+        deletedUserId
+      )
+    );
+
+
+    localStorage.removeItem(
+      userLastSyncKey(
+        deletedUserId
+      )
+    );
+
+
+    clearPendingGuestImport();
+
 
     currentUser =
       null;
-
-
-    deletedClients =
-      {};
-
-
-    localStorage.removeItem(
-      DELETED_KEY
-    );
-
-
-    localStorage.removeItem(
-      LAST_SYNC_AT_KEY
-    );
 
 
     try{
@@ -4766,19 +5747,12 @@ async function deleteAccount(){
     catch{}
 
 
-    setBackupStatus(
-      "Saved on this device"
-    );
+    loadGuestMode();
 
 
     alert(
-      "Account deleted. Your schedule is still saved on this device."
+      "Account deleted. Your schedule is now available in Guest Mode on this device."
     );
-
-
-    renderAccount();
-
-    render();
 
 
     show(
@@ -4844,12 +5818,27 @@ async function fetchCloudRows(){
 
 
 /* =========================================================
-   MERGE CLOUD INTO LOCAL
+   MERGE CLOUD INTO CURRENT USER
 ========================================================= */
 
 function mergeCloudRows(
   rows
 ){
+
+  /*
+    Never cloud-sync Guest Mode.
+  */
+
+  if(
+    !currentUser ||
+    activeStorageMode !==
+    "user"
+  ){
+
+    return;
+
+  }
+
 
   const localMap =
     new Map(
@@ -4915,7 +5904,7 @@ function mergeCloudRows(
 
 
     /*
-      CLOUD DELETION
+      CLOUD DELETE
     */
 
     if(
@@ -4951,7 +5940,7 @@ function mergeCloudRows(
 
 
     /*
-      CLOUD ACTIVE CLIENT
+      ACTIVE CLOUD CLIENT
     */
 
     if(
@@ -4968,7 +5957,9 @@ function mergeCloudRows(
         normalizeClient(
           {
             ...row.data,
+
             id,
+
             updatedAt:
               cloudStamp
           },
@@ -5029,10 +6020,6 @@ function buildLocalChanges(
     [];
 
 
-  /*
-    ACTIVE CLIENTS
-  */
-
   clients.forEach(
     c => {
 
@@ -5055,6 +6042,7 @@ function buildLocalChanges(
       ){
 
         changes.push({
+
           client_id:
             c.id,
 
@@ -5066,6 +6054,7 @@ function buildLocalChanges(
 
           deleted_at:
             null
+
         });
 
       }
@@ -5073,10 +6062,6 @@ function buildLocalChanges(
     }
   );
 
-
-  /*
-    DELETED CLIENTS
-  */
 
   Object.entries(
     deletedClients
@@ -5108,6 +6093,7 @@ function buildLocalChanges(
       ){
 
         changes.push({
+
           client_id:
             id,
 
@@ -5118,6 +6104,7 @@ function buildLocalChanges(
 
           deleted_at:
             stamp
+
         });
 
       }
@@ -5132,7 +6119,7 @@ function buildLocalChanges(
 
 
 /* =========================================================
-   PUSH CHANGES
+   PUSH CLOUD CHANGES
 ========================================================= */
 
 async function pushChanges(
@@ -5178,7 +6165,9 @@ async function syncCloud(){
 
   if(
     !supabaseClient ||
-    !currentUser
+    !currentUser ||
+    activeStorageMode !==
+    "user"
   ){
 
     return;
@@ -5198,6 +6187,10 @@ async function syncCloud(){
   }
 
 
+  const syncingUserId =
+    currentUser.id;
+
+
   syncInProgress =
     true;
 
@@ -5210,28 +6203,32 @@ async function syncCloud(){
 
   try{
 
-    /*
-      1. Get current cloud state.
-    */
-
     const before =
       await fetchCloudRows();
 
 
     /*
-      2. Bring newer cloud records
-         into local storage.
+      User might have signed out
+      while network request was running.
     */
+
+    if(
+      !currentUser ||
+      currentUser.id !==
+      syncingUserId ||
+      activeStorageMode !==
+      "user"
+    ){
+
+      return;
+
+    }
+
 
     mergeCloudRows(
       before
     );
 
-
-    /*
-      3. Find anything local that is
-         newer than the cloud.
-    */
 
     const changes =
       buildLocalChanges(
@@ -5239,26 +6236,35 @@ async function syncCloud(){
       );
 
 
-    /*
-      4. Push those changes.
-
-         SQL refuses to let an older
-         version replace a newer row.
-    */
-
     await pushChanges(
       changes
     );
 
 
-    /*
-      5. Fetch again so this device
-         ends with the final cloud state,
-         including changes from other devices.
-    */
+    if(
+      !currentUser ||
+      currentUser.id !==
+      syncingUserId
+    ){
+
+      return;
+
+    }
+
 
     const after =
       await fetchCloudRows();
+
+
+    if(
+      !currentUser ||
+      currentUser.id !==
+      syncingUserId
+    ){
+
+      return;
+
+    }
 
 
     mergeCloudRows(
@@ -5272,7 +6278,9 @@ async function syncCloud(){
 
 
     localStorage.setItem(
-      LAST_SYNC_AT_KEY,
+      userLastSyncKey(
+        syncingUserId
+      ),
       nowStamp()
     );
 
@@ -5318,7 +6326,9 @@ async function syncCloud(){
 
       setTimeout(
         () => {
+
           syncCloud();
+
         },
         100
       );
@@ -5338,6 +6348,8 @@ function scheduleCloudSync(){
 
   if(
     !currentUser ||
+    activeStorageMode !==
+    "user" ||
     !supabaseClient
   ){
 
@@ -5503,7 +6515,7 @@ deleteAccountBtn.onclick =
   deleteAccount;
 
 
-/* ENTER PASSWORD = SIGN IN */
+/* ENTER = SIGN IN */
 
 authPassword.addEventListener(
   "keydown",
@@ -5522,7 +6534,7 @@ authPassword.addEventListener(
 );
 
 
-/* ENTER NEW PASSWORD */
+/* ENTER = SAVE NEW PASSWORD */
 
 newPasswordInput.addEventListener(
   "keydown",
@@ -5548,7 +6560,9 @@ window.addEventListener(
   () => {
 
     if(
-      currentUser
+      currentUser &&
+      activeStorageMode ===
+      "user"
     ){
 
       syncCloud();
@@ -5559,8 +6573,7 @@ window.addEventListener(
 );
 
 
-/* CHECK OTHER DEVICE CHANGES
-   WHEN USER COMES BACK TO APP */
+/* APP BECOMES VISIBLE AGAIN */
 
 document.addEventListener(
   "visibilitychange",
@@ -5573,6 +6586,11 @@ document.addEventListener(
       &&
 
       currentUser
+
+      &&
+
+      activeStorageMode ===
+      "user"
     ){
 
       syncCloud();
@@ -5587,11 +6605,29 @@ document.addEventListener(
    START
 ========================================================= */
 
-loadLocal();
+/*
+  Preserve the old device-wide data
+  as Guest Mode once.
+*/
 
-render();
+migrateOldStorageToGuest();
 
-renderAccount();
+
+/*
+  Start visually in Guest Mode
+  while Supabase checks whether
+  a saved login session exists.
+*/
+
+loadGuestMode();
+
+
+/*
+  If a Supabase session exists,
+  initCloud() automatically switches
+  from Guest Mode to that user's
+  separate schedule.
+*/
 
 initCloud();
 
