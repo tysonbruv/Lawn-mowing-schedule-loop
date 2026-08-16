@@ -277,13 +277,16 @@ button{
 
 .row{
   display:grid;
-  grid-template-columns:1fr auto;
+  grid-template-columns:minmax(0,1fr) auto;
   gap:8px;
   align-items:center;
   background:#111;
   border:1px solid #242424;
   border-radius:8px;
   padding:10px;
+  width:100%;
+  min-width:0;
+  overflow:hidden;
 }
 
 .row.next-row{
@@ -301,14 +304,22 @@ button{
   background:#1b1b1b;
 }
 
+.row > div:first-child{
+  min-width:0;
+}
+
 .row-title{
   font-weight:700;
+  min-width:0;
+  overflow-wrap:anywhere;
 }
 
 .row-sub{
   color:var(--muted);
   font-size:14px;
   margin-top:3px;
+  min-width:0;
+  max-width:100%;
   overflow:hidden;
   white-space:nowrap;
   text-overflow:ellipsis;
@@ -318,6 +329,8 @@ button{
   text-align:right;
   color:var(--muted);
   font-size:14px;
+  min-width:72px;
+  max-width:92px;
 }
 
 .price{
