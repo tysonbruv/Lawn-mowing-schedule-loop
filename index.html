@@ -1124,6 +1124,10 @@ textarea{
   </div>
 
   <div class="weekly-ad-slide">
+    <img src="./Advertisements/QAZVee83.jpg" alt="QAZ Vee 83 advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
     <img src="./Advertisements/QAZVee82.jpg" alt="QAZ Vee 82 advertisement">
   </div>
 
@@ -1324,6 +1328,10 @@ textarea{
 
   <div class="weekly-ad-slide">
     <img src="./Advertisements/Ransom Grimus Burgers.jpg" alt="Ransom Grimus Burgers advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./Advertisements/QAZVee83.jpg" alt="QAZ Vee 83 advertisement">
   </div>
 
   <div class="weekly-ad-slide">
@@ -1641,6 +1649,10 @@ textarea{
 
   <div class="weekly-ad-slide">
     <img src="./Advertisements/Ransom Grimus Burgers.jpg" alt="Ransom Grimus Burgers advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./Advertisements/QAZVee83.jpg" alt="QAZ Vee 83 advertisement">
   </div>
 
   <div class="weekly-ad-slide">
@@ -3730,7 +3742,11 @@ function renderRecurringUnpaidList(list){
             ) +
           '</div>' +
 
-          '<div>Unpaid</div>' +
+          '<div>' +
+            pretty(
+              c.nextDue
+            ) +
+          '</div>' +
 
           paidButton +
 
