@@ -27,6 +27,7 @@
   --green:#5fd36d;
   --orange:#ffb347;
   --red:#ff5f57;
+  --purple:#9272ff;
 }
 
 *{
@@ -321,6 +322,16 @@ button{
   background:#101710;
 }
 
+.row.personal-event-row{
+  border-color:#6f5ed6;
+  background:#171225;
+}
+
+.row.personal-event-row.selected-row{
+  border-color:#b7a7ff;
+  background:#211936;
+}
+
 .row.unpaid-row{
   border-color:#5b3f1a;
   background:#171208;
@@ -387,6 +398,17 @@ button{
   font-weight:800;
 }
 
+.personal-tag{
+  color:var(--purple);
+  font-weight:900;
+}
+
+.event-time-text{
+  color:var(--purple);
+  font-weight:800;
+  white-space:nowrap;
+}
+
 .finish-small{
   background:#132015;
   border:1px solid #254a2a;
@@ -406,6 +428,17 @@ button{
   padding:7px 12px;
   margin-top:6px;
   min-height:34px;
+}
+
+.delete-small{
+  background:#261113;
+  border:1px solid #6d2a2e;
+  color:#ff8b85;
+  border-radius:6px;
+  padding:7px 12px;
+  margin-top:6px;
+  min-height:34px;
+  font-weight:800;
 }
 
 .paid-btn{
@@ -558,6 +591,40 @@ select{
 textarea{
   min-height:72px;
   resize:vertical;
+}
+
+.event-time-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+}
+
+.all-day-option{
+  min-height:42px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:var(--input);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+.all-day-option input{
+  width:18px;
+  height:18px;
+  margin:0;
+  padding:0;
+  accent-color:var(--purple);
+}
+
+#eventTimeInput:disabled{
+  opacity:.45;
+  cursor:not-allowed;
 }
 
 .form-actions{
@@ -1007,6 +1074,13 @@ textarea{
       + One-off
     </button>
 
+    <button
+      class="small-btn"
+      id="addEventTop"
+    >
+      + Event
+    </button>
+
   </div>
 
 </div>
@@ -1035,7 +1109,7 @@ textarea{
     id="searchInput"
     class="search-input"
     type="search"
-    placeholder="Search name or suburb"
+    placeholder="Search jobs or events"
     autocomplete="off"
   />
 
@@ -1070,7 +1144,7 @@ textarea{
 
 
 <div class="section-title">
-  NORMAL JOBS
+  SCHEDULE
 </div>
 
 <div
@@ -1190,7 +1264,7 @@ textarea{
 
 <div class="field">
 
-  <label>
+  <label id="nameLabel">
     Name
   </label>
 
@@ -1202,7 +1276,10 @@ textarea{
 </div>
 
 
-<div class="field">
+<div
+  class="field"
+  id="suburbField"
+>
 
   <label>
     Suburb
@@ -1216,7 +1293,10 @@ textarea{
 </div>
 
 
-<div class="field">
+<div
+  class="field"
+  id="priceField"
+>
 
   <label>
     Price $
@@ -1256,7 +1336,7 @@ textarea{
 
 <div class="field">
 
-  <label>
+  <label id="dueLabel">
     Next due date
   </label>
 
@@ -1264,6 +1344,37 @@ textarea{
     id="dueInput"
     type="date"
   />
+
+</div>
+
+
+<div
+  class="field full hidden-field"
+  id="eventTimingField"
+>
+
+  <label>
+    Time
+  </label>
+
+  <div class="event-time-row">
+
+    <input
+      id="eventTimeInput"
+      type="time"
+      disabled
+    />
+
+    <label class="all-day-option">
+      <input
+        id="allDayInput"
+        type="checkbox"
+        checked
+      />
+      <span>All day</span>
+    </label>
+
+  </div>
 
 </div>
 
@@ -1718,7 +1829,7 @@ textarea{
   <h2>What Lawn Schedule stores</h2>
 
   <p>
-    Lawn Schedule stores the information you enter to run your schedule. This can include client names, suburbs, prices, mowing cycles, due dates, notes, completion dates and paid or unpaid status. If you create an account, the app also uses your email address to identify and recover that account.
+    Lawn Schedule stores the information you enter to run your schedule. This can include client names, suburbs, prices, mowing cycles, due dates, notes, completion dates, paid or unpaid status, and personal event names, dates and times. If you create an account, the app also uses your email address to identify and recover that account.
   </p>
 
   <h2>How information is collected</h2>
@@ -1832,7 +1943,7 @@ textarea{
   </div>
 
   <p class="about-description">
-    A simple schedule for recurring lawn clients and one-off jobs, with due dates, payment tracking, undo and optional cloud backup.
+    A simple schedule for recurring lawn clients, one-off jobs and personal events, with due dates, payment tracking, undo and optional cloud backup.
   </p>
 
 </div>
@@ -2051,6 +2162,11 @@ const addOneOffTop =
     "addOneOffTop"
   );
 
+const addEventTop =
+  document.getElementById(
+    "addEventTop"
+  );
+
 const searchInput =
   document.getElementById(
     "searchInput"
@@ -2119,6 +2235,16 @@ const nameInput =
     "nameInput"
   );
 
+const nameLabel =
+  document.getElementById(
+    "nameLabel"
+  );
+
+const suburbField =
+  document.getElementById(
+    "suburbField"
+  );
+
 const suburbInput =
   document.getElementById(
     "suburbInput"
@@ -2127,6 +2253,11 @@ const suburbInput =
 const priceInput =
   document.getElementById(
     "priceInput"
+  );
+
+const priceField =
+  document.getElementById(
+    "priceField"
   );
 
 const cycleField =
@@ -2142,6 +2273,26 @@ const cycleInput =
 const dueInput =
   document.getElementById(
     "dueInput"
+  );
+
+const dueLabel =
+  document.getElementById(
+    "dueLabel"
+  );
+
+const eventTimingField =
+  document.getElementById(
+    "eventTimingField"
+  );
+
+const eventTimeInput =
+  document.getElementById(
+    "eventTimeInput"
+  );
+
+const allDayInput =
+  document.getElementById(
+    "allDayInput"
   );
 
 const notesInput =
@@ -2446,6 +2597,119 @@ function prettyCompleted(s){
 }
 
 
+function formatEventTime(value){
+
+  const match =
+    String(
+      value || ""
+    )
+    .match(
+      /^(\d{2}):(\d{2})$/
+    );
+
+
+  if(!match){
+
+    return "All day";
+
+  }
+
+
+  const d =
+    new Date(
+      2000,
+      0,
+      1,
+      Number(
+        match[1]
+      ),
+      Number(
+        match[2]
+      )
+    );
+
+
+  return d.toLocaleTimeString(
+    "en-AU",
+    {
+      hour:
+        "numeric",
+
+      minute:
+        "2-digit"
+    }
+  );
+
+}
+
+
+function eventTimeText(c){
+
+  if(
+    !c ||
+    c.allDay !== false ||
+    !c.eventTime
+  ){
+
+    return "All day";
+
+  }
+
+
+  return formatEventTime(
+    c.eventTime
+  );
+
+}
+
+
+function eventTimeMinutes(c){
+
+  if(
+    !c ||
+    c.type !== "event" ||
+    c.allDay !== false ||
+    !c.eventTime
+  ){
+
+    return 0;
+
+  }
+
+
+  const parts =
+    c.eventTime
+      .split(
+        ":"
+      )
+      .map(
+        Number
+      );
+
+
+  if(
+    parts.length !== 2 ||
+    !Number.isFinite(
+      parts[0]
+    ) ||
+    !Number.isFinite(
+      parts[1]
+    )
+  ){
+
+    return 0;
+
+  }
+
+
+  return (
+    parts[0] * 60 +
+    parts[1]
+  );
+
+}
+
+
 function daysUntil(s){
 
   return Math.round(
@@ -2709,6 +2973,33 @@ function normalizeClient(
       c.notes ||
       "",
 
+    eventTime:
+      /^(?:[01]\d|2[0-3]):[0-5]\d$/
+        .test(
+          String(
+            c.eventTime ||
+            ""
+          )
+        )
+          ? String(
+              c.eventTime
+            )
+          : "",
+
+    allDay:
+      c.type ===
+      "event"
+        ?
+        (
+          c.allDay ===
+          undefined
+            ? !c.eventTime
+            : Boolean(
+                c.allDay
+              )
+        )
+        : true,
+
     paid:
       c.paid === undefined
         ? true
@@ -2771,14 +3062,89 @@ function sortClients(list){
   return [
     ...list
   ].sort(
-    (a,b) =>
-      dateFromIso(
-        a.nextDue
-      )
-      -
-      dateFromIso(
-        b.nextDue
-      )
+    (a,b) => {
+
+      const dateDifference =
+        dateFromIso(
+          a.nextDue
+        )
+        -
+        dateFromIso(
+          b.nextDue
+        );
+
+
+      if(dateDifference){
+
+        return dateDifference;
+
+      }
+
+
+      const rank =
+        item => {
+
+          if(
+            item.type !==
+            "event"
+          ){
+
+            return 1;
+
+          }
+
+
+          return (
+            item.allDay !== false ||
+            !item.eventTime
+          )
+            ? 0
+            : 2;
+
+        };
+
+
+      const rankDifference =
+        rank(a) -
+        rank(b);
+
+
+      if(rankDifference){
+
+        return rankDifference;
+
+      }
+
+
+      if(
+        a.type ===
+        "event"
+
+        &&
+
+        b.type ===
+        "event"
+
+        &&
+
+        a.allDay === false
+
+        &&
+
+        b.allDay === false
+      ){
+
+        return (
+          eventTimeMinutes(a) -
+          eventTimeMinutes(b)
+        );
+
+      }
+
+
+      return 0;
+
+    }
   );
 
 }
@@ -2819,6 +3185,14 @@ function matchesSearch(c){
 
     String(
       c.suburb || ""
+    )
+      .toLowerCase()
+      .includes(q)
+
+    ||
+
+    String(
+      c.notes || ""
     )
       .toLowerCase()
       .includes(q)
@@ -3434,8 +3808,8 @@ function renderNormalList(list){
       '<div class="empty">' +
       (
         searchQuery
-          ? "No matching jobs."
-          : "No clients yet. Add one to start the schedule."
+          ? "No matching jobs or events."
+          : "No jobs or events yet. Add one to start the schedule."
       ) +
       '</div>';
 
@@ -3456,6 +3830,12 @@ function renderNormalList(list){
       row.className =
         "row" +
         (
+          c.type ===
+          "event"
+            ? " personal-event-row"
+            : ""
+        ) +
+        (
           index === 0
             ? " next-row"
             : ""
@@ -3471,6 +3851,108 @@ function renderNormalList(list){
       const selected =
         selectedClientId ===
         c.id;
+
+
+      if(
+        c.type ===
+        "event"
+      ){
+
+        const eventActions =
+          selected
+            ?
+            '<div class="selected-actions">' +
+
+            '<button class="edit-small" onclick="event.stopPropagation();editClient(\'' +
+            c.id +
+            '\')">' +
+            'Edit' +
+            '</button>' +
+
+            '<button class="delete-small" onclick="event.stopPropagation();deletePersonalEvent(\'' +
+            c.id +
+            '\')">' +
+            'Delete' +
+            '</button>' +
+
+            '</div>'
+            :
+            '';
+
+
+        row.innerHTML =
+
+          '<div>' +
+
+            '<div class="row-title">' +
+
+              (
+                index === 0
+                  ? "NEXT - "
+                  : ""
+              ) +
+
+              esc(
+                c.name
+              ) +
+
+            '</div>' +
+
+            '<div class="row-sub">' +
+
+              '<span class="personal-tag">PERSONAL</span>' +
+
+              (
+                c.notes
+                  ?
+                  ' · ' +
+                  esc(
+                    c.notes
+                  )
+                  :
+                  ''
+              ) +
+
+            '</div>' +
+
+          '</div>' +
+
+          '<div class="row-right">' +
+
+            '<div>' +
+              pretty(
+                c.nextDue
+              ) +
+            '</div>' +
+
+            '<div class="event-time-text">' +
+              esc(
+                eventTimeText(
+                  c
+                )
+              ) +
+            '</div>' +
+
+          '</div>' +
+
+          eventActions;
+
+
+        row.onclick =
+          () =>
+            selectClient(
+              c.id
+            );
+
+
+        clientList.appendChild(
+          row
+        );
+
+
+        return;
+
+      }
 
 
       const paidClass =
@@ -3983,7 +4465,11 @@ function finishClient(id){
     );
 
 
-  if(!c){
+  if(
+    !c ||
+    c.type ===
+    "event"
+  ){
 
     return;
 
@@ -4382,6 +4868,126 @@ function dismissUndo(){
 
 
 /* =========================================================
+   FORM MODE
+========================================================= */
+
+function syncEventTimeControl(){
+
+  const allDay =
+    allDayInput.checked;
+
+
+  eventTimeInput.disabled =
+    allDay;
+
+
+  if(allDay){
+
+    eventTimeInput.value =
+      "";
+
+  }
+
+}
+
+
+function configureFormForMode(mode){
+
+  const isEvent =
+    mode ===
+    "event";
+
+
+  const hidesCycle =
+    mode ===
+    "oneoff" ||
+    isEvent;
+
+
+  suburbField
+    .classList
+    .toggle(
+      "hidden-field",
+      isEvent
+    );
+
+
+  priceField
+    .classList
+    .toggle(
+      "hidden-field",
+      isEvent
+    );
+
+
+  cycleField
+    .classList
+    .toggle(
+      "hidden-field",
+      hidesCycle
+    );
+
+
+  eventTimingField
+    .classList
+    .toggle(
+      "hidden-field",
+      !isEvent
+    );
+
+
+  nameLabel.textContent =
+    isEvent
+      ? "Event name"
+      : "Name";
+
+
+  nameInput.placeholder =
+    isEvent
+      ? "Nan's house or birthday"
+      : "Mary";
+
+
+  dueLabel.textContent =
+    isEvent
+      ? "Date"
+      : "Next due date";
+
+
+  notesInput.placeholder =
+    isEvent
+      ? "Details, address, what to bring, etc."
+      : "Gate code, dog, green bin, cash, etc.";
+
+
+  saveClientBtn.textContent =
+    isEvent
+      ? "Save Event"
+      : "Save Client";
+
+
+  deleteClientBtn.textContent =
+    isEvent
+      ? "Delete Event"
+      :
+      (
+        mode ===
+        "oneoff"
+          ? "Delete Job"
+          : "Delete Client"
+      );
+
+
+  if(isEvent){
+
+    syncEventTimeControl();
+
+  }
+
+}
+
+
+/* =========================================================
    ADD CLIENT
 ========================================================= */
 
@@ -4398,11 +5004,9 @@ function addClient(){
     "Add Client";
 
 
-  cycleField
-    .classList
-    .remove(
-      "hidden-field"
-    );
+  configureFormForMode(
+    formMode
+  );
 
 
   nameInput.value =
@@ -4424,6 +5028,14 @@ function addClient(){
 
   notesInput.value =
     "";
+
+  eventTimeInput.value =
+    "";
+
+  allDayInput.checked =
+    true;
+
+  syncEventTimeControl();
 
 
   lastCompletedBox
@@ -4461,11 +5073,85 @@ function addOneOff(){
     "Add One-off Job";
 
 
-  cycleField
-    .classList
-    .add(
-      "hidden-field"
+  configureFormForMode(
+    formMode
+  );
+
+
+  nameInput.value =
+    "";
+
+  suburbInput.value =
+    "";
+
+  priceInput.value =
+    "";
+
+  cycleInput.value =
+    "30";
+
+  dueInput.value =
+    iso(
+      today()
     );
+
+  notesInput.value =
+    "";
+
+  eventTimeInput.value =
+    "";
+
+  allDayInput.checked =
+    true;
+
+  syncEventTimeControl();
+
+
+  lastCompletedBox
+    .classList
+    .remove(
+      "active"
+    );
+
+
+  deleteClientBtn.style.display =
+    "none";
+
+
+  show(
+    "formScreen"
+  );
+
+}
+
+
+/* =========================================================
+   ADD PERSONAL EVENT
+========================================================= */
+
+function addPersonalEvent(){
+
+  editingId =
+    null;
+
+  formMode =
+    "event";
+
+
+  formTitle.textContent =
+    "Add Event";
+
+
+  allDayInput.checked =
+    true;
+
+  eventTimeInput.value =
+    "";
+
+
+  configureFormForMode(
+    formMode
+  );
 
 
   nameInput.value =
@@ -4538,18 +5224,20 @@ function editClient(id){
 
   formTitle.textContent =
     formMode ===
-    "oneoff"
-      ? "Edit One-off Job"
-      : "Edit Client";
+    "event"
+      ? "Edit Event"
+      :
+      (
+        formMode ===
+        "oneoff"
+          ? "Edit One-off Job"
+          : "Edit Client"
+      );
 
 
-  cycleField
-    .classList
-    .toggle(
-      "hidden-field",
-      formMode ===
-      "oneoff"
-    );
+  configureFormForMode(
+    formMode
+  );
 
 
   nameInput.value =
@@ -4572,9 +5260,30 @@ function editClient(id){
     c.notes ||
     "";
 
+  eventTimeInput.value =
+    c.eventTime ||
+    "";
+
+  allDayInput.checked =
+    formMode ===
+    "event"
+      ?
+      (
+        c.allDay !== false ||
+        !c.eventTime
+      )
+      : true;
+
+  syncEventTimeControl();
+
 
   if(
     c.lastCompleted
+
+    &&
+
+    formMode !==
+    "event"
   ){
 
     lastCompletedText.textContent =
@@ -4631,24 +5340,51 @@ function saveClientForm(){
   }
 
 
+  const isEvent =
+    formMode ===
+    "event";
+
+
+  const selectedEventTime =
+    eventTimeInput.value;
+
+
+  const eventIsAllDay =
+    isEvent
+      ?
+      (
+        allDayInput.checked ||
+        !selectedEventTime
+      )
+      : true;
+
+
   const data = {
 
     name,
 
     suburb:
-      suburbInput
-        .value
-        .trim(),
+      isEvent
+        ? ""
+        : suburbInput
+            .value
+            .trim(),
 
     price:
-      Number(
-        priceInput.value
-      ) ||
-      0,
+      isEvent
+        ? 0
+        :
+        (
+          Number(
+            priceInput.value
+          ) ||
+          0
+        ),
 
     cycle:
       formMode ===
-      "oneoff"
+      "oneoff" ||
+      isEvent
         ? 0
         :
         (
@@ -4668,6 +5404,17 @@ function saveClientForm(){
       notesInput
         .value
         .trim(),
+
+    eventTime:
+      isEvent &&
+      !eventIsAllDay
+        ? selectedEventTime
+        : "",
+
+    allDay:
+      isEvent
+        ? eventIsAllDay
+        : true,
 
     type:
       formMode
@@ -4776,7 +5523,16 @@ function deleteClientForm(){
 
   if(
     !confirm(
-      "Delete this client?"
+      c.type ===
+      "event"
+        ? "Delete this event?"
+        :
+        (
+          c.type ===
+          "oneoff"
+            ? "Delete this one-off job?"
+            : "Delete this client?"
+        )
     )
   ){
 
@@ -4813,6 +5569,62 @@ function deleteClientForm(){
   show(
     "homeScreen"
   );
+
+}
+
+
+function deletePersonalEvent(id){
+
+  const c =
+    clients.find(
+      x =>
+        x.id === id &&
+        x.type ===
+        "event"
+    );
+
+
+  if(!c){
+
+    return;
+
+  }
+
+
+  if(
+    !confirm(
+      "Delete this event?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  markClientDeleted(
+    c
+  );
+
+
+  if(
+    lastAction &&
+    lastAction.before.id === id
+  ){
+
+    lastAction =
+      null;
+
+  }
+
+
+  selectedClientId =
+    null;
+
+
+  saveLocal();
+
+  render();
 
 }
 
@@ -6965,6 +7777,16 @@ addClientTop.onclick =
 
 addOneOffTop.onclick =
   addOneOff;
+
+
+addEventTop.onclick =
+  addPersonalEvent;
+
+
+allDayInput.addEventListener(
+  "change",
+  syncEventTimeControl
+);
 
 
 searchInput.addEventListener(
