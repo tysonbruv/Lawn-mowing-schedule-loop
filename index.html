@@ -567,6 +567,87 @@ textarea{
 }
 
 
+/* WEEKLY ADVERTISEMENTS */
+
+.weekly-ad-label{
+  margin-top:14px;
+  margin-bottom:6px;
+  color:#6f5ed6;
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:.01em;
+  text-align:left;
+}
+
+.weekly-ad{
+  position:relative;
+  width:100%;
+  aspect-ratio:3 / 2;
+  min-height:0;
+  margin-top:0;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:#101010;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+  overflow:hidden;
+}
+
+.weekly-ad-footer{
+  margin-top:7px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.weekly-ad-pricing{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  text-align:left;
+}
+
+.weekly-ad-pricing strong{
+  color:var(--text);
+  font-weight:800;
+}
+
+.weekly-ad-timer{
+  display:none;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+  text-align:right;
+  letter-spacing:.02em;
+  white-space:nowrap;
+}
+
+.weekly-ad-slide{
+  position:absolute;
+  inset:20px;
+  opacity:0;
+  transition:opacity 1.2s ease-in-out;
+  pointer-events:none;
+}
+
+.weekly-ad-slide.active{
+  opacity:1;
+}
+
+.weekly-ad-slide img{
+  width:100%;
+  height:100%;
+  max-height:520px;
+  object-fit:contain;
+  display:block;
+  border-radius:6px;
+}
+
+
 /* ACCOUNT */
 
 .account-card{
@@ -883,6 +964,42 @@ textarea{
 
 </div>
 
+
+<div class="weekly-ad-label">
+  Advertisement for the week
+</div>
+
+<div class="weekly-ad" aria-label="Advertisement for the week">
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/Ransom-Grimus-Burgers.jpg" alt="Ransom Grimus Burgers advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/QAZVee83.jpg" alt="QAZ Vee 83 advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/QAZVee82.jpg" alt="QAZ Vee 82 advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/VHSRewind4.jpg" alt="VHS Rewind 4 advertisement">
+  </div>
+
+</div>
+
+<div class="weekly-ad-footer">
+
+  <div class="weekly-ad-pricing">
+    <div><strong>Weekly Advertising — $20</strong></div>
+    <div>Maximum 5 advertisers per week.</div>
+  </div>
+
+  <div class="weekly-ad-timer">1:00</div>
+
+</div>
+
 </section>
 
 
@@ -1051,6 +1168,42 @@ textarea{
   >
     Delete Client
   </button>
+
+</div>
+
+
+<div class="weekly-ad-label">
+  Advertisement for the week
+</div>
+
+<div class="weekly-ad" aria-label="Advertisement for the week">
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/Ransom-Grimus-Burgers.jpg" alt="Ransom Grimus Burgers advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/QAZVee83.jpg" alt="QAZ Vee 83 advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/QAZVee82.jpg" alt="QAZ Vee 82 advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/VHSRewind4.jpg" alt="VHS Rewind 4 advertisement">
+  </div>
+
+</div>
+
+<div class="weekly-ad-footer">
+
+  <div class="weekly-ad-pricing">
+    <div><strong>Weekly Advertising — $20</strong></div>
+    <div>Maximum 5 advertisers per week.</div>
+  </div>
+
+  <div class="weekly-ad-timer">1:00</div>
 
 </div>
 
@@ -1299,6 +1452,42 @@ textarea{
     </button>
 
   </div>
+
+</div>
+
+
+<div class="weekly-ad-label">
+  Advertisement for the week
+</div>
+
+<div class="weekly-ad" aria-label="Advertisement for the week">
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/Ransom-Grimus-Burgers.jpg" alt="Ransom Grimus Burgers advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/QAZVee83.jpg" alt="QAZ Vee 83 advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/QAZVee82.jpg" alt="QAZ Vee 82 advertisement">
+  </div>
+
+  <div class="weekly-ad-slide">
+    <img src="./advertisements/VHSRewind4.jpg" alt="VHS Rewind 4 advertisement">
+  </div>
+
+</div>
+
+<div class="weekly-ad-footer">
+
+  <div class="weekly-ad-pricing">
+    <div><strong>Weekly Advertising — $20</strong></div>
+    <div>Maximum 5 advertisers per week.</div>
+  </div>
+
+  <div class="weekly-ad-timer">1:00</div>
 
 </div>
 
@@ -6632,6 +6821,181 @@ loadGuestMode();
 */
 
 initCloud();
+
+
+/*
+  WEEKLY ADVERTISEMENT ROTATION
+
+  Each screen owns its own carousel so the same weekly ads
+  appear on Home, Client Form and Backup, just like the
+  advertisement sections in Simple Tax AU.
+*/
+
+document
+  .querySelectorAll(
+    ".weekly-ad"
+  )
+  .forEach(
+    weeklyAd => {
+
+      const slides =
+        Array.from(
+          weeklyAd.querySelectorAll(
+            ".weekly-ad-slide"
+          )
+        );
+
+
+      const footer =
+        weeklyAd.nextElementSibling;
+
+
+      const timer =
+        footer
+          ? footer.querySelector(
+              ".weekly-ad-timer"
+            )
+          : null;
+
+
+      let index = 0;
+
+      let secondsLeft = 60;
+
+
+      if(
+        slides.length > 0
+      ){
+
+        slides.forEach(
+          slide =>
+            slide.classList.remove(
+              "active"
+            )
+        );
+
+
+        slides[0]
+          .classList
+          .add(
+            "active"
+          );
+
+      }
+
+
+      function renderAdTimer(){
+
+        if(!timer){
+
+          return;
+
+        }
+
+
+        const minutes =
+          Math.floor(
+            secondsLeft / 60
+          );
+
+
+        const seconds =
+          secondsLeft % 60;
+
+
+        timer.textContent =
+          minutes +
+          ":" +
+          String(
+            seconds
+          ).padStart(
+            2,
+            "0"
+          );
+
+      }
+
+
+      function advanceAd(){
+
+        if(
+          slides.length <= 1
+        ){
+
+          return;
+
+        }
+
+
+        slides[index]
+          .classList
+          .remove(
+            "active"
+          );
+
+
+        index =
+          (
+            index + 1
+          ) % slides.length;
+
+
+        slides[index]
+          .classList
+          .add(
+            "active"
+          );
+
+
+        secondsLeft = 60;
+
+        renderAdTimer();
+
+      }
+
+
+      if(
+        slides.length > 1
+
+        &&
+
+        timer
+      ){
+
+        timer.style.display =
+          "block";
+
+
+        renderAdTimer();
+
+
+        setInterval(
+          () => {
+
+            secondsLeft--;
+
+
+            if(
+              secondsLeft <= 0
+            ){
+
+              advanceAd();
+
+            }
+            else{
+
+              renderAdTimer();
+
+            }
+
+          },
+          1000
+        );
+
+      }
+
+    }
+  );
 
 </script>
 
