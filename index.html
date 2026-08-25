@@ -96,6 +96,13 @@ button{
   justify-content:space-between;
 }
 
+.home-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:0 0 auto;
+}
+
 .top-buttons{
   display:flex;
   gap:8px;
@@ -127,6 +134,26 @@ button{
   color:var(--green);
   background:#132015;
   border-color:#254a2a;
+}
+
+.settings-cog-btn{
+  width:38px;
+  height:38px;
+  min-width:38px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--input);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  font-size:22px;
+  line-height:1;
+}
+
+.settings-cog-btn:active{
+  transform:scale(.96);
 }
 
 
@@ -650,6 +677,138 @@ textarea{
 
 /* ACCOUNT */
 
+.settings-section-title{
+  margin:18px 2px 7px;
+  color:var(--muted2);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.09em;
+}
+
+.settings-menu{
+  overflow:hidden;
+  border:1px solid var(--border2);
+  border-radius:12px;
+  background:#111;
+}
+
+.settings-link{
+  width:100%;
+  min-height:62px;
+  border:0;
+  border-bottom:1px solid var(--border2);
+  border-radius:0;
+  background:#111;
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 14px;
+  text-align:left;
+}
+
+.settings-link:last-child{
+  border-bottom:0;
+}
+
+.settings-link-text{
+  min-width:0;
+}
+
+.settings-link-title{
+  display:block;
+  font-size:15px;
+  font-weight:800;
+}
+
+.settings-link-sub{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+}
+
+.settings-chevron{
+  flex:0 0 auto;
+  color:var(--muted2);
+  font-size:24px;
+  line-height:1;
+}
+
+.settings-detail-card{
+  margin-top:14px;
+  border:1px solid var(--border2);
+  border-radius:12px;
+  background:#111;
+  padding:16px;
+}
+
+.settings-detail-card h2{
+  margin:22px 0 7px;
+  font-size:16px;
+}
+
+.settings-detail-card h2:first-child{
+  margin-top:0;
+}
+
+.settings-detail-card p,
+.settings-detail-card li{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.55;
+}
+
+.settings-detail-card p{
+  margin:0;
+}
+
+.settings-detail-card ul{
+  margin:7px 0 0;
+  padding-left:20px;
+}
+
+.settings-detail-card li + li{
+  margin-top:6px;
+}
+
+.about-card{
+  text-align:center;
+}
+
+.about-mark{
+  width:64px;
+  height:64px;
+  margin:4px auto 12px;
+  border:1px solid #254a2a;
+  border-radius:16px;
+  background:#132015;
+  color:var(--green);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  font-weight:900;
+}
+
+.about-name{
+  font-size:22px;
+  font-weight:900;
+}
+
+.about-version{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.about-description{
+  max-width:480px;
+  margin:18px auto 0 !important;
+}
+
 .account-card{
   background:#111;
   border:1px solid #2a2a2a;
@@ -819,22 +978,29 @@ textarea{
 
 <div class="top home-top">
 
-  <div
-    id="modeBadge"
-    class="mode-badge guest"
-  >
-    Guest Mode
+  <div class="home-status">
+
+    <button
+      class="settings-cog-btn"
+      id="settingsTop"
+      type="button"
+      aria-label="Open Settings"
+      title="Settings"
+    >
+      &#9881;&#65038;
+    </button>
+
+    <div
+      id="modeBadge"
+      class="mode-badge guest"
+    >
+      Guest Mode
+    </div>
+
   </div>
 
 
   <div class="top-buttons">
-
-    <button
-      class="small-btn"
-      id="backupTop"
-    >
-      Backup
-    </button>
 
     <button
       class="small-btn"
@@ -1212,7 +1378,7 @@ textarea{
 
 
 <!-- =========================
-     ACCOUNT
+     SETTINGS
 ========================= -->
 
 <section
@@ -1225,11 +1391,11 @@ textarea{
   <div>
 
     <h1>
-      Backup
+      Settings
     </h1>
 
     <h3>
-      Optional
+      App and account
     </h3>
 
   </div>
@@ -1243,6 +1409,10 @@ textarea{
 
 </div>
 
+
+<div class="settings-section-title">
+  ACCOUNT &amp; BACKUP
+</div>
 
 
 <!-- GUEST ACCOUNT SCREEN -->
@@ -1456,6 +1626,39 @@ textarea{
 </div>
 
 
+<div class="settings-section-title">
+  APP
+</div>
+
+<div class="settings-menu">
+
+  <button
+    class="settings-link"
+    id="privacyPolicyBtn"
+    type="button"
+  >
+    <span class="settings-link-text">
+      <span class="settings-link-title">Privacy Policy</span>
+      <span class="settings-link-sub">How schedule and account information is handled</span>
+    </span>
+    <span class="settings-chevron" aria-hidden="true">&rsaquo;</span>
+  </button>
+
+  <button
+    class="settings-link"
+    id="aboutBtn"
+    type="button"
+  >
+    <span class="settings-link-text">
+      <span class="settings-link-title">About</span>
+      <span class="settings-link-sub">Lawn Schedule · Version 1.0</span>
+    </span>
+    <span class="settings-chevron" aria-hidden="true">&rsaquo;</span>
+  </button>
+
+</div>
+
+
 <div class="weekly-ad-label">
   Advertisement for the week
 </div>
@@ -1488,6 +1691,167 @@ textarea{
   </div>
 
   <div class="weekly-ad-timer">1:00</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =========================
+     PRIVACY POLICY
+========================= -->
+
+<section
+  id="privacyScreen"
+  class="screen"
+>
+
+<div class="top">
+
+  <div>
+
+    <h1>
+      Privacy Policy
+    </h1>
+
+    <h3>
+      Last updated 25 August 2026
+    </h3>
+
+  </div>
+
+  <button
+    class="small-btn"
+    id="backFromPrivacy"
+    type="button"
+  >
+    Back
+  </button>
+
+</div>
+
+<div class="settings-detail-card">
+
+  <h2>What Lawn Schedule stores</h2>
+
+  <p>
+    Lawn Schedule stores the information you enter to run your schedule. This can include client names, suburbs, prices, mowing cycles, due dates, notes, completion dates and paid or unpaid status. If you create an account, the app also uses your email address to identify and recover that account.
+  </p>
+
+  <h2>How information is collected</h2>
+
+  <p>
+    Schedule information is entered directly by you. The app does not independently collect information from your clients. Only enter information you are authorised to keep, and avoid placing unnecessary sensitive information in job notes.
+  </p>
+
+  <h2>Guest Mode</h2>
+
+  <p>
+    In Guest Mode, your schedule is stored in this browser on this device. It is not uploaded as an account backup. Clearing browser or website data may permanently remove the Guest Mode schedule.
+  </p>
+
+  <h2>Accounts and cloud backup</h2>
+
+  <p>
+    When you sign in, your account schedule is stored locally and sent to the app's cloud service so it can be backed up and synchronised. The cloud and authentication providers may process information on infrastructure located in Australia or overseas, depending on their service configuration.
+  </p>
+
+  <h2>How information is used</h2>
+
+  <ul>
+    <li>To display and organise your recurring and one-off jobs.</li>
+    <li>To record due dates, completion and payment status.</li>
+    <li>To provide account sign-in, recovery, backup and synchronisation.</li>
+    <li>To maintain the security and operation of the service.</li>
+  </ul>
+
+  <h2>Sharing and advertising</h2>
+
+  <p>
+    Schedule information is not sold. It is only handled by services needed to operate account authentication and cloud backup, or when disclosure is required by law. The current advertisement carousel displays static image files and does not use personalised advertising or ad-click tracking.
+  </p>
+
+  <h2>Access, correction and deletion</h2>
+
+  <p>
+    You can view and correct schedule information by editing jobs in the app. You can delete individual jobs at any time. Deleting your account removes the online account and cloud backup; the current schedule is retained on this device in Guest Mode until you delete it or clear the app's browser data.
+  </p>
+
+  <h2>Security and retention</h2>
+
+  <p>
+    Reasonable technical safeguards are used, but no local or online storage system can guarantee absolute security. Information is kept while it is needed to provide the schedule or backup service, unless a longer period is required by law.
+  </p>
+
+  <h2>Privacy questions or complaints</h2>
+
+  <p>
+    To request help accessing or correcting account information, ask a privacy question, or make a complaint, use the developer support contact published on the official Lawn Schedule website or app-store listing. The request will be reviewed and answered within a reasonable time.
+  </p>
+
+  <h2>Policy changes</h2>
+
+  <p>
+    This policy may be updated when the app's features or data practices change. The updated date shown above will change when a new policy takes effect.
+  </p>
+
+</div>
+
+</section>
+
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section
+  id="aboutScreen"
+  class="screen"
+>
+
+<div class="top">
+
+  <div>
+
+    <h1>
+      About
+    </h1>
+
+    <h3>
+      Lawn Schedule
+    </h3>
+
+  </div>
+
+  <button
+    class="small-btn"
+    id="backFromAbout"
+    type="button"
+  >
+    Back
+  </button>
+
+</div>
+
+<div class="settings-detail-card about-card">
+
+  <div class="about-mark">
+    LS
+  </div>
+
+  <div class="about-name">
+    Lawn Schedule
+  </div>
+
+  <div class="about-version">
+    Version 1.0
+  </div>
+
+  <p class="about-description">
+    A simple schedule for recurring lawn clients and one-off jobs, with due dates, payment tracking, undo and optional cloud backup.
+  </p>
 
 </div>
 
@@ -1690,9 +2054,9 @@ const backupStrip =
     "backupStrip"
   );
 
-const backupTop =
+const settingsTop =
   document.getElementById(
-    "backupTop"
+    "settingsTop"
   );
 
 const addClientTop =
@@ -1847,6 +2211,26 @@ const paidNoBtn =
 const backFromAccount =
   document.getElementById(
     "backFromAccount"
+  );
+
+const privacyPolicyBtn =
+  document.getElementById(
+    "privacyPolicyBtn"
+  );
+
+const aboutBtn =
+  document.getElementById(
+    "aboutBtn"
+  );
+
+const backFromPrivacy =
+  document.getElementById(
+    "backFromPrivacy"
+  );
+
+const backFromAbout =
+  document.getElementById(
+    "backFromAbout"
   );
 
 const guestAccount =
@@ -6615,7 +6999,7 @@ searchInput.addEventListener(
 );
 
 
-backupTop.onclick =
+settingsTop.onclick =
   () => {
 
     renderAccount();
@@ -6649,6 +7033,52 @@ backFromAccount.onclick =
 
     show(
       "homeScreen"
+    );
+
+  };
+
+
+privacyPolicyBtn.onclick =
+  () => {
+
+    show(
+      "privacyScreen"
+    );
+
+  };
+
+
+aboutBtn.onclick =
+  () => {
+
+    show(
+      "aboutScreen"
+    );
+
+  };
+
+
+backFromPrivacy.onclick =
+  () => {
+
+    renderAccount();
+
+
+    show(
+      "accountScreen"
+    );
+
+  };
+
+
+backFromAbout.onclick =
+  () => {
+
+    renderAccount();
+
+
+    show(
+      "accountScreen"
     );
 
   };
