@@ -398,6 +398,11 @@ button{
   font-weight:800;
 }
 
+.oncall-tag{
+  color:var(--green);
+  font-weight:800;
+}
+
 .personal-tag{
   color:var(--purple);
   font-weight:900;
@@ -664,6 +669,27 @@ textarea{
   text-align:left;
 }
 
+.weekly-ad-heading-row{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:14px;
+  margin-bottom:6px;
+}
+
+.weekly-ad-heading-row .weekly-ad-label{
+  margin:0;
+}
+
+.all-clients-btn{
+  flex:0 0 auto;
+  min-height:34px;
+  padding:6px 11px;
+  font-size:12px;
+  font-weight:800;
+}
+
 .weekly-ad{
   position:relative;
   width:100%;
@@ -710,14 +736,158 @@ textarea{
 
 .ad-open-btn{
   min-width:58px;
-  height:28px;
   min-height:28px;
   padding:3px 9px;
   font-size:11px;
 }
 
+
+/* ALL CLIENTS */
+
+.all-clients-summary{
+  margin:4px 0 14px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.all-clients-search-wrap{
+  margin-bottom:10px;
+}
+
+.all-clients-search{
+  width:100%;
+  min-height:40px;
+  padding:9px 12px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--input);
+  color:var(--text);
+}
+
+.all-clients-search::placeholder{
+  color:var(--muted2);
+}
+
+.all-clients-table{
+  overflow:hidden;
+  border:1px solid var(--border2);
+  border-radius:8px;
+  background:#101010;
+}
+
+.all-clients-header,
+.all-clients-row{
+  display:grid;
+  grid-template-columns:minmax(105px, .75fr) minmax(150px, 1.25fr) minmax(125px, .9fr) auto;
+  gap:16px;
+  align-items:center;
+}
+
+.all-clients-header{
+  min-height:36px;
+  padding:0 13px;
+  border-bottom:1px solid var(--border);
+  background:#0b0b0b;
+  color:var(--muted2);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.all-clients-row{
+  min-height:48px;
+  padding:9px 13px;
+  border-bottom:1px solid #242424;
+  cursor:pointer;
+}
+
+.all-clients-row:active{
+  background:#171717;
+}
+
+.all-clients-row.selected{
+  background:#171717;
+}
+
+.all-clients-row:last-child{
+  border-bottom:0;
+}
+
+.all-clients-name{
+  min-width:0;
+  color:var(--text);
+  font-size:14px;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+
+.all-clients-address{
+  min-width:0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.35;
+  overflow-wrap:anywhere;
+}
+
+.all-clients-edit-slot{
+  min-width:0;
+  display:grid;
+  gap:5px;
+}
+
+.all-clients-edit-btn,
+.all-clients-job-btn,
+.all-clients-call-btn{
+  min-height:32px;
+  padding:5px 11px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.all-clients-edit-btn{
+  color:var(--orange);
+}
+
+.all-clients-job-btn{
+  color:var(--green);
+}
+
+.all-clients-call-btn{
+  color:#7cc8ff;
+}
+
+.optional-label{
+  color:var(--muted2);
+  font-size:11px;
+  font-weight:500;
+}
+
+.all-clients-type-cell{
+  min-width:0;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+  line-height:1.3;
+  overflow-wrap:anywhere;
+}
+
+.all-clients-type-cell.oncall{
+  color:var(--green);
+}
+
+.all-clients-empty{
+  padding:22px 14px;
+  color:var(--muted);
+  font-size:14px;
+  text-align:center;
+}
+
+
+/* ADVERTISING SPOTS */
+
 .ad-spots-head{
-  margin-top:18px;
+  margin-top:6px;
 }
 
 .ad-spots-week{
@@ -757,7 +927,7 @@ textarea{
 }
 
 .ad-spot-status.available{
-  color:var(--orange);
+  color:var(--green);
 }
 
 .ad-spot-status.taken{
@@ -773,10 +943,10 @@ textarea{
 }
 
 .ad-booking-kicker{
+  margin-bottom:4px;
   color:var(--muted2);
   font-size:11px;
   font-weight:700;
-  margin-bottom:4px;
 }
 
 .ad-booking-date{
@@ -801,7 +971,6 @@ textarea{
   color:var(--text);
   border:1px solid var(--border);
   border-radius:6px;
-  cursor:pointer;
   font-weight:800;
 }
 
@@ -822,7 +991,7 @@ textarea{
 }
 
 .ad-booking-result strong{
-  color:var(--orange);
+  color:var(--green);
 }
 
 .advertising-current-label{
@@ -1142,6 +1311,35 @@ textarea{
     grid-template-columns:1fr;
   }
 
+  .all-clients-header,
+  .all-clients-row{
+    grid-template-columns:minmax(52px, .7fr) minmax(62px, 1.1fr) minmax(66px, .9fr) auto;
+    gap:6px;
+  }
+
+  .all-clients-header,
+  .all-clients-row{
+    padding-left:8px;
+    padding-right:8px;
+  }
+
+  .all-clients-name,
+  .all-clients-address{
+    font-size:12px;
+  }
+
+  .all-clients-type-cell{
+    font-size:10px;
+  }
+
+  .all-clients-edit-btn,
+  .all-clients-job-btn,
+  .all-clients-call-btn{
+    padding-left:7px;
+    padding-right:7px;
+    font-size:11px;
+  }
+
 }
 
 </style>
@@ -1304,7 +1502,7 @@ textarea{
 >
 
   <div class="section-title">
-    ONE-OFF UNPAID JOBS
+    ONE-OFF / ON-CALL UNPAID JOBS
   </div>
 
   <div
@@ -1315,8 +1513,20 @@ textarea{
 </div>
 
 
-<div class="weekly-ad-label">
-  Advertisement for the week
+<div class="weekly-ad-heading-row">
+
+  <div class="weekly-ad-label">
+    Advertisement for the week
+  </div>
+
+  <button
+    class="small-btn all-clients-btn"
+    id="allClientsBtn"
+    type="button"
+  >
+    All clients
+  </button>
+
 </div>
 
 <div class="weekly-ad" aria-label="Advertisement for the week">
@@ -1342,11 +1552,83 @@ textarea{
 <div class="weekly-ad-footer">
 
   <div class="weekly-ad-pricing">
-    <div class="weekly-ad-price-row"><strong>Weekly Advertising — $20</strong><button class="small-btn ad-open-btn" type="button">Book</button></div>
+    <div class="weekly-ad-price-row">
+      <strong>Weekly Advertising — $20</strong>
+      <button class="small-btn ad-open-btn" type="button">Book</button>
+    </div>
     <div>Maximum 5 advertisers per week.</div>
   </div>
 
   <div class="weekly-ad-timer">1:00</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =========================
+     ALL CLIENTS
+========================= -->
+
+<section
+  id="allClientsScreen"
+  class="screen"
+>
+
+<div class="top">
+
+  <div>
+
+    <h1>
+      All Clients
+    </h1>
+
+    <h3>
+      Client details
+    </h3>
+
+  </div>
+
+  <button
+    class="small-btn"
+    id="backFromAllClients"
+    type="button"
+  >
+    Back
+  </button>
+
+</div>
+
+<div
+  class="all-clients-summary"
+  id="allClientsSummary"
+>
+  0 clients
+</div>
+
+<div class="all-clients-search-wrap">
+
+  <input
+    class="all-clients-search"
+    id="allClientsSearchInput"
+    type="search"
+    placeholder="Search clients, addresses or phone"
+    autocomplete="off"
+  />
+
+</div>
+
+<div class="all-clients-table">
+
+  <div class="all-clients-header">
+    <div>Client</div>
+    <div>Address</div>
+    <div>Type</div>
+    <div aria-hidden="true"></div>
+  </div>
+
+  <div id="allClientsList"></div>
 
 </div>
 
@@ -1406,6 +1688,40 @@ textarea{
 
 <div
   class="field"
+  id="clientScheduleField"
+>
+
+  <label>
+    Client schedule
+  </label>
+
+  <select id="clientScheduleInput">
+    <option value="recurring">Scheduled client</option>
+    <option value="oncall">Client calls when needed</option>
+  </select>
+
+</div>
+
+
+<div
+  class="field"
+  id="addressField"
+>
+
+  <label>
+    Street address
+  </label>
+
+  <input
+    id="addressInput"
+    placeholder="12 Smith Street"
+  />
+
+</div>
+
+
+<div
+  class="field"
   id="suburbField"
 >
 
@@ -1416,6 +1732,26 @@ textarea{
   <input
     id="suburbInput"
     placeholder="Blacktown"
+  />
+
+</div>
+
+
+<div
+  class="field"
+  id="phoneField"
+>
+
+  <label>
+    Phone number <span class="optional-label">(optional)</span>
+  </label>
+
+  <input
+    id="phoneInput"
+    type="tel"
+    inputmode="tel"
+    autocomplete="tel"
+    placeholder="0412 345 678"
   />
 
 </div>
@@ -1462,7 +1798,10 @@ textarea{
 </div>
 
 
-<div class="field">
+<div
+  class="field"
+  id="dueField"
+>
 
   <label id="dueLabel">
     Next due date
@@ -1586,7 +1925,10 @@ textarea{
 <div class="weekly-ad-footer">
 
   <div class="weekly-ad-pricing">
-    <div class="weekly-ad-price-row"><strong>Weekly Advertising — $20</strong><button class="small-btn ad-open-btn" type="button">Book</button></div>
+    <div class="weekly-ad-price-row">
+      <strong>Weekly Advertising — $20</strong>
+      <button class="small-btn ad-open-btn" type="button">Book</button>
+    </div>
     <div>Maximum 5 advertisers per week.</div>
   </div>
 
@@ -1907,7 +2249,10 @@ textarea{
 <div class="weekly-ad-footer">
 
   <div class="weekly-ad-pricing">
-    <div class="weekly-ad-price-row"><strong>Weekly Advertising — $20</strong><button class="small-btn ad-open-btn" type="button">Book</button></div>
+    <div class="weekly-ad-price-row">
+      <strong>Weekly Advertising — $20</strong>
+      <button class="small-btn ad-open-btn" type="button">Book</button>
+    </div>
     <div>Maximum 5 advertisers per week.</div>
   </div>
 
@@ -1930,16 +2275,12 @@ textarea{
 
 <div class="top">
 
-  <div>
-
-    <h1>
-      Advertising Spots
-    </h1>
-
-    <h3>
-      Weekly Advertising — $20
-    </h3>
-
+  <div class="ad-spots-head">
+    <h1>Advertising Spots</h1>
+    <h3>Weekly Advertising — $20</h3>
+    <div class="ad-spots-week" id="adSpotsWeek">
+      Checking the next available week...
+    </div>
   </div>
 
   <button
@@ -1952,52 +2293,21 @@ textarea{
 
 </div>
 
-<div class="ad-spots-head">
-
-  <div
-    class="ad-spots-week"
-    id="adSpotsWeek"
-  >
-    Checking the next available week...
-  </div>
-
-</div>
-
-<div
-  class="ad-spots-list"
-  id="adSpotsList"
->
-
+<div class="ad-spots-list" id="adSpotsList">
   <div class="ad-spot-row">
     <div class="ad-spot-name">Checking spots...</div>
     <div class="ad-spot-status taken">—</div>
   </div>
-
 </div>
 
 <div class="ad-booking-panel">
-
-  <div class="ad-booking-kicker">
-    Next available advertising week
-  </div>
-
-  <div class="ad-booking-date">
-    Checking availability...
-  </div>
-
+  <div class="ad-booking-kicker">Next available advertising week</div>
+  <div class="ad-booking-date">Checking availability...</div>
   <div class="ad-booking-note">
     Maximum 5 advertisers per week. You will see the exact run dates before paying.
   </div>
-
-  <button
-    class="ad-book-btn"
-    type="button"
-  >
-    Check booking — $20
-  </button>
-
+  <button class="ad-book-btn" type="button">Check booking — $20</button>
   <div class="ad-booking-result"></div>
-
 </div>
 
 <div class="weekly-ad-label advertising-current-label">
@@ -2077,7 +2387,7 @@ textarea{
   <h2>What Lawn Schedule stores</h2>
 
   <p>
-    Lawn Schedule stores the information you enter to run your schedule. This can include client names, suburbs, prices, mowing cycles, due dates, notes, completion dates, paid or unpaid status, and personal event names, dates and times. If you create an account, the app also uses your email address to identify and recover that account.
+    Lawn Schedule stores the information you enter to run your schedule. This can include client names, optional phone numbers, street addresses, suburbs, prices, client schedule types, mowing cycles, due dates, notes, completion dates, paid or unpaid status, and personal event names, dates and times. If you create an account, the app also uses your email address to identify and recover that account.
   </p>
 
   <h2>How information is collected</h2>
@@ -2101,7 +2411,7 @@ textarea{
   <h2>How information is used</h2>
 
   <ul>
-    <li>To display and organise your recurring and one-off jobs.</li>
+    <li>To display and organise your recurring, on-call and one-off jobs.</li>
     <li>To record due dates, completion and payment status.</li>
     <li>To provide account sign-in, recovery, backup and synchronisation.</li>
     <li>To maintain the security and operation of the service.</li>
@@ -2191,7 +2501,7 @@ textarea{
   </div>
 
   <p class="about-description">
-    A simple schedule for recurring lawn clients, one-off jobs and personal events, with due dates, payment tracking, undo and optional cloud backup.
+    A simple schedule for recurring lawn clients, clients who call when needed, one-off jobs and personal events, with due dates, payment tracking, undo and optional cloud backup.
   </p>
 
 </div>
@@ -2356,6 +2666,40 @@ let formMode = "recurring";
 
 let searchQuery = "";
 
+let formReturnScreen =
+  "homeScreen";
+
+let selectedDirectoryClientId =
+  null;
+
+let schedulingNewOnCallJob =
+  false;
+
+let advertisingReturnScreen =
+  "homeScreen";
+
+
+/*
+  WEEKLY ADVERTISING BOOKING SETTINGS
+
+  The screen is prepared for a real global five-slot queue and
+  Apple purchase. The native wrapper and shared backend still
+  need to provide the paid booking count before money goes live.
+*/
+
+const AD_PRICE_AUD = 20;
+
+const AD_SLOTS_PER_WEEK = 5;
+
+const AD_PRODUCT_ID =
+  "lawn_schedule_weekly_advertising";
+
+const AD_SUBMISSION_EMAIL =
+  "YOUR-AD-EMAIL@example.com";
+
+const AD_TEST_WEEKLY_COUNTS = {
+};
+
 
 /*
   AUTH / CLOUD
@@ -2374,43 +2718,6 @@ let syncInProgress = false;
 let syncAgain = false;
 
 let passwordRecoveryMode = false;
-
-
-/*
-  WEEKLY ADVERTISING BOOKING
-
-  Same scaffold as Simple Tax AU.
-  The browser/PWA can show the five weekly spots and the
-  next available week, but real paid/reserved counts must
-  come from a shared backend and Apple payment must be
-  connected in the native iPhone build.
-*/
-
-const AD_PRICE_AUD = 20;
-
-const AD_SLOTS_PER_WEEK = 5;
-
-const AD_PRODUCT_ID =
-  "lawn_schedule_weekly_advertising";
-
-const AD_SUBMISSION_EMAIL =
-  "YOUR-AD-EMAIL@example.com";
-
-
-/*
-  Local TEST counts only.
-
-  Example:
-  "2026-09-07": 5,  // full
-  "2026-09-14": 3   // 2 spots left
-*/
-
-const AD_TEST_WEEKLY_COUNTS = {
-};
-
-
-let advertisingReturnScreen =
-  "homeScreen";
 
 
 /* =========================================================
@@ -2482,6 +2789,31 @@ const clientList =
     "clientList"
   );
 
+const allClientsBtn =
+  document.getElementById(
+    "allClientsBtn"
+  );
+
+const backFromAllClients =
+  document.getElementById(
+    "backFromAllClients"
+  );
+
+const allClientsSummary =
+  document.getElementById(
+    "allClientsSummary"
+  );
+
+const allClientsSearchInput =
+  document.getElementById(
+    "allClientsSearchInput"
+  );
+
+const allClientsList =
+  document.getElementById(
+    "allClientsList"
+  );
+
 const recurringUnpaidSection =
   document.getElementById(
     "recurringUnpaidSection"
@@ -2525,6 +2857,26 @@ const nameLabel =
     "nameLabel"
   );
 
+const clientScheduleField =
+  document.getElementById(
+    "clientScheduleField"
+  );
+
+const clientScheduleInput =
+  document.getElementById(
+    "clientScheduleInput"
+  );
+
+const addressField =
+  document.getElementById(
+    "addressField"
+  );
+
+const addressInput =
+  document.getElementById(
+    "addressInput"
+  );
+
 const suburbField =
   document.getElementById(
     "suburbField"
@@ -2533,6 +2885,16 @@ const suburbField =
 const suburbInput =
   document.getElementById(
     "suburbInput"
+  );
+
+const phoneField =
+  document.getElementById(
+    "phoneField"
+  );
+
+const phoneInput =
+  document.getElementById(
+    "phoneInput"
   );
 
 const priceInput =
@@ -2558,6 +2920,11 @@ const cycleInput =
 const dueInput =
   document.getElementById(
     "dueInput"
+  );
+
+const dueField =
+  document.getElementById(
+    "dueField"
   );
 
 const dueLabel =
@@ -2631,6 +2998,11 @@ const backFromAccount =
     "backFromAccount"
   );
 
+const advertisingBack =
+  document.getElementById(
+    "advertisingBack"
+  );
+
 const privacyPolicyBtn =
   document.getElementById(
     "privacyPolicyBtn"
@@ -2649,11 +3021,6 @@ const backFromPrivacy =
 const backFromAbout =
   document.getElementById(
     "backFromAbout"
-  );
-
-const advertisingBack =
-  document.getElementById(
-    "advertisingBack"
   );
 
 const guestAccount =
@@ -3243,6 +3610,14 @@ function normalizeClient(
       c.suburb ||
       "",
 
+    address:
+      c.address ||
+      "",
+
+    phone:
+      c.phone ||
+      "",
+
     price:
       Number(
         c.price || 0
@@ -3300,6 +3675,14 @@ function normalizeClient(
     type:
       c.type ||
       "recurring",
+
+    activeJob:
+      c.type ===
+      "oncall"
+        ? Boolean(
+            c.activeJob
+          )
+        : false,
 
     finished:
       Boolean(
@@ -3475,6 +3858,22 @@ function matchesSearch(c){
 
     String(
       c.suburb || ""
+    )
+      .toLowerCase()
+      .includes(q)
+
+    ||
+
+    String(
+      c.address || ""
+    )
+      .toLowerCase()
+      .includes(q)
+
+    ||
+
+    String(
+      c.phone || ""
     )
       .toLowerCase()
       .includes(q)
@@ -3968,6 +4367,419 @@ function show(id){
 
 
 /* =========================================================
+   ALL CLIENTS DIRECTORY
+========================================================= */
+
+function clientFullAddress(c){
+
+  const street =
+    String(
+      c.address ||
+      ""
+    )
+    .trim();
+
+  const suburb =
+    String(
+      c.suburb ||
+      ""
+    )
+    .trim();
+
+
+  if(
+    street &&
+    suburb &&
+    street
+      .toLowerCase()
+      .includes(
+        suburb.toLowerCase()
+      )
+  ){
+
+    return street;
+
+  }
+
+
+  return [
+    street,
+    suburb
+  ]
+  .filter(
+    Boolean
+  )
+  .join(
+    ", "
+  );
+
+}
+
+function renderAllClients(){
+
+  const allDirectoryClients =
+    clients
+      .filter(
+        c =>
+          [
+            "recurring",
+            "oncall"
+          ]
+          .includes(
+            c.type ||
+            "recurring"
+          )
+      )
+      .sort(
+        (a,b) =>
+          String(
+            a.name ||
+            ""
+          )
+          .localeCompare(
+            String(
+              b.name ||
+              ""
+            ),
+            "en-AU",
+            {
+              sensitivity:
+                "base"
+            }
+          )
+      );
+
+
+  const query =
+    allClientsSearchInput
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const directoryClients =
+    allDirectoryClients.filter(
+      c => {
+
+        const address =
+          clientFullAddress(
+            c
+          )
+          .toLowerCase();
+
+
+        return (
+          !query ||
+          String(
+            c.name ||
+            ""
+          )
+          .toLowerCase()
+          .includes(
+            query
+          ) ||
+          address.includes(
+            query
+          ) ||
+          String(
+            c.phone ||
+            ""
+          )
+          .toLowerCase()
+          .includes(
+            query
+          )
+        );
+
+      }
+    );
+
+
+  allClientsSummary.textContent =
+    query
+      ?
+      (
+        directoryClients.length +
+        " of " +
+        allDirectoryClients.length +
+        " clients"
+      )
+      :
+      (
+        directoryClients.length +
+        (
+          directoryClients.length === 1
+            ? " client"
+            : " clients"
+        )
+      );
+
+
+  allClientsList.innerHTML =
+    "";
+
+
+  if(
+    !directoryClients.length
+  ){
+
+    allClientsList.innerHTML =
+      '<div class="all-clients-empty">' +
+      (
+        query
+          ? "No matching clients."
+          : "No clients added yet."
+      ) +
+      '</div>';
+
+    return;
+
+  }
+
+
+  directoryClients.forEach(
+    c => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      const selected =
+        selectedDirectoryClientId ===
+        c.id;
+
+
+      row.className =
+        "all-clients-row" +
+        (
+          selected
+            ? " selected"
+            : ""
+        );
+
+
+      const address =
+        clientFullAddress(
+          c
+        );
+
+
+      row.innerHTML =
+        '<div class="all-clients-name">' +
+          esc(
+            c.name
+          ) +
+        '</div>' +
+        '<div class="all-clients-address">' +
+          (
+            address
+              ? esc(
+                  address
+                )
+              : "No address added"
+          ) +
+        '</div>' +
+        '<div class="all-clients-type-cell ' +
+          (
+            c.type ===
+            "oncall"
+              ? "oncall"
+              : ""
+          ) +
+        '">' +
+          (
+            c.type ===
+            "oncall"
+              ?
+              (
+                "Client calls when needed" +
+                (
+                  c.activeJob
+                    ? " · Job active"
+                    : ""
+                )
+              )
+              : "Scheduled"
+          ) +
+        '</div>' +
+        '<div class="all-clients-edit-slot"></div>';
+
+
+      if(selected){
+
+        const editSlot =
+          row.querySelector(
+            ".all-clients-edit-slot"
+          );
+
+
+        if(
+          c.type ===
+          "oncall" &&
+          !c.activeJob
+        ){
+
+          const jobButton =
+            document.createElement(
+              "button"
+            );
+
+
+          jobButton.className =
+            "small-btn all-clients-job-btn";
+
+          jobButton.type =
+            "button";
+
+          jobButton.textContent =
+            "Add job";
+
+
+          jobButton.onclick =
+            event => {
+
+              event.stopPropagation();
+
+
+              scheduleOnCallJob(
+                c.id
+              );
+
+            };
+
+
+          editSlot.appendChild(
+            jobButton
+          );
+
+        }
+
+
+        if(
+          String(
+            c.phone ||
+            ""
+          )
+          .trim()
+        ){
+
+          const callButton =
+            document.createElement(
+              "button"
+            );
+
+
+          callButton.className =
+            "small-btn all-clients-call-btn";
+
+          callButton.type =
+            "button";
+
+          callButton.textContent =
+            "Call";
+
+          callButton.setAttribute(
+            "aria-label",
+            "Call " +
+            c.name
+          );
+
+
+          callButton.onclick =
+            event => {
+
+              event.stopPropagation();
+
+
+              const phoneNumber =
+                String(
+                  c.phone
+                )
+                .replace(
+                  /[^\d+]/g,
+                  ""
+                );
+
+
+              if(phoneNumber){
+
+                window.location.href =
+                  "tel:" +
+                  phoneNumber;
+
+              }
+
+            };
+
+
+          editSlot.appendChild(
+            callButton
+          );
+
+        }
+
+        const editButton =
+          document.createElement(
+            "button"
+          );
+
+
+        editButton.className =
+          "small-btn all-clients-edit-btn";
+
+        editButton.type =
+          "button";
+
+        editButton.textContent =
+          "Edit";
+
+
+        editButton.onclick =
+          event => {
+
+            event.stopPropagation();
+
+
+            editClient(
+              c.id,
+              "allClientsScreen"
+            );
+
+          };
+
+
+        editSlot.appendChild(
+          editButton
+        );
+
+      }
+
+
+      row.onclick =
+        () => {
+
+          selectedDirectoryClientId =
+            c.id;
+
+
+          renderAllClients();
+
+        };
+
+
+      allClientsList.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
    MAIN RENDER
 ========================================================= */
 
@@ -3990,8 +4802,12 @@ function render(){
         c =>
 
           !(
-            c.type ===
-            "oneoff"
+            (
+              c.type ===
+              "oneoff" ||
+              c.type ===
+              "oncall"
+            )
 
             &&
 
@@ -4015,6 +4831,17 @@ function render(){
             &&
 
             !c.paid
+          )
+
+          &&
+
+          !(
+            c.type ===
+            "oncall"
+
+            &&
+
+            !c.activeJob
           )
       )
     )
@@ -4048,8 +4875,12 @@ function render(){
     sortClients(
       clients.filter(
         c =>
-          c.type ===
-          "oneoff"
+          (
+            c.type ===
+            "oneoff" ||
+            c.type ===
+            "oncall"
+          )
 
           &&
 
@@ -4322,9 +5153,15 @@ function renderNormalList(list){
                 ?
                 '<span class="oneoff-tag">ONE-OFF</span>'
                 :
-                'every ' +
-                c.cycle +
-                ' days'
+                (
+                  c.type ===
+                  "oncall"
+                    ? '<span class="oncall-tag">ON-CALL JOB</span>'
+                    :
+                    'every ' +
+                    c.cycle +
+                    ' days'
+                )
             ) +
 
             (
@@ -4648,7 +5485,12 @@ function renderOneOffUnpaidList(list){
 
             ' · Finished · ' +
 
-            '<span class="oneoff-tag">ONE-OFF</span>' +
+            (
+              c.type ===
+              "oncall"
+                ? '<span class="oncall-tag">ON-CALL JOB</span>'
+                : '<span class="oneoff-tag">ONE-OFF</span>'
+            ) +
 
             (
               c.notes
@@ -4780,7 +5622,9 @@ function finishClient(id){
 
   if(
     c.type ===
-    "oneoff"
+    "oneoff" ||
+    c.type ===
+    "oncall"
   ){
 
     c.finished =
@@ -4892,10 +5736,49 @@ function markPaidYes(){
 
 
   /*
-    ONE-OFF
+    ON-CALL JOB
+
+    Completing payment clears the active job but keeps the
+    client permanently available in All Clients.
   */
 
   if(
+    c.type ===
+    "oncall"
+  ){
+
+    storeAction(
+      c,
+      "oncallPaid"
+    );
+
+
+    c.paid =
+      true;
+
+    c.finished =
+      false;
+
+    c.activeJob =
+      false;
+
+
+    touchClient(
+      c
+    );
+
+
+    selectedClientId =
+      null;
+
+  }
+
+
+  /*
+    ONE-OFF
+  */
+
+  else if(
     c.type ===
     "oneoff"
   ){
@@ -5047,7 +5930,9 @@ function renderUndo(){
 
   else if(
     lastAction.action ===
-    "oneoffPaid"
+    "oneoffPaid" ||
+    lastAction.action ===
+    "oncallPaid"
   ){
 
     undoText.textContent =
@@ -5187,11 +6072,60 @@ function configureFormForMode(mode){
     mode ===
     "event";
 
+  const isOnCall =
+    mode ===
+    "oncall";
+
+  const isOnCallJob =
+    mode ===
+    "oncallJob";
+
+  const isClient =
+    mode ===
+    "recurring" ||
+    isOnCall;
+
 
   const hidesCycle =
     mode ===
     "oneoff" ||
+    isOnCall ||
+    isOnCallJob ||
     isEvent;
+
+
+  clientScheduleField
+    .classList
+    .toggle(
+      "hidden-field",
+      !isClient
+    );
+
+
+  if(isClient){
+
+    clientScheduleInput.value =
+      isOnCall
+        ? "oncall"
+        : "recurring";
+
+  }
+
+
+  addressField
+    .classList
+    .toggle(
+      "hidden-field",
+      isEvent
+    );
+
+
+  phoneField
+    .classList
+    .toggle(
+      "hidden-field",
+      isEvent
+    );
 
 
   suburbField
@@ -5218,6 +6152,14 @@ function configureFormForMode(mode){
     );
 
 
+  dueField
+    .classList
+    .toggle(
+      "hidden-field",
+      isOnCall
+    );
+
+
   eventTimingField
     .classList
     .toggle(
@@ -5241,7 +6183,12 @@ function configureFormForMode(mode){
   dueLabel.textContent =
     isEvent
       ? "Date"
-      : "Next due date";
+      :
+      (
+        isOnCallJob
+          ? "Job date"
+          : "Next due date"
+      );
 
 
   notesInput.placeholder =
@@ -5253,7 +6200,12 @@ function configureFormForMode(mode){
   saveClientBtn.textContent =
     isEvent
       ? "Save Event"
-      : "Save Client";
+      :
+      (
+        isOnCallJob
+          ? "Add Job"
+          : "Save Client"
+      );
 
 
   deleteClientBtn.textContent =
@@ -5286,6 +6238,12 @@ function addClient(){
   editingId =
     null;
 
+  formReturnScreen =
+    "homeScreen";
+
+  schedulingNewOnCallJob =
+    false;
+
   formMode =
     "recurring";
 
@@ -5300,6 +6258,12 @@ function addClient(){
 
 
   nameInput.value =
+    "";
+
+  addressInput.value =
+    "";
+
+  phoneInput.value =
     "";
 
   suburbInput.value =
@@ -5355,6 +6319,12 @@ function addOneOff(){
   editingId =
     null;
 
+  formReturnScreen =
+    "homeScreen";
+
+  schedulingNewOnCallJob =
+    false;
+
   formMode =
     "oneoff";
 
@@ -5369,6 +6339,12 @@ function addOneOff(){
 
 
   nameInput.value =
+    "";
+
+  addressInput.value =
+    "";
+
+  phoneInput.value =
     "";
 
   suburbInput.value =
@@ -5424,6 +6400,12 @@ function addPersonalEvent(){
   editingId =
     null;
 
+  formReturnScreen =
+    "homeScreen";
+
+  schedulingNewOnCallJob =
+    false;
+
   formMode =
     "event";
 
@@ -5445,6 +6427,12 @@ function addPersonalEvent(){
 
 
   nameInput.value =
+    "";
+
+  addressInput.value =
+    "";
+
+  phoneInput.value =
     "";
 
   suburbInput.value =
@@ -5484,10 +6472,115 @@ function addPersonalEvent(){
 
 
 /* =========================================================
+   SCHEDULE AN ON-CALL JOB
+========================================================= */
+
+function scheduleOnCallJob(id){
+
+  const c =
+    clients.find(
+      item =>
+        item.id === id &&
+        item.type ===
+        "oncall"
+    );
+
+
+  if(
+    !c ||
+    c.activeJob
+  ){
+
+    return;
+
+  }
+
+
+  editingId =
+    id;
+
+  formReturnScreen =
+    "allClientsScreen";
+
+  formMode =
+    "oncallJob";
+
+  schedulingNewOnCallJob =
+    true;
+
+
+  formTitle.textContent =
+    "Add Job — " +
+    c.name;
+
+
+  configureFormForMode(
+    formMode
+  );
+
+
+  nameInput.value =
+    c.name;
+
+  addressInput.value =
+    c.address ||
+    "";
+
+  phoneInput.value =
+    c.phone ||
+    "";
+
+  suburbInput.value =
+    c.suburb;
+
+  priceInput.value =
+    c.price;
+
+  cycleInput.value =
+    "30";
+
+  dueInput.value =
+    iso(
+      today()
+    );
+
+  notesInput.value =
+    c.notes ||
+    "";
+
+  eventTimeInput.value =
+    "";
+
+  allDayInput.checked =
+    true;
+
+
+  lastCompletedBox
+    .classList
+    .remove(
+      "active"
+    );
+
+
+  deleteClientBtn.style.display =
+    "none";
+
+
+  show(
+    "formScreen"
+  );
+
+}
+
+
+/* =========================================================
    EDIT CLIENT
 ========================================================= */
 
-function editClient(id){
+function editClient(
+  id,
+  returnScreen="homeScreen"
+){
 
   const c =
     clients.find(
@@ -5506,10 +6599,25 @@ function editClient(id){
   editingId =
     id;
 
+  formReturnScreen =
+    returnScreen;
+
+  schedulingNewOnCallJob =
+    false;
+
 
   formMode =
-    c.type ||
-    "recurring";
+    c.type ===
+    "oncall" &&
+    c.activeJob &&
+    returnScreen ===
+    "homeScreen"
+      ? "oncallJob"
+      :
+      (
+        c.type ||
+        "recurring"
+      );
 
 
   formTitle.textContent =
@@ -5519,9 +6627,15 @@ function editClient(id){
       :
       (
         formMode ===
+        "oncallJob"
+          ? "Edit On-call Job"
+          :
+          (
+        formMode ===
         "oneoff"
           ? "Edit One-off Job"
           : "Edit Client"
+          )
       );
 
 
@@ -5532,6 +6646,14 @@ function editClient(id){
 
   nameInput.value =
     c.name;
+
+  addressInput.value =
+    c.address ||
+    "";
+
+  phoneInput.value =
+    c.phone ||
+    "";
 
   suburbInput.value =
     c.suburb;
@@ -5601,7 +6723,10 @@ function editClient(id){
 
 
   deleteClientBtn.style.display =
-    "block";
+    formMode ===
+    "oncallJob"
+      ? "none"
+      : "block";
 
 
   show(
@@ -5634,6 +6759,24 @@ function saveClientForm(){
     formMode ===
     "event";
 
+  const isOnCallJob =
+    formMode ===
+    "oncallJob";
+
+  const savedType =
+    isOnCallJob
+      ? "oncall"
+      : formMode;
+
+  const existingClient =
+    editingId
+      ? clients.find(
+          c =>
+            c.id ===
+            editingId
+        )
+      : null;
+
 
   const selectedEventTime =
     eventTimeInput.value;
@@ -5660,6 +6803,20 @@ function saveClientForm(){
             .value
             .trim(),
 
+    address:
+      isEvent
+        ? ""
+        : addressInput
+            .value
+            .trim(),
+
+    phone:
+      isEvent
+        ? ""
+        : phoneInput
+            .value
+            .trim(),
+
     price:
       isEvent
         ? 0
@@ -5672,23 +6829,30 @@ function saveClientForm(){
         ),
 
     cycle:
-      formMode ===
-      "oneoff" ||
-      isEvent
-        ? 0
-        :
+      savedType ===
+      "recurring"
+        ?
         (
           Number(
             cycleInput.value
           ) ||
           14
-        ),
+        )
+        : 0,
 
     nextDue:
-      dueInput.value ||
-      iso(
-        today()
-      ),
+      savedType ===
+      "oncall" &&
+      !isOnCallJob &&
+      existingClient
+        ? existingClient.nextDue
+        :
+        (
+          dueInput.value ||
+          iso(
+            today()
+          )
+        ),
 
     notes:
       notesInput
@@ -5707,7 +6871,21 @@ function saveClientForm(){
         : true,
 
     type:
-      formMode
+      savedType,
+
+    activeJob:
+      isOnCallJob
+        ? true
+        :
+        (
+          savedType ===
+          "oncall"
+            ? Boolean(
+                existingClient &&
+                existingClient.activeJob
+              )
+            : false
+        )
 
   };
 
@@ -5726,10 +6904,44 @@ function saveClientForm(){
 
     if(c){
 
+      const previousType =
+        c.type;
+
       Object.assign(
         c,
         data
       );
+
+
+      if(
+        isOnCallJob &&
+        schedulingNewOnCallJob
+      ){
+
+        c.paid =
+          false;
+
+        c.finished =
+          false;
+
+      }
+
+
+      if(
+        previousType !==
+        savedType
+      ){
+
+        c.paid =
+          true;
+
+        c.finished =
+          false;
+
+        c.activeJob =
+          false;
+
+      }
 
 
       touchClient(
@@ -5748,7 +6960,7 @@ function saveClientForm(){
           makeId(),
 
         paid:
-          formMode ===
+          savedType ===
           "oneoff"
             ? false
             : true,
@@ -5774,8 +6986,29 @@ function saveClientForm(){
 
   render();
 
+
+  const returnAfterSave =
+    isOnCallJob &&
+    schedulingNewOnCallJob
+      ? "homeScreen"
+      : formReturnScreen;
+
+
+  schedulingNewOnCallJob =
+    false;
+
+
+  if(
+    returnAfterSave ===
+    "allClientsScreen"
+  ){
+
+    renderAllClients();
+
+  }
+
   show(
-    "homeScreen"
+    returnAfterSave
   );
 
 }
@@ -5856,8 +7089,18 @@ function deleteClientForm(){
 
   render();
 
+
+  if(
+    formReturnScreen ===
+    "allClientsScreen"
+  ){
+
+    renderAllClients();
+
+  }
+
   show(
-    "homeScreen"
+    formReturnScreen
   );
 
 }
@@ -8058,48 +9301,11 @@ function scheduleCloudSync(){
 
 
 /* =========================================================
-   WEEKLY ADVERTISING BOOKING
+   ADVERTISING BOOKING
 ========================================================= */
 
-function currentActiveScreenId(){
-
-  const active =
-    document.querySelector(
-      ".screen.active"
-    );
-
-
-  return active
-    ? active.id
-    : "homeScreen";
-
-}
-
-
-async function openAdvertisingScreen(){
-
-  advertisingReturnScreen =
-    currentActiveScreenId();
-
-
-  show(
-    "advertisingScreen"
-  );
-
-
-  window.scrollTo(
-    0,
-    0
-  );
-
-
-  await refreshAdBookingPanels();
-
-}
-
-
 function adStartOfWeek(
-  date = new Date()
+  date=new Date()
 ){
 
   const d =
@@ -8120,14 +9326,13 @@ function adStartOfWeek(
     d.getDay();
 
 
-  const diff =
-    day === 0
-      ? -6
-      : 1 - day;
-
-
   d.setDate(
-    d.getDate() + diff
+    d.getDate() +
+    (
+      day === 0
+        ? -6
+        : 1 - day
+    )
   );
 
 
@@ -8138,29 +9343,23 @@ function adStartOfWeek(
 
 function adDateKey(date){
 
-  const y =
-    date.getFullYear();
-
-
-  const m =
+  return [
+    date.getFullYear(),
     String(
       date.getMonth() + 1
     ).padStart(
       2,
       "0"
-    );
-
-
-  const d =
+    ),
     String(
       date.getDate()
     ).padStart(
       2,
       "0"
-    );
-
-
-  return `${y}-${m}-${d}`;
+    )
+  ].join(
+    "-"
+  );
 
 }
 
@@ -8188,8 +9387,10 @@ function adFormatShortDate(date){
   return date.toLocaleDateString(
     "en-AU",
     {
-      day:"numeric",
-      month:"short"
+      day:
+        "numeric",
+      month:
+        "short"
     }
   );
 
@@ -8205,9 +9406,13 @@ function adFormatWeek(start){
 
 
   return (
-    adFormatShortDate(start) +
+    adFormatShortDate(
+      start
+    ) +
     " – " +
-    adFormatShortDate(end) +
+    adFormatShortDate(
+      end
+    ) +
     " " +
     end.getFullYear()
   );
@@ -8215,7 +9420,9 @@ function adFormatWeek(start){
 }
 
 
-function adLocalTestCount(weekStart){
+function adLocalTestCount(
+  weekStart
+){
 
   const key =
     adDateKey(
@@ -8233,8 +9440,11 @@ function adLocalTestCount(weekStart){
     return Math.max(
       0,
       Number(
-        AD_TEST_WEEKLY_COUNTS[key]
-      ) || 0
+        AD_TEST_WEEKLY_COUNTS[
+          key
+        ]
+      ) ||
+      0
     );
 
   }
@@ -8245,12 +9455,13 @@ function adLocalTestCount(weekStart){
 }
 
 
-async function adFetchWeekCount(weekStart){
+async function adFetchWeekCount(
+  weekStart
+){
 
   /*
-    Replace this with the real shared backend call later.
-    It must return the GLOBAL number of paid/reserved ads
-    for the supplied week.
+    Replace this with the real backend call later.
+    It must return the global paid/reserved count for the week.
   */
 
   return adLocalTestCount(
@@ -8279,7 +9490,8 @@ async function adFindNextAvailableWeek(){
 
 
     if(
-      booked < AD_SLOTS_PER_WEEK
+      booked <
+      AD_SLOTS_PER_WEEK
     ){
 
       return {
@@ -8297,7 +9509,8 @@ async function adFindNextAvailableWeek(){
         booked,
 
         remaining:
-          AD_SLOTS_PER_WEEK - booked
+          AD_SLOTS_PER_WEEK -
+          booked
 
       };
 
@@ -8343,13 +9556,16 @@ function adSetPanelMessage(
   result.innerHTML =
     html;
 
+
   result.style.display =
     "block";
 
 }
 
 
-function renderAdSpotRows(booking){
+function renderAdSpotRows(
+  booking
+){
 
   const weekLabel =
     document.getElementById(
@@ -8456,10 +9672,20 @@ function renderAdSpotRows(booking){
   ){
 
     const taken =
-      i <= booking.booked;
-
+      i <=
+      booking.booked;
 
     const row =
+      document.createElement(
+        "div"
+      );
+
+    const name =
+      document.createElement(
+        "div"
+      );
+
+    const status =
       document.createElement(
         "div"
       );
@@ -8468,25 +9694,12 @@ function renderAdSpotRows(booking){
     row.className =
       "ad-spot-row";
 
-
-    const name =
-      document.createElement(
-        "div"
-      );
-
-
     name.className =
       "ad-spot-name";
 
     name.textContent =
-      "Advertising Spot " + i;
-
-
-    const status =
-      document.createElement(
-        "div"
-      );
-
+      "Advertising Spot " +
+      i;
 
     status.className =
       "ad-spot-status " +
@@ -8495,7 +9708,6 @@ function renderAdSpotRows(booking){
           ? "taken"
           : "available"
       );
-
 
     status.textContent =
       taken
@@ -8528,13 +9740,6 @@ async function refreshAdBookingPanels(){
         ".ad-booking-panel"
       )
     );
-
-
-  if(!panels.length){
-
-    return;
-
-  }
 
 
   panels.forEach(
@@ -8633,8 +9838,8 @@ async function refreshAdBookingPanels(){
         );
 
       const isCurrentWeek =
-        bookingWeekKey ===
-        currentWeekKey;
+        currentWeekKey ===
+        bookingWeekKey;
 
 
       if(date){
@@ -8676,7 +9881,6 @@ async function refreshAdBookingPanels(){
         button.dataset.weekStart =
           bookingWeekKey;
 
-
         button.textContent =
           isCurrentWeek
             ?
@@ -8706,7 +9910,39 @@ async function refreshAdBookingPanels(){
 }
 
 
-async function beginAppleAdPurchase(panel){
+async function openAdvertisingScreen(){
+
+  const activeScreen =
+    document.querySelector(
+      ".screen.active"
+    );
+
+
+  advertisingReturnScreen =
+    activeScreen
+      ? activeScreen.id
+      : "homeScreen";
+
+
+  show(
+    "advertisingScreen"
+  );
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+
+  await refreshAdBookingPanels();
+
+}
+
+
+async function beginAppleAdPurchase(
+  panel
+){
 
   const booking =
     await adFindNextAvailableWeek();
@@ -8718,7 +9954,6 @@ async function beginAppleAdPurchase(panel){
       panel,
       "No advertising week is currently available."
     );
-
 
     return;
 
@@ -8751,24 +9986,15 @@ async function beginAppleAdPurchase(panel){
   };
 
 
-  /*
-    Native iPhone StoreKit bridge.
-    The iOS wrapper should register a WKScriptMessageHandler
-    named "adPurchase".
-  */
-
   if(
     window.webkit &&
     window.webkit.messageHandlers &&
     window.webkit.messageHandlers.adPurchase
   ){
 
-    window.webkit
-      .messageHandlers
-      .adPurchase
-      .postMessage(
-        payload
-      );
+    window.webkit.messageHandlers.adPurchase.postMessage(
+      payload
+    );
 
 
     adSetPanelMessage(
@@ -8784,10 +10010,6 @@ async function beginAppleAdPurchase(panel){
   }
 
 
-  /*
-    Never fake payment success in the browser/PWA version.
-  */
-
   adSetPanelMessage(
     panel,
     "<strong>" +
@@ -8798,11 +10020,6 @@ async function beginAppleAdPurchase(panel){
 
 }
 
-
-/*
-  Native iOS code calls this only AFTER Apple confirms the
-  purchase and the backend has reserved the week/slot.
-*/
 
 window.completeAdPurchase =
   function(result){
@@ -8840,11 +10057,16 @@ window.completeAdPurchase =
     const displayWeek =
       result.displayWeek ||
       (
-        (result.weekStart || "") +
+        (
+          result.weekStart ||
+          ""
+        ) +
         " – " +
-        (result.weekEnd || "")
+        (
+          result.weekEnd ||
+          ""
+        )
       ).trim();
-
 
     const bookingCode =
       result.bookingCode ||
@@ -8866,8 +10088,7 @@ window.completeAdPurchase =
           "Include booking code: <strong>" +
           bookingCode +
           "</strong>.<br><br>" +
-          "Recommended image: 1500 × 1000 px, JPG or PNG. " +
-          "Your advertisement will be reviewed before going live."
+          "Recommended image: 1500 × 1000 px, JPG or PNG. Your advertisement will be reviewed before going live."
         );
 
       }
@@ -8877,7 +10098,6 @@ window.completeAdPurchase =
     refreshAdBookingPanels();
 
   };
-
 
 
 /* =========================================================
@@ -8896,9 +10116,152 @@ addEventTop.onclick =
   addPersonalEvent;
 
 
+allClientsBtn.onclick =
+  () => {
+
+    allClientsSearchInput.value =
+      "";
+
+    selectedDirectoryClientId =
+      null;
+
+    renderAllClients();
+
+
+    show(
+      "allClientsScreen"
+    );
+
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+  };
+
+
+allClientsSearchInput.addEventListener(
+  "input",
+  () => {
+
+    selectedDirectoryClientId =
+      null;
+
+
+    renderAllClients();
+
+  }
+);
+
+
+backFromAllClients.onclick =
+  () => {
+
+    render();
+
+
+    show(
+      "homeScreen"
+    );
+
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+  };
+
+
+advertisingBack.onclick =
+  () => {
+
+    show(
+      advertisingReturnScreen
+    );
+
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+  };
+
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const openButton =
+      event.target.closest(
+        ".ad-open-btn"
+      );
+
+
+    if(openButton){
+
+      openAdvertisingScreen();
+
+      return;
+
+    }
+
+
+    const bookButton =
+      event.target.closest(
+        ".ad-book-btn"
+      );
+
+
+    if(!bookButton){
+
+      return;
+
+    }
+
+
+    const panel =
+      bookButton.closest(
+        ".ad-booking-panel"
+      );
+
+
+    if(panel){
+
+      beginAppleAdPurchase(
+        panel
+      );
+
+    }
+
+  }
+);
+
+
 allDayInput.addEventListener(
   "change",
   syncEventTimeControl
+);
+
+
+clientScheduleInput.addEventListener(
+  "change",
+  () => {
+
+    formMode =
+      clientScheduleInput.value ===
+      "oncall"
+        ? "oncall"
+        : "recurring";
+
+
+    configureFormForMode(
+      formMode
+    );
+
+  }
 );
 
 
@@ -8939,8 +10302,18 @@ backHome.onclick =
     render();
 
 
+    if(
+      formReturnScreen ===
+      "allClientsScreen"
+    ){
+
+      renderAllClients();
+
+    }
+
+
     show(
-      "homeScreen"
+      formReturnScreen
     );
 
   };
@@ -9003,84 +10376,6 @@ backFromAbout.onclick =
     );
 
   };
-
-
-advertisingBack.onclick =
-  () => {
-
-    show(
-      advertisingReturnScreen ||
-      "homeScreen"
-    );
-
-
-    window.scrollTo(
-      0,
-      0
-    );
-
-  };
-
-
-document.addEventListener(
-  "click",
-  event => {
-
-    const openButton =
-      event.target.closest(
-        ".ad-open-btn"
-      );
-
-
-    if(!openButton){
-
-      return;
-
-    }
-
-
-    openAdvertisingScreen();
-
-  }
-);
-
-
-document.addEventListener(
-  "click",
-  event => {
-
-    const button =
-      event.target.closest(
-        ".ad-book-btn"
-      );
-
-
-    if(!button){
-
-      return;
-
-    }
-
-
-    const panel =
-      button.closest(
-        ".ad-booking-panel"
-      );
-
-
-    if(!panel){
-
-      return;
-
-    }
-
-
-    beginAppleAdPurchase(
-      panel
-    );
-
-  }
-);
 
 
 saveClientBtn.onclick =
@@ -9242,6 +10537,9 @@ migrateOldStorageToGuest();
 loadGuestMode();
 
 
+refreshAdBookingPanels();
+
+
 /*
   If a Supabase session exists,
   initCloud() automatically switches
@@ -9250,13 +10548,6 @@ loadGuestMode();
 */
 
 initCloud();
-
-
-/*
-  Prepare the advertising availability screen.
-*/
-
-refreshAdBookingPanels();
 
 
 /*
