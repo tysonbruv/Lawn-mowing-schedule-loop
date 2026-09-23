@@ -372,6 +372,14 @@ button{
   max-width:92px;
 }
 
+.next-scheduled-date{
+  color:#777;
+  font-size:11px;
+  line-height:1.25;
+  margin-top:2px;
+  white-space:nowrap;
+}
+
 .price{
   color:var(--text);
   font-weight:700;
@@ -4366,6 +4374,177 @@ function show(id){
 }
 
 
+function prettyShort(s){
+
+  if(!s){
+    return "";
+  }
+
+
+  return dateFromIso(
+    s
+  ).toLocaleDateString(
+    "en-AU",
+    {
+      day:"numeric",
+      month:"short"
+    }
+  );
+
+}
+
+
+function nextRecurringDue(c){
+
+  if(
+    !c ||
+    (
+      c.type ||
+      "recurring"
+    ) !==
+    "recurring"
+  ){
+
+    return "";
+
+  }
+
+
+  const cycle =
+    Number(
+      c.cycle
+    );
+
+
+  const scheduledDue =
+    String(
+      c.nextDue ||
+      ""
+    );
+
+
+  const scheduledDate =
+    scheduledDue
+      ? dateFromIso(
+          scheduledDue
+        )
+      : null;
+
+
+  if(
+    !Number.isFinite(
+      cycle
+    ) ||
+    cycle <= 0 ||
+    !scheduledDate ||
+    Number.isNaN(
+      scheduledDate.getTime()
+    )
+  ){
+
+    return "";
+
+  }
+
+
+  return iso(
+    addDays(
+      scheduledDate,
+      cycle
+    )
+  );
+
+}
+
+
+function nextRecurringDateMarkup(c){
+
+  const nextDue =
+    nextRecurringDue(
+      c
+    );
+
+
+  if(!nextDue){
+
+    return "";
+
+  }
+
+
+  return (
+    '<div class="next-scheduled-date">' +
+    'Next: ' +
+    esc(
+      prettyShort(
+        nextDue
+      )
+    ) +
+    '</div>'
+  );
+
+}
+
+
+function advanceRecurringSchedule(c){
+
+  const scheduledDue =
+    String(
+      c.nextDue ||
+      ""
+    );
+
+
+  const followingDue =
+    nextRecurringDue(
+      c
+    );
+
+
+  if(followingDue){
+
+    /*
+      Keep the recurring schedule anchored to its saved due date.
+      Paying or finishing a day late must not move every future job.
+    */
+
+    c.lastCompleted =
+      scheduledDue;
+
+    c.nextDue =
+      followingDue;
+
+    return;
+
+  }
+
+
+  /*
+    Safe fallback for old or incomplete saved records.
+  */
+
+  c.lastCompleted =
+    iso(
+      today()
+    );
+
+  c.nextDue =
+    iso(
+      addDays(
+        today(),
+        Math.max(
+          0,
+          Number(
+            c.cycle
+          ) ||
+          0
+        )
+      )
+    );
+
+}
+
+
 /* =========================================================
    ALL CLIENTS DIRECTORY
 ========================================================= */
@@ -5193,6 +5372,10 @@ function renderNormalList(list){
             ) +
           '</div>' +
 
+          nextRecurringDateMarkup(
+            c
+          ) +
+
           paidButton +
 
         '</div>' +
@@ -5356,6 +5539,10 @@ function renderRecurringUnpaidList(list){
               c.nextDue
             ) +
           '</div>' +
+
+          nextRecurringDateMarkup(
+            c
+          ) +
 
           paidButton +
 
@@ -5614,18 +5801,17 @@ function finishClient(id){
   );
 
 
-  c.lastCompleted =
-    iso(
-      today()
-    );
-
-
   if(
     c.type ===
     "oneoff" ||
     c.type ===
     "oncall"
   ){
+
+    c.lastCompleted =
+      iso(
+        today()
+      );
 
     c.finished =
       true;
@@ -5636,13 +5822,9 @@ function finishClient(id){
   }
   else{
 
-    c.nextDue =
-      iso(
-        addDays(
-          today(),
-          c.cycle
-        )
-      );
+    advanceRecurringSchedule(
+      c
+    );
 
 
     c.paid =
@@ -5815,19 +5997,9 @@ function markPaidYes(){
     );
 
 
-    c.lastCompleted =
-      iso(
-        today()
-      );
-
-
-    c.nextDue =
-      iso(
-        addDays(
-          today(),
-          c.cycle
-        )
-      );
+    advanceRecurringSchedule(
+      c
+    );
 
 
     c.paid =
