@@ -680,7 +680,8 @@ textarea{
 .schedule-directory-row{
   display:flex;
   align-items:center;
-  justify-content:flex-start;
+  justify-content:space-between;
+  gap:12px;
   margin-top:14px;
   margin-bottom:0;
 }
@@ -689,12 +690,25 @@ textarea{
   margin-top:10px;
 }
 
-.all-clients-btn{
+.all-clients-btn,
+.unpaid-jobs-btn{
   flex:0 0 auto;
   min-height:34px;
   padding:6px 11px;
   font-size:12px;
   font-weight:800;
+}
+
+.unpaid-jobs-btn{
+  color:var(--orange);
+  border-color:#5b3f1a;
+  background:#2a1f0d;
+}
+
+.unpaid-jobs-summary{
+  margin:4px 0 14px;
+  color:var(--muted);
+  font-size:13px;
 }
 
 .weekly-ad{
@@ -1486,6 +1500,14 @@ textarea{
     All clients
   </button>
 
+  <button
+    class="small-btn unpaid-jobs-btn"
+    id="unpaidJobsBtn"
+    type="button"
+  >
+    Unpaid jobs
+  </button>
+
 </div>
 
 
@@ -1639,6 +1661,55 @@ textarea{
   <div id="allClientsList"></div>
 
 </div>
+
+</section>
+
+
+
+<!-- =========================
+     UNPAID JOBS
+========================= -->
+
+<section
+  id="unpaidJobsScreen"
+  class="screen"
+>
+
+<div class="top">
+
+  <div>
+
+    <h1>
+      Unpaid Jobs
+    </h1>
+
+    <h3>
+      Clients waiting for payment
+    </h3>
+
+  </div>
+
+  <button
+    class="small-btn"
+    id="backFromUnpaidJobs"
+    type="button"
+  >
+    Back
+  </button>
+
+</div>
+
+<div
+  class="unpaid-jobs-summary"
+  id="unpaidJobsSummary"
+>
+  0 unpaid jobs
+</div>
+
+<div
+  id="unpaidJobsList"
+  class="list"
+></div>
 
 </section>
 
@@ -2680,6 +2751,9 @@ let formReturnScreen =
 let selectedDirectoryClientId =
   null;
 
+let selectedUnpaidJobId =
+  null;
+
 let schedulingNewOnCallJob =
   false;
 
@@ -2820,6 +2894,26 @@ const allClientsSearchInput =
 const allClientsList =
   document.getElementById(
     "allClientsList"
+  );
+
+const unpaidJobsBtn =
+  document.getElementById(
+    "unpaidJobsBtn"
+  );
+
+const backFromUnpaidJobs =
+  document.getElementById(
+    "backFromUnpaidJobs"
+  );
+
+const unpaidJobsSummary =
+  document.getElementById(
+    "unpaidJobsSummary"
+  );
+
+const unpaidJobsList =
+  document.getElementById(
+    "unpaidJobsList"
   );
 
 const recurringUnpaidSection =
@@ -4959,6 +5053,244 @@ function renderAllClients(){
 
 
 /* =========================================================
+   UNPAID JOBS PAGE
+========================================================= */
+
+function isUnpaidJob(c){
+
+  const type =
+    c.type ||
+    "recurring";
+
+
+  if(
+    type ===
+    "recurring"
+  ){
+
+    return !c.paid;
+
+  }
+
+
+  return (
+    (
+      type ===
+      "oneoff" ||
+      type ===
+      "oncall"
+    )
+    &&
+    c.finished
+    &&
+    !c.paid
+  );
+
+}
+
+
+function renderUnpaidJobs(){
+
+  const jobs =
+    sortClients(
+      clients.filter(
+        isUnpaidJob
+      )
+    );
+
+
+  const outstandingTotal =
+    jobs.reduce(
+      (total,c) =>
+        total +
+        Number(
+          c.price || 0
+        ),
+      0
+    );
+
+
+  unpaidJobsSummary.textContent =
+    jobs.length +
+    (
+      jobs.length === 1
+        ? " unpaid job"
+        : " unpaid jobs"
+    ) +
+    " · " +
+    money(
+      outstandingTotal
+    ) +
+    " outstanding";
+
+
+  unpaidJobsList.innerHTML =
+    "";
+
+
+  if(!jobs.length){
+
+    selectedUnpaidJobId =
+      null;
+
+    unpaidJobsList.innerHTML =
+      '<div class="empty">No unpaid jobs.</div>';
+
+    return;
+
+  }
+
+
+  jobs.forEach(
+    c => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      const selected =
+        selectedUnpaidJobId ===
+        c.id;
+
+
+      const type =
+        c.type ||
+        "recurring";
+
+
+      const jobType =
+        type ===
+        "recurring"
+          ? "Scheduled"
+          :
+          (
+            type ===
+            "oncall"
+              ? "Client calls when needed"
+              : "One-off job"
+          );
+
+
+      const timing =
+        type ===
+        "recurring"
+          ?
+          (
+            "Due " +
+            pretty(
+              c.lastCompleted ||
+              c.nextDue
+            )
+          )
+          : "Finished";
+
+
+      row.className =
+        "row unpaid-row" +
+        (
+          selected
+            ? " selected-row"
+            : ""
+        );
+
+
+      const actions =
+        selected
+          ?
+          '<div class="selected-actions">' +
+
+          '<button class="edit-small" onclick="event.stopPropagation();editClient(\'' +
+          c.id +
+          '\',\'unpaidJobsScreen\')">' +
+          'Edit' +
+          '</button>' +
+
+          '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\'' +
+          c.id +
+          '\')">' +
+          'Paid' +
+          '</button>' +
+
+          '</div>'
+          :
+          '';
+
+
+      row.innerHTML =
+
+        '<div>' +
+
+          '<div class="row-title">' +
+            esc(
+              c.name
+            ) +
+          '</div>' +
+
+          '<div class="row-sub">' +
+            esc(
+              clientFullAddress(
+                c
+              ) ||
+              "No address added"
+            ) +
+            ' · ' +
+            esc(
+              jobType
+            ) +
+            ' · ' +
+            esc(
+              timing
+            ) +
+          '</div>' +
+
+        '</div>' +
+
+        '<div class="row-right">' +
+
+          '<div class="price">' +
+            money(
+              c.price
+            ) +
+          '</div>' +
+
+          '<div>Unpaid</div>' +
+
+          '<button class="paid-btn" onclick="event.stopPropagation();openPaidPopup(\'' +
+            c.id +
+          '\')">Paid</button>' +
+
+        '</div>' +
+
+        actions;
+
+
+      row.onclick =
+        () => {
+
+          selectedUnpaidJobId =
+            selected
+              ? null
+              : c.id;
+
+
+          renderUnpaidJobs();
+
+        };
+
+
+      unpaidJobsList.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
    MAIN RENDER
 ========================================================= */
 
@@ -6047,6 +6379,8 @@ function markPaidYes(){
   saveLocal();
 
   render();
+
+  renderUnpaidJobs();
 
   closePaidPopup();
 
@@ -7179,6 +7513,16 @@ function saveClientForm(){
 
   }
 
+
+  if(
+    returnAfterSave ===
+    "unpaidJobsScreen"
+  ){
+
+    renderUnpaidJobs();
+
+  }
+
   show(
     returnAfterSave
   );
@@ -7268,6 +7612,16 @@ function deleteClientForm(){
   ){
 
     renderAllClients();
+
+  }
+
+
+  if(
+    formReturnScreen ===
+    "unpaidJobsScreen"
+  ){
+
+    renderUnpaidJobs();
 
   }
 
@@ -10327,6 +10681,46 @@ allClientsSearchInput.addEventListener(
 );
 
 
+unpaidJobsBtn.onclick =
+  () => {
+
+    selectedUnpaidJobId =
+      null;
+
+    renderUnpaidJobs();
+
+
+    show(
+      "unpaidJobsScreen"
+    );
+
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+  };
+
+
+backFromUnpaidJobs.onclick =
+  () => {
+
+    render();
+
+    show(
+      "homeScreen"
+    );
+
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+  };
+
+
 backFromAllClients.onclick =
   () => {
 
@@ -10480,6 +10874,16 @@ backHome.onclick =
     ){
 
       renderAllClients();
+
+    }
+
+
+    if(
+      formReturnScreen ===
+      "unpaidJobsScreen"
+    ){
+
+      renderUnpaidJobs();
 
     }
 
