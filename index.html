@@ -677,17 +677,16 @@ textarea{
   text-align:left;
 }
 
-.weekly-ad-heading-row{
+.schedule-directory-row{
   display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  gap:12px;
+  align-items:center;
+  justify-content:flex-start;
   margin-top:14px;
-  margin-bottom:6px;
+  margin-bottom:0;
 }
 
-.weekly-ad-heading-row .weekly-ad-label{
-  margin:0;
+.schedule-directory-row + .section-title{
+  margin-top:10px;
 }
 
 .all-clients-btn{
@@ -1477,6 +1476,19 @@ textarea{
 </div>
 
 
+<div class="schedule-directory-row">
+
+  <button
+    class="small-btn all-clients-btn"
+    id="allClientsBtn"
+    type="button"
+  >
+    All clients
+  </button>
+
+</div>
+
+
 <div class="section-title">
   SCHEDULE
 </div>
@@ -1521,20 +1533,8 @@ textarea{
 </div>
 
 
-<div class="weekly-ad-heading-row">
-
-  <div class="weekly-ad-label">
-    Advertisement for the week
-  </div>
-
-  <button
-    class="small-btn all-clients-btn"
-    id="allClientsBtn"
-    type="button"
-  >
-    All clients
-  </button>
-
+<div class="weekly-ad-label">
+  Advertisement for the week
 </div>
 
 <div class="weekly-ad" aria-label="Advertisement for the week">
@@ -4813,7 +4813,7 @@ function renderAllClients(){
             "button";
 
           jobButton.textContent =
-            "Add job";
+            "Add to schedule";
 
 
           jobButton.onclick =
@@ -6375,7 +6375,7 @@ function configureFormForMode(mode){
       :
       (
         isOnCallJob
-          ? "Add Job"
+          ? "Add to Schedule"
           : "Save Client"
       );
 
@@ -6682,7 +6682,7 @@ function scheduleOnCallJob(id){
 
 
   formTitle.textContent =
-    "Add Job — " +
+    "Add to Schedule — " +
     c.name;
 
 
