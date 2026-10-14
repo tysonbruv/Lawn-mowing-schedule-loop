@@ -665,6 +665,45 @@ textarea{
   color:var(--text);
 }
 
+
+/* ADD ON-CALL CLIENT TO SCHEDULE */
+
+.oncall-schedule-card{
+  width:min(100%,520px);
+  margin:28px auto 0;
+  padding:18px;
+  border:1px solid var(--border2);
+  border-radius:12px;
+  background:#101010;
+}
+
+.oncall-schedule-label{
+  display:block;
+  margin-bottom:9px;
+  color:var(--muted);
+  font-size:15px;
+  font-weight:800;
+}
+
+.oncall-schedule-date{
+  min-height:68px;
+  padding:12px 14px;
+  color:var(--text);
+  background:var(--input);
+  border:1px solid #4a4a4a;
+  border-radius:9px;
+  font-size:25px;
+  font-weight:900;
+  color-scheme:dark;
+}
+
+.oncall-schedule-submit{
+  min-height:52px;
+  margin-top:14px;
+  font-size:17px;
+  font-weight:900;
+}
+
 /* WEEKLY ADVERTISEMENTS */
 
 .weekly-ad-label{
@@ -1716,6 +1755,66 @@ textarea{
 
 
 <!-- =========================
+     ADD ON-CALL CLIENT TO SCHEDULE
+========================= -->
+
+<section
+  id="onCallScheduleScreen"
+  class="screen"
+>
+
+<div class="top">
+
+  <div>
+
+    <h1>
+      Add to Schedule
+    </h1>
+
+    <h3 id="onCallScheduleClientName"></h3>
+
+  </div>
+
+  <button
+    class="small-btn"
+    id="backFromOnCallSchedule"
+    type="button"
+  >
+    Back
+  </button>
+
+</div>
+
+<div class="oncall-schedule-card">
+
+  <label
+    class="oncall-schedule-label"
+    for="onCallScheduleDate"
+  >
+    Job date
+  </label>
+
+  <input
+    class="oncall-schedule-date"
+    id="onCallScheduleDate"
+    type="date"
+  />
+
+  <button
+    class="main-btn oncall-schedule-submit"
+    id="confirmOnCallSchedule"
+    type="button"
+  >
+    Add to Schedule
+  </button>
+
+</div>
+
+</section>
+
+
+
+<!-- =========================
      CLIENT FORM
 ========================= -->
 
@@ -2754,6 +2853,9 @@ let selectedDirectoryClientId =
 let selectedUnpaidJobId =
   null;
 
+let onCallScheduleClientId =
+  null;
+
 let schedulingNewOnCallJob =
   false;
 
@@ -2914,6 +3016,26 @@ const unpaidJobsSummary =
 const unpaidJobsList =
   document.getElementById(
     "unpaidJobsList"
+  );
+
+const onCallScheduleClientName =
+  document.getElementById(
+    "onCallScheduleClientName"
+  );
+
+const onCallScheduleDate =
+  document.getElementById(
+    "onCallScheduleDate"
+  );
+
+const confirmOnCallSchedule =
+  document.getElementById(
+    "confirmOnCallSchedule"
+  );
+
+const backFromOnCallSchedule =
+  document.getElementById(
+    "backFromOnCallSchedule"
   );
 
 const recurringUnpaidSection =
@@ -7002,78 +7124,137 @@ function scheduleOnCallJob(id){
   }
 
 
-  editingId =
+  onCallScheduleClientId =
     id;
 
-  formReturnScreen =
-    "allClientsScreen";
-
-  formMode =
-    "oncallJob";
-
-  schedulingNewOnCallJob =
-    true;
-
-
-  formTitle.textContent =
-    "Add to Schedule — " +
+  onCallScheduleClientName.textContent =
     c.name;
 
-
-  configureFormForMode(
-    formMode
-  );
-
-
-  nameInput.value =
-    c.name;
-
-  addressInput.value =
-    c.address ||
-    "";
-
-  phoneInput.value =
-    c.phone ||
-    "";
-
-  suburbInput.value =
-    c.suburb;
-
-  priceInput.value =
-    c.price;
-
-  cycleInput.value =
-    "30";
-
-  dueInput.value =
+  onCallScheduleDate.value =
     iso(
       today()
     );
 
-  notesInput.value =
-    c.notes ||
-    "";
 
-  eventTimeInput.value =
-    "";
-
-  allDayInput.checked =
-    true;
+  show(
+    "onCallScheduleScreen"
+  );
 
 
-  lastCompletedBox
-    .classList
-    .remove(
-      "active"
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+
+function addOnCallJobToSchedule(){
+
+  const c =
+    clients.find(
+      item =>
+        item.id ===
+        onCallScheduleClientId &&
+        item.type ===
+        "oncall"
     );
 
 
-  deleteClientBtn.style.display =
-    "none";
+  if(
+    !c ||
+    c.activeJob
+  ){
+
+    onCallScheduleClientId =
+      null;
+
+    renderAllClients();
+
+    show(
+      "allClientsScreen"
+    );
+
+    return;
+
+  }
+
+
+  const selectedDate =
+    onCallScheduleDate.value;
+
+
+  if(!selectedDate){
+
+    onCallScheduleDate.focus();
+
+    return;
+
+  }
+
+
+  c.nextDue =
+    selectedDate;
+
+  c.activeJob =
+    true;
+
+  c.finished =
+    false;
+
+  c.paid =
+    false;
+
+
+  touchClient(
+    c
+  );
+
+
+  selectedClientId =
+    null;
+
+  selectedDirectoryClientId =
+    null;
+
+  onCallScheduleClientId =
+    null;
+
+
+  saveLocal();
+
+  render();
 
 
   show(
-    "formScreen"
+    "homeScreen"
+  );
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+
+function cancelOnCallSchedule(){
+
+  onCallScheduleClientId =
+    null;
+
+  renderAllClients();
+
+
+  show(
+    "allClientsScreen"
+  );
+
+
+  window.scrollTo(
+    0,
+    0
   );
 
 }
@@ -10676,6 +10857,31 @@ allClientsSearchInput.addEventListener(
 
 
     renderAllClients();
+
+  }
+);
+
+
+confirmOnCallSchedule.onclick =
+  addOnCallJobToSchedule;
+
+
+backFromOnCallSchedule.onclick =
+  cancelOnCallSchedule;
+
+
+onCallScheduleDate.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key ===
+      "Enter"
+    ){
+
+      addOnCallJobToSchedule();
+
+    }
 
   }
 );
